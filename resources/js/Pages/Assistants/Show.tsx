@@ -4,6 +4,8 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { ChangeEvent, useEffect } from 'react';
 
+import ReactMarkdown from 'react-markdown';
+
 interface Chunk {
     id: number;
     content: string;
@@ -12,6 +14,8 @@ interface Chunk {
 interface Article {
     id: number;
     url: string;
+    title: string | null;
+    content: string | null;
     status: string;
 }
 
@@ -32,16 +36,19 @@ export default function Show({ assistant }: Props) {
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
-        if (assistant.status !== 'ready' && assistant.status !== 'error') {
+        const isProcessing = assistant.status !== 'ready' && assistant.status !== 'error' 
+            || assistant.articles.some(a => a.status === 'processing' || a.status === 'pending');
+
+        if (isProcessing) {
             interval = setInterval(() => {
-                router.reload({ only: ['assistant'] });
+                router.reload({ only: ['assistant'], preserveScroll: true });
             }, 3000);
         }
 
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [assistant.status]);
+    }, [assistant.status, assistant.articles]);
 
     const docForm = useForm({
         document: null as File | null,
@@ -60,9 +67,6 @@ export default function Show({ assistant }: Props) {
             docForm.setData('document', e.target.files[0]);
             docForm.post(route('assistants.upload-document', assistant.id), {
                 forceFormData: true,
-                onSuccess: () => {
-                    alert('Документ загружен и обрабатывается');
-                }
             });
         }
     };
@@ -72,9 +76,6 @@ export default function Show({ assistant }: Props) {
             audioForm.setData('audio', e.target.files[0]);
             audioForm.post(route('assistants.upload-audio', assistant.id), {
                 forceFormData: true,
-                onSuccess: () => {
-                    alert('Аудио загружено и транскрибируется');
-                }
             });
         }
     };
@@ -83,7 +84,6 @@ export default function Show({ assistant }: Props) {
         e.preventDefault();
         urlForm.post(route('assistants.add-url', assistant.id), {
             onSuccess: () => {
-                alert('URL добавлен и обрабатывается');
                 urlForm.reset();
             }
         });
@@ -125,23 +125,47 @@ export default function Show({ assistant }: Props) {
                             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div className="p-6">
                                     <h3 className="text-lg font-bold mb-4">Сгенерированные статьи</h3>
+                                    <p className="text-xs text-gray-400 mb-2">Отладка: {assistant.articles.length} статей найдено</p>
                                     {assistant.articles.length === 0 ? (
                                         <p className="text-gray-500">Статей пока нет. Добавьте URL конкурента для генерации.</p>
                                     ) : (
-                                        <div className="space-y-4">
+                                        <div className="grid grid-cols-1 gap-6">
                                             {assistant.articles.map((article) => (
-                                                <div key={article.id} className="p-4 border rounded-lg">
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h4 className="font-bold">{article.title || 'Обработка...'}</h4>
-                                                            <p className="text-xs text-gray-500">{article.url}</p>
+                                                <div key={article.id} className="p-6 border rounded-xl shadow-sm hover:shadow-md transition-shadow bg-gray-50">
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div className="overflow-hidden">
+                                    <h4 className="font-bold text-lg text-gray-900 truncate">
+                                        {article.title || (article.status === 'processing' ? 'Генерируется контент...' : (article.status === 'pending' ? 'Ожидание...' : 'Загрузка...'))}
+                                    </h4>
+                                                            <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:text-indigo-800 truncate block">
+                                                                {article.url}
+                                                            </a>
                                                         </div>
-                                                        <span className={`text-xs px-2 py-1 rounded ${
-                                                            article.status === 'ready' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium shrink-0 ${
+                                                            article.status === 'ready' ? 'bg-green-100 text-green-800' : 
+                                                            article.status === 'error' ? 'bg-red-100 text-red-800' :
+                                                            article.status === 'pending' ? 'bg-blue-100 text-blue-800' :
+                                                            'bg-yellow-100 text-yellow-800'
                                                         }`}>
-                                                            {article.status}
+                                                            {article.status === 'processing' ? 'В обработке' : 
+                                                             article.status === 'ready' ? 'Готово' : 
+                                                             article.status === 'pending' ? 'В очереди' :
+                                                             article.status === 'error' ? 'Ошибка' : article.status}
                                                         </span>
                                                     </div>
+                                                    
+                                                    {article.content ? (
+                                                        <div className="prose prose-sm max-w-none mt-4 max-h-96 overflow-y-auto p-4 bg-white rounded-lg border border-gray-200">
+                                                            <ReactMarkdown>{article.content}</ReactMarkdown>
+                                                        </div>
+                                                    ) : (
+                                                        article.status === 'processing' && (
+                                                            <div className="mt-4 p-8 flex flex-col items-center justify-center bg-white rounded-lg border border-dashed border-gray-300">
+                                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2"></div>
+                                                                <p className="text-sm text-gray-500">Анализируем содержимое сайта...</p>
+                                                            </div>
+                                                        )
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

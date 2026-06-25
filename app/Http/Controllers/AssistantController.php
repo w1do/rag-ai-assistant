@@ -122,6 +122,11 @@ class AssistantController extends Controller
 
         $action->execute($assistant, $request->url);
 
-        return back()->with('status', 'URL added and article generation started.');
+        return back()->with([
+            'status' => 'URL added and article generation started.',
+            'flash' => [
+                'message' => 'URL добавлен и обрабатывается',
+            ],
+        ]);
     }
 }

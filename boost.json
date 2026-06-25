@@ -18,6 +18,7 @@
         "architecture-ddd",
         "laravel-activitylog",
         "dtos",
-        "documentation"
+        "documentation",
+        "polza-ai"
     ]
 }

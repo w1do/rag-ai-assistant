@@ -3,10 +3,11 @@
 namespace App\Domain\Shared\AI\Services;
 
 use App\Domain\Assistant\Models\Assistant;
+use App\Domain\Shared\AI\Embeddings\PolzaAIEmbeddingGenerator;
 use LLPhant\Chat\OpenAIChat;
 use LLPhant\Embeddings\Document;
 use LLPhant\Embeddings\DocumentSplitter\DocumentSplitter;
-use LLPhant\Embeddings\EmbeddingGenerator\OpenAI\OpenAIADA002EmbeddingGenerator;
+use LLPhant\Embeddings\EmbeddingGenerator\EmbeddingGeneratorInterface;
 use LLPhant\Embeddings\VectorStores\Qdrant\QdrantVectorStore;
 use LLPhant\OpenAIConfig;
 use LLPhant\Query\SemanticSearch\QuestionAnswering;
@@ -14,18 +15,38 @@ use Qdrant\Config;
 
 class RAGService
 {
-    private OpenAIADA002EmbeddingGenerator $embeddingGenerator;
+    private ?EmbeddingGeneratorInterface $embeddingGenerator = null;
 
-    private OpenAIChat $chat;
+    private ?OpenAIChat $chat = null;
 
-    public function __construct()
+    public function __construct() {}
+
+    private function getEmbeddingGenerator(): EmbeddingGeneratorInterface
     {
-        $config = new OpenAIConfig;
-        $config->apiKey = config('llphant.openai.api_key');
-        $config->url = config('llphant.openai.base_url');
+        if ($this->embeddingGenerator === null) {
+            $config = new OpenAIConfig;
+            $config->apiKey = config('llphant.openai.api_key');
+            $config->url = config('llphant.openai.base_url');
+            $config->model = config('llphant.openai.embedding_model', 'text-embedding-3-small');
 
-        $this->embeddingGenerator = new OpenAIADA002EmbeddingGenerator($config);
-        $this->chat = new OpenAIChat($config);
+            $this->embeddingGenerator = new PolzaAIEmbeddingGenerator($config);
+        }
+
+        return $this->embeddingGenerator;
+    }
+
+    private function getChat(): OpenAIChat
+    {
+        if ($this->chat === null) {
+            $config = new OpenAIConfig;
+            $config->apiKey = config('llphant.openai.api_key');
+            $config->url = config('llphant.openai.base_url');
+            $config->model = config('llphant.openai.chat_model', 'gpt-4o-mini');
+
+            $this->chat = new OpenAIChat($config);
+        }
+
+        return $this->chat;
     }
 
     /**
@@ -38,11 +59,15 @@ class RAGService
         $allEmbeddedDocuments = [];
 
         foreach ($documents as $document) {
-            // Split document into chunks
-            $splitDocuments = DocumentSplitter::splitDocument($document, 1000);
+            // Normalize content to follow Polza AI "Normalize texts" recommendation
+            $document->content = $this->normalizeText($document->content);
+
+            // Split document into chunks (Polza AI recommends 200-800 tokens)
+            // Using 800 characters as a conservative estimate for token limits
+            $splitDocuments = DocumentSplitter::splitDocument($document, 800);
 
             // Generate embeddings
-            $embeddedDocuments = $this->embeddingGenerator->embedDocuments($splitDocuments);
+            $embeddedDocuments = $this->getEmbeddingGenerator()->embedDocuments($splitDocuments);
             $allEmbeddedDocuments = array_merge($allEmbeddedDocuments, $embeddedDocuments);
         }
 
@@ -73,7 +98,7 @@ class RAGService
      */
     public function search(Assistant $assistant, string $question, int $limit = 4): array
     {
-        $embedding = $this->embeddingGenerator->embedText($question);
+        $embedding = $this->getEmbeddingGenerator()->embedText($question);
         $vectorStore = $this->getVectorStore($assistant);
 
         return $vectorStore->similaritySearch($embedding, $limit);
@@ -88,8 +113,8 @@ class RAGService
     {
         $qa = new QuestionAnswering(
             $this->getVectorStore($assistant),
-            $this->embeddingGenerator,
-            $this->chat
+            $this->getEmbeddingGenerator(),
+            $this->getChat()
         );
 
         $answer = $qa->answerQuestion($question);
@@ -123,9 +148,21 @@ class RAGService
         $collectionName = 'assistant_'.$assistant->id;
         $vectorStore = new QdrantVectorStore($config, $collectionName);
 
+        // Determine dimensions based on model (Polza AI: small=1536, large=3072)
+        $model = config('llphant.openai.embedding_model', 'text-embedding-3-small');
+        $dimensions = str_contains($model, 'large') ? 3072 : 1536;
+
         // Ensure collection exists
-        $vectorStore->createCollectionIfDoesNotExist($collectionName, 1536); // 1536 is OpenAI embedding length
+        $vectorStore->createCollectionIfDoesNotExist($collectionName, $dimensions);
 
         return $vectorStore;
+    }
+
+    private function normalizeText(string $text): string
+    {
+        // Remove multiple spaces and newlines to follow Polza AI "Normalize texts" recommendation
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        return trim($text);
     }
 }
