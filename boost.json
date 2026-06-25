@@ -11,6 +11,13 @@
         "laravel-best-practices",
         "pest-testing",
         "inertia-react-development",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "laravel-query-builder",
+        "medialibrary-development",
+        "sluggable-development",
+        "architecture-ddd",
+        "laravel-activitylog",
+        "dtos",
+        "documentation"
     ]
 }
