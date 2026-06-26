@@ -2,6 +2,7 @@
 
 namespace App\Domain\Assistant\Models;
 
+use App\Domain\Assistant\Enums\AssistantStyle;
 use App\Domain\Chat\Models\ChatHistory;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Models\User;
@@ -11,6 +12,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Модель ассистента.
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string|null $description Описание компании/ассистента
+ * @property string $status
+ * @property AssistantStyle $style Стиль общения
+ * @property string|null $brand_name Имя бренда
+ * @property string|null $phone Контактный телефон
+ * @property array|null $social Социальные сети
+ * @property string|null $fallback Сообщение при отсутствии ответа
+ * @property string|null $system Пользовательский системный промпт
+ */
 class Assistant extends Model
 {
     /** @use HasFactory<AssistantFactory> */
@@ -30,6 +46,21 @@ class Assistant extends Model
         'qdrant_id',
         'content',
         'metadata',
+        'style',
+        'brand_name',
+        'phone',
+        'social',
+        'fallback',
+        'system',
+    ];
+
+    protected $casts = [
+        'style' => AssistantStyle::class,
+        'social' => 'array',
+    ];
+
+    protected $attributes = [
+        'style' => AssistantStyle::Business,
     ];
 
     protected $appends = [

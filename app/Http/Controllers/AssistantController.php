@@ -40,6 +40,12 @@ class AssistantController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'style' => 'nullable|string|in:commercial,business,rude,positive',
+            'brand_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'social' => 'nullable|array',
+            'fallback' => 'nullable|string',
+            'system' => 'nullable|string',
         ]);
 
         $action->execute(auth()->user(), $validated);
@@ -72,11 +78,17 @@ class AssistantController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'style' => 'nullable|string|in:commercial,business,rude,positive',
+            'brand_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'social' => 'nullable|array',
+            'fallback' => 'nullable|string',
+            'system' => 'nullable|string',
         ]);
 
         $action->execute($assistant, $validated);
 
-        return redirect()->route('assistants.index');
+        return redirect()->route('assistants.show', $assistant->id);
     }
 
     public function destroy(Assistant $assistant, DeleteAssistantAction $action): RedirectResponse

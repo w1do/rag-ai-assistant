@@ -6,21 +6,37 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { FormEventHandler } from 'react';
 
-export default function Create() {
-    const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        description: '',
-        style: 'business',
-        brand_name: '',
-        phone: '',
-        social: { telegram: '', vk: '' },
-        fallback: '',
-        system: '',
+interface Assistant {
+    id: number;
+    name: string;
+    description: string | null;
+    style: string;
+    brand_name: string | null;
+    phone: string | null;
+    social: Record<string, string> | null;
+    fallback: string | null;
+    system: string | null;
+}
+
+interface Props {
+    assistant: Assistant;
+}
+
+export default function Edit({ assistant }: Props) {
+    const { data, setData, patch, processing, errors } = useForm({
+        name: assistant.name || '',
+        description: assistant.description || '',
+        style: assistant.style || 'business',
+        brand_name: assistant.brand_name || '',
+        phone: assistant.phone || '',
+        social: assistant.social || { telegram: '', vk: '' },
+        fallback: assistant.fallback || '',
+        system: assistant.system || '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('assistants.store'));
+        patch(route('assistants.update', assistant.id));
     };
 
     const handleSocialChange = (key: string, value: string) => {
@@ -34,11 +50,11 @@ export default function Create() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Создать ассистента
+                    Редактировать ассистента: {assistant.name}
                 </h2>
             }
         >
-            <Head title="Создать ассистента" />
+            <Head title={`Редактировать ${assistant.name}`} />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -47,34 +63,29 @@ export default function Create() {
                             <form onSubmit={submit} className="max-w-2xl space-y-6">
                                 <div>
                                     <InputLabel htmlFor="name" value="Имя ассистента" />
-
                                     <TextInput
                                         id="name"
                                         type="text"
                                         name="name"
                                         value={data.name}
                                         className="mt-1 block w-full"
-                                        isFocused={true}
                                         onChange={(e) => setData('name', e.target.value)}
                                         required
                                     />
-
                                     <InputError message={errors.name} className="mt-2" />
                                 </div>
 
                                 <div>
                                     <InputLabel htmlFor="description" value="Описание / Информация о компании" />
-
                                     <textarea
                                         id="description"
                                         name="description"
-                                        value={data.description}
+                                        value={data.description || ''}
                                         className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                         rows={4}
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Краткое описание вашей компании для контекста ассистента"
                                     />
-
                                     <InputError message={errors.description} className="mt-2" />
                                 </div>
 
@@ -102,7 +113,7 @@ export default function Create() {
                                             id="brand_name"
                                             type="text"
                                             name="brand_name"
-                                            value={data.brand_name}
+                                            value={data.brand_name || ''}
                                             className="mt-1 block w-full"
                                             onChange={(e) => setData('brand_name', e.target.value)}
                                         />
@@ -117,7 +128,7 @@ export default function Create() {
                                             id="phone"
                                             type="text"
                                             name="phone"
-                                            value={data.phone}
+                                            value={data.phone || ''}
                                             className="mt-1 block w-full"
                                             onChange={(e) => setData('phone', e.target.value)}
                                         />
@@ -131,7 +142,7 @@ export default function Create() {
                                                 <span className="text-sm text-gray-500 w-20">Telegram:</span>
                                                 <TextInput
                                                     type="text"
-                                                    value={data.social.telegram}
+                                                    value={data.social?.telegram || ''}
                                                     className="block w-full text-sm"
                                                     onChange={(e) => handleSocialChange('telegram', e.target.value)}
                                                     placeholder="@username"
@@ -141,7 +152,7 @@ export default function Create() {
                                                 <span className="text-sm text-gray-500 w-20">VK:</span>
                                                 <TextInput
                                                     type="text"
-                                                    value={data.social.vk}
+                                                    value={data.social?.vk || ''}
                                                     className="block w-full text-sm"
                                                     onChange={(e) => handleSocialChange('vk', e.target.value)}
                                                     placeholder="vk.com/id"
@@ -157,12 +168,15 @@ export default function Create() {
                                     <textarea
                                         id="fallback"
                                         name="fallback"
-                                        value={data.fallback}
+                                        value={data.fallback || ''}
                                         className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                         rows={3}
                                         onChange={(e) => setData('fallback', e.target.value)}
                                         placeholder="Что ответить, если ассистент не знает ответа?"
                                     />
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        Это сообщение будет отправлено пользователю, если ассистент не сможет найти ответ в базе знаний.
+                                    </p>
                                     <InputError message={errors.fallback} className="mt-2" />
                                 </div>
 
@@ -171,7 +185,7 @@ export default function Create() {
                                     <textarea
                                         id="system"
                                         name="system"
-                                        value={data.system}
+                                        value={data.system || ''}
                                         className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                         rows={5}
                                         onChange={(e) => setData('system', e.target.value)}
@@ -183,10 +197,14 @@ export default function Create() {
                                     <InputError message={errors.system} className="mt-2" />
                                 </div>
 
-                                <div className="mt-6">
+                                <div className="flex items-center gap-4 pt-4 border-t">
                                     <PrimaryButton disabled={processing}>
-                                        Создать
+                                        Сохранить изменения
                                     </PrimaryButton>
+                                    
+                                    {data.isDirty && (
+                                        <p className="text-sm text-gray-600">Есть несохраненные изменения.</p>
+                                    )}
                                 </div>
                             </form>
                         </div>

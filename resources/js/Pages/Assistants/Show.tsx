@@ -25,8 +25,13 @@ interface Knowledge {
 interface Assistant {
     id: number;
     name: string;
-    description: string;
+    description: string | null;
     status: string;
+    style: string;
+    brand_name: string | null;
+    phone: string | null;
+    social: Record<string, string> | null;
+    fallback: string | null;
     chunks: Chunk[];
     knowledge: Knowledge[];
 }
@@ -318,6 +323,51 @@ export default function Show({ assistant }: Props) {
                         </div>
 
                         <div className="space-y-6">
+                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <div className="p-6">
+                                    <h3 className="text-lg font-bold mb-4">Настройки ассистента</h3>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-bold">Стиль общения</p>
+                                            <p className="text-sm font-medium">
+                                                {assistant.style === 'business' ? 'Деловой' :
+                                                 assistant.style === 'commercial' ? 'Коммерческий' :
+                                                 assistant.style === 'rude' ? 'Грубый' :
+                                                 assistant.style === 'positive' ? 'Позитивный' : assistant.style}
+                                            </p>
+                                        </div>
+                                        {assistant.brand_name && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-bold">Бренд</p>
+                                                <p className="text-sm font-medium">{assistant.brand_name}</p>
+                                            </div>
+                                        )}
+                                        {assistant.phone && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-bold">Телефон</p>
+                                                <p className="text-sm font-medium">{assistant.phone}</p>
+                                            </div>
+                                        )}
+                                        {assistant.social && Object.entries(assistant.social).some(([_, v]) => v) && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-bold">Социальные сети</p>
+                                                <div className="text-sm font-medium">
+                                                    {Object.entries(assistant.social).map(([key, value]) => (
+                                                        value && <div key={key}><span className="capitalize">{key}</span>: {value}</div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {assistant.fallback && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-bold">Fallback</p>
+                                                <p className="text-sm font-medium italic">"{assistant.fallback}"</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div className="p-6">
                                     <h3 className="text-lg font-bold mb-4">Статус ассистента</h3>

@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Domain\Assistant\Models;
 
+use App\Domain\Assistant\Enums\AssistantStyle;
 use App\Domain\Assistant\Models\Assistant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,6 +24,15 @@ class AssistantFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->sentence(),
             'status' => 'ready',
+            'style' => AssistantStyle::Business,
+            'brand_name' => $this->faker->company(),
+            'phone' => $this->faker->phoneNumber(),
+            'social' => [
+                'telegram' => 'https://t.me/'.$this->faker->userName(),
+                'vk' => 'https://vk.com/'.$this->faker->userName(),
+            ],
+            'fallback' => 'Извините, я не знаю ответа на этот вопрос.',
+            'system' => null,
         ];
     }
 }

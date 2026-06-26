@@ -20,6 +20,7 @@
         "dtos",
         "documentation",
         "polza-ai",
-        "firecrawl"
+        "firecrawl",
+        "design-system"
     ]
 }
