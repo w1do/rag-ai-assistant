@@ -53,12 +53,12 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 - `OPENAI_BASE_URL`: Базовый URL провайдера (например, `https://api.polzai.ru/v1`).
 
 ### Фоновые процессы
-Длительные операции вынесены в очереди (управляются через Laravel Horizon):
+Длительные операции вынесены в очереди (управляются через Supervisor и Laravel Horizon):
 1. **ProcessDocumentJob**: Чтение файла, чанкинг, генерация эмбеддингов и сохранение в Qdrant.
 2. **TranscribeVoiceJob**: Транскрипция аудио через Whisper и последующая индексация.
 3. **GenerateKnowledgeJob**: Парсинг текста с URL и генерация записи в базу знаний через LLM.
 
-Мониторинг очередей доступен по адресу `/horizon`. Доступ в продакшене регулируется через `HORIZON_EMAILS` в `.env`.
+Для обеспечения надежности в Supervisor настроен стандартный воркер `queue:work`, а для расширенного мониторинга используется Laravel Horizon (доступен по адресу `/horizon`). Доступ в продакшене регулируется через `HORIZON_EMAILS` в `.env`.
 
 ## Переменные окружения (.env)
 Все чувствительные данные вынесены в `.env`:

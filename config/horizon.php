@@ -199,14 +199,15 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => [env('REDIS_QUEUE', 'default')],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',
-            'maxProcesses' => 1,
+            'minProcesses' => 1,
+            'maxProcesses' => 10,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
-            'tries' => 1,
+            'tries' => 3,
             'timeout' => 60,
             'nice' => 0,
         ],
@@ -222,6 +223,20 @@ return [
         ],
 
         'local' => [
+            'supervisor-1' => [
+                'maxProcesses' => 3,
+            ],
+        ],
+
+        'staging' => [
+            'supervisor-1' => [
+                'maxProcesses' => 10,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ],
+        ],
+
+        'testing' => [
             'supervisor-1' => [
                 'maxProcesses' => 3,
             ],
