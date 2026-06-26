@@ -58,3 +58,20 @@ MVP-сервис для быстрой сборки AI-ассистентов с
 
 ## Документация
 Подробное описание архитектуры и принципов работы системы доступно в файле [DOCUMENTATION.md](DOCUMENTATION.md).
+
+### Контакты
+
+> Разработал Денис Митрофанов
+
+**Сайт: [AI-инженер](https://w1do.ru)**
+
+**TG: [W1DO_DIGITAL](https://t.me/W1DO_DIGITAL)**
+
+**MAX: [Простите за MAX](https://max.ru/u/f9LHodD0cOKlpm9dqNIVXbxyaDeOEKzC4jizdf-1qeqNIOnm7yL9qs68d58)**
+
+**Мой канал: [YouTube](https://www.youtube.com/@w1do_digital)**
+
+## Для работодателей и нанимателей
+- Только удаленка
+- Внедрение AI / Разработка (Claude, Junie, Codex)
+
