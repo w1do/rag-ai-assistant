@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Run migrations
+php artisan migrate --force
+
 # Cache configuration
 php artisan config:cache
 php artisan route:cache
