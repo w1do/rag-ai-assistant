@@ -49,6 +49,8 @@ RUN apk add --no-cache \
     libpng \
     libpq \
     icu-libs \
+    freetype \
+    libjpeg-turbo \
     git \
     unzip
 
@@ -59,13 +61,16 @@ RUN apk add --no-cache --virtual .build-deps \
     libpng-dev \
     postgresql-dev \
     icu-dev \
+    zlib-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     bcmath \
     gd \
     intl \
     pdo_pgsql \
     zip \
-    opcache \
     && apk del .build-deps
 
 # Copy Composer binary from stage 1
