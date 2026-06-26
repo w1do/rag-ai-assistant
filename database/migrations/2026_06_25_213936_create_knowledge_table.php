@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('knowledge', function (Blueprint $table) {
             $table->id();
             $table->foreignId('assistant_id')->constrained()->cascadeOnDelete();
-            $table->string('url');
-            $table->string('title')->nullable();
+            $table->string('type'); // 'document', 'voice', 'website'
+            $table->string('name')->nullable();
+            $table->string('url')->nullable();
+            $table->string('path')->nullable();
             $table->longText('content')->nullable();
             $table->string('status')->default('pending');
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('knowledge');
     }
 };

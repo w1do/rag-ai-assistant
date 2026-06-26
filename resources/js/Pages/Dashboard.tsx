@@ -5,7 +5,7 @@ interface Props {
     stats: {
         assistants_count: number;
         chats_count: number;
-        articles_count: number;
+        knowledge_count: number;
     };
     recent_assistants: {
         id: number;
@@ -37,8 +37,8 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                             <div className="text-3xl font-bold">{stats.chats_count}</div>
                         </div>
                         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                            <div className="text-gray-500 text-sm">Сгенерировано статей</div>
-                            <div className="text-3xl font-bold">{stats.articles_count}</div>
+                            <div className="text-gray-500 text-sm">База знаний</div>
+                            <div className="text-3xl font-bold">{stats.knowledge_count}</div>
                         </div>
                     </div>
 

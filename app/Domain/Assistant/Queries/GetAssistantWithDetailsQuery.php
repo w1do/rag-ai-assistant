@@ -8,6 +8,6 @@ class GetAssistantWithDetailsQuery
 {
     public function execute(Assistant $assistant): Assistant
     {
-        return $assistant->load(['chunks', 'articles']);
+        return $assistant->load(['chunks', 'knowledge']);
     }
 }

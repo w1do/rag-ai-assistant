@@ -3,7 +3,7 @@
 namespace App\Domain\Assistant\Jobs;
 
 use App\Domain\Assistant\Actions\ProcessDocumentAction;
-use App\Domain\Assistant\Models\Assistant;
+use App\Domain\Knowledge\Models\Knowledge;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -15,8 +15,7 @@ class ProcessDocumentJob implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public Assistant $assistant,
-        public string $filePath
+        public Knowledge $knowledge
     ) {
         //
     }
@@ -26,6 +25,6 @@ class ProcessDocumentJob implements ShouldQueue
      */
     public function handle(ProcessDocumentAction $action): void
     {
-        $action->execute($this->assistant, $this->filePath);
+        $action->execute($this->knowledge);
     }
 }

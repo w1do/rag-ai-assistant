@@ -2,8 +2,8 @@
 
 namespace App\Domain\Assistant\Actions;
 
-use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Assistant\Jobs\TranscribeVoiceJob;
+use App\Domain\Assistant\Models\Assistant;
 use Illuminate\Http\UploadedFile;
 
 class UploadAudioAction
@@ -11,6 +11,14 @@ class UploadAudioAction
     public function execute(Assistant $assistant, UploadedFile $file): void
     {
         $path = $file->store('audio');
-        TranscribeVoiceJob::dispatch($assistant, storage_path('app/private/' . $path));
+
+        $knowledge = $assistant->knowledge()->create([
+            'type' => 'voice',
+            'name' => $file->getClientOriginalName(),
+            'path' => $path,
+            'status' => 'pending',
+        ]);
+
+        TranscribeVoiceJob::dispatch($knowledge);
     }
 }

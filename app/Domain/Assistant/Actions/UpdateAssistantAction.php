@@ -7,7 +7,7 @@ use App\Domain\Assistant\Models\Assistant;
 class UpdateAssistantAction
 {
     /**
-     * @param array{name: string, description: ?string} $data
+     * @param  array{name: string, description: ?string}  $data
      */
     public function execute(Assistant $assistant, array $data): bool
     {

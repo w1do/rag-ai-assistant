@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Domain\Assistant\Models\Assistant;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AssistantPolicy
 {

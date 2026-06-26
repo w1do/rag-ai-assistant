@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import SecondaryButton from '@/Components/SecondaryButton';
 import PrimaryButton from '@/Components/PrimaryButton';
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
@@ -11,12 +11,15 @@ interface Chunk {
     content: string;
 }
 
-interface Article {
+interface Knowledge {
     id: number;
-    url: string;
-    title: string | null;
+    type: 'document' | 'voice' | 'website';
+    name: string | null;
+    url: string | null;
+    path: string | null;
     content: string | null;
     status: string;
+    metadata: any;
 }
 
 interface Assistant {
@@ -25,7 +28,7 @@ interface Assistant {
     description: string;
     status: string;
     chunks: Chunk[];
-    articles: Article[];
+    knowledge: Knowledge[];
 }
 
 interface Props {
@@ -33,11 +36,13 @@ interface Props {
 }
 
 export default function Show({ assistant }: Props) {
+    const [activeTab, setActiveTab] = useState<'document' | 'voice' | 'website'>('document');
+
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
         const isProcessing = assistant.status !== 'ready' && assistant.status !== 'error' 
-            || assistant.articles.some(a => a.status === 'processing' || a.status === 'pending');
+            || (assistant.knowledge || []).some(k => k.status === 'processing' || k.status === 'pending');
 
         if (isProcessing) {
             interval = setInterval(() => {
@@ -48,7 +53,7 @@ export default function Show({ assistant }: Props) {
         return () => {
             if (interval) clearInterval(interval);
         };
-    }, [assistant.status, assistant.articles]);
+    }, [assistant.status, assistant.knowledge]);
 
     const docForm = useForm({
         document: null as File | null,
@@ -89,6 +94,18 @@ export default function Show({ assistant }: Props) {
         });
     };
 
+    const deleteKnowledge = (knowledgeId: number) => {
+        if (confirm('Вы уверены, что хотите удалить этот источник знаний и все связанные данные?')) {
+            router.delete(route('assistants.knowledge.destroy', [assistant.id, knowledgeId]));
+        }
+    };
+
+    const deleteAssistant = () => {
+        if (confirm('Вы уверены, что хотите полностью удалить этого ассистента и все связанные данные?')) {
+            router.delete(route('assistants.destroy', assistant.id));
+        }
+    };
+
     return (
         <AuthenticatedLayout
             header={
@@ -96,13 +113,22 @@ export default function Show({ assistant }: Props) {
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
                         Ассистент: {assistant.name}
                     </h2>
-                    <div className="flex space-x-2">
+                    <div className="flex items-center space-x-3">
                         <Link href={route('assistants.edit', assistant.id)}>
                             <SecondaryButton>Редактировать</SecondaryButton>
                         </Link>
                         <Link href={route('assistants.chat', assistant.id)}>
                             <PrimaryButton>Начать чат</PrimaryButton>
                         </Link>
+                        <button 
+                            onClick={deleteAssistant}
+                            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
+                            title="Удалить ассистента"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             }
@@ -124,103 +150,94 @@ export default function Show({ assistant }: Props) {
 
                             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                 <div className="p-6">
-                                    <h3 className="text-lg font-bold mb-4">Сгенерированные статьи</h3>
-                                    <p className="text-xs text-gray-400 mb-2">Отладка: {assistant.articles.length} статей найдено</p>
-                                    {assistant.articles.length === 0 ? (
-                                        <p className="text-gray-500">Статей пока нет. Добавьте URL конкурента для генерации.</p>
-                                    ) : (
-                                        <div className="grid grid-cols-1 gap-6">
-                                            {assistant.articles.map((article) => (
-                                                <div key={article.id} className="p-6 border rounded-xl shadow-sm hover:shadow-md transition-shadow bg-gray-50">
-                                                    <div className="flex justify-between items-start mb-4">
-                                                        <div className="overflow-hidden">
-                                    <h4 className="font-bold text-lg text-gray-900 truncate">
-                                        {article.title || (article.status === 'processing' ? 'Генерируется контент...' : (article.status === 'pending' ? 'Ожидание...' : 'Загрузка...'))}
-                                    </h4>
-                                                            <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:text-indigo-800 truncate block">
-                                                                {article.url}
-                                                            </a>
-                                                        </div>
-                                                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium shrink-0 ${
-                                                            article.status === 'ready' ? 'bg-green-100 text-green-800' : 
-                                                            article.status === 'error' ? 'bg-red-100 text-red-800' :
-                                                            article.status === 'pending' ? 'bg-blue-100 text-blue-800' :
-                                                            'bg-yellow-100 text-yellow-800'
-                                                        }`}>
-                                                            {article.status === 'processing' ? 'В обработке' : 
-                                                             article.status === 'ready' ? 'Готово' : 
-                                                             article.status === 'pending' ? 'В очереди' :
-                                                             article.status === 'error' ? 'Ошибка' : article.status}
-                                                        </span>
-                                                    </div>
-                                                    
-                                                    {article.content ? (
-                                                        <div className="prose prose-sm max-w-none mt-4 max-h-96 overflow-y-auto p-4 bg-white rounded-lg border border-gray-200">
-                                                            <ReactMarkdown>{article.content}</ReactMarkdown>
-                                                        </div>
-                                                    ) : (
-                                                        article.status === 'processing' && (
-                                                            <div className="mt-4 p-8 flex flex-col items-center justify-center bg-white rounded-lg border border-dashed border-gray-300">
-                                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2"></div>
-                                                                <p className="text-sm text-gray-500">Анализируем содержимое сайта...</p>
-                                                            </div>
-                                                        )
-                                                    )}
+                                    <div className="flex border-b mb-6">
+                                        <button
+                                            onClick={() => setActiveTab('document')}
+                                            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                                                activeTab === 'document'
+                                                    ? 'border-indigo-500 text-indigo-600'
+                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            Документы
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('voice')}
+                                            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                                                activeTab === 'voice'
+                                                    ? 'border-indigo-500 text-indigo-600'
+                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            Голосовые
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab('website')}
+                                            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                                                activeTab === 'website'
+                                                    ? 'border-indigo-500 text-indigo-600'
+                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            Веб-сайты
+                                        </button>
+                                    </div>
+
+                                    {activeTab === 'document' && (
+                                        <div className="space-y-6">
+                                            <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50">
+                                                <div>
+                                                    <h4 className="font-medium">Загрузить PDF / Документ</h4>
+                                                    <p className="text-sm text-gray-500">Добавьте документы для обучения ассистента</p>
                                                 </div>
-                                            ))}
+                                                <div className="flex items-center">
+                                                    <label className="cursor-pointer">
+                                                        <PrimaryButton as="span" disabled={docForm.processing}>
+                                                            {docForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                        </PrimaryButton>
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept=".pdf,.docx,.txt"
+                                                            onChange={uploadDoc}
+                                                            disabled={docForm.processing}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
-                                </div>
-                            </div>
 
-                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold mb-4">Источники знаний</h3>
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50">
-                                            <div>
-                                                <h4 className="font-medium">Загрузить PDF / Документ</h4>
-                                                <p className="text-sm text-gray-500">Добавьте документы для обучения ассистента</p>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <label className="cursor-pointer">
-                                                    <PrimaryButton as="span" disabled={docForm.processing}>
-                                                        {docForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                    </PrimaryButton>
-                                                    <input
-                                                        type="file"
-                                                        className="hidden"
-                                                        accept=".pdf,.docx,.txt"
-                                                        onChange={uploadDoc}
-                                                        disabled={docForm.processing}
-                                                    />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50">
-                                            <div>
-                                                <h4 className="font-medium">Голосовое сообщение</h4>
-                                                <p className="text-sm text-gray-500">Загрузите аудио для транскрипции</p>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <label className="cursor-pointer">
-                                                    <PrimaryButton as="span" disabled={audioForm.processing}>
-                                                        {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                    </PrimaryButton>
-                                                    <input
-                                                        type="file"
-                                                        className="hidden"
-                                                        accept="audio/*"
-                                                        onChange={uploadAudio}
-                                                        disabled={audioForm.processing}
-                                                    />
-                                                </label>
+                                    {activeTab === 'voice' && (
+                                        <div className="space-y-6">
+                                            <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50">
+                                                <div>
+                                                    <h4 className="font-medium">Голосовое сообщение</h4>
+                                                    <p className="text-sm text-gray-500">Загрузите аудио для транскрипции</p>
+                                                </div>
+                                                <div className="flex items-center">
+                                                    <label className="cursor-pointer">
+                                                        <PrimaryButton as="span" disabled={audioForm.processing}>
+                                                            {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                        </PrimaryButton>
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept="audio/*"
+                                                            onChange={uploadAudio}
+                                                            disabled={audioForm.processing}
+                                                        />
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex justify-between items-center p-4 border rounded-lg bg-gray-50">
-                                            <div className="flex-grow">
+                                    )}
+
+                                    {activeTab === 'website' && (
+                                        <div className="space-y-6">
+                                            <div className="p-4 border rounded-lg bg-gray-50">
                                                 <h4 className="font-medium">Анализ сайта</h4>
-                                                <p className="text-sm text-gray-500">Введите URL конкурента для анализа</p>
+                                                <p className="text-sm text-gray-500">Введите URL для анализа и обучения</p>
                                                 <form onSubmit={submitUrl} className="mt-2 flex space-x-2">
                                                     <input
                                                         type="url"
@@ -236,6 +253,65 @@ export default function Show({ assistant }: Props) {
                                                 </form>
                                             </div>
                                         </div>
+                                    )}
+
+                                    <div className="mt-8 space-y-4">
+                                        <h3 className="text-md font-bold text-gray-700">Список источников ({(assistant.knowledge || []).filter(k => k.type === activeTab).length})</h3>
+                                        
+                                        {(assistant.knowledge || []).filter(k => k.type === activeTab).length === 0 ? (
+                                            <p className="text-gray-500 text-sm">Источников этого типа пока нет.</p>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                {(assistant.knowledge || []).filter(k => k.type === activeTab).map((item) => (
+                                                    <div key={item.id} className="p-4 border rounded-lg bg-white shadow-sm">
+                                                        <div className="flex justify-between items-start">
+                                                            <div className="overflow-hidden">
+                                                                <h4 className="font-bold text-sm text-gray-900 truncate">
+                                                                    {item.name || item.url || 'Безымянный источник'}
+                                                                </h4>
+                                                                {item.url && (
+                                                                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-xs text-indigo-600 hover:text-indigo-800 truncate block">
+                                                                        {item.url}
+                                                                    </a>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex items-center space-x-2 shrink-0">
+                                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                                                                    item.status === 'ready' ? 'bg-green-100 text-green-800' : 
+                                                                    item.status === 'error' ? 'bg-red-100 text-red-800' :
+                                                                    item.status === 'pending' ? 'bg-blue-100 text-blue-800' :
+                                                                    'bg-yellow-100 text-yellow-800'
+                                                                }`}>
+                                                                    {item.status === 'processing' ? 'В обработке' : 
+                                                                     item.status === 'ready' ? 'Готово' : 
+                                                                     item.status === 'pending' ? 'В очереди' :
+                                                                     item.status === 'error' ? 'Ошибка' : item.status}
+                                                                </span>
+                                                                
+                                                                <button 
+                                                                    onClick={() => deleteKnowledge(item.id)}
+                                                                    className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                                                                    title="Удалить"
+                                                                >
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        {item.content && (
+                                                            <details className="mt-2">
+                                                                <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700">Показать содержимое</summary>
+                                                                <div className="mt-2 p-3 bg-gray-50 rounded text-xs prose prose-sm max-w-none max-h-60 overflow-y-auto border border-gray-100">
+                                                                    <ReactMarkdown>{item.content}</ReactMarkdown>
+                                                                </div>
+                                                            </details>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -252,8 +328,8 @@ export default function Show({ assistant }: Props) {
                                         <span className="capitalize">{assistant.status}</span>
                                     </div>
                                     <div className="mt-4 pt-4 border-t">
-                                        <p className="text-sm text-gray-500">Чанков: {assistant.chunks.length}</p>
-                                        <p className="text-sm text-gray-500">Статей: {assistant.articles.length}</p>
+                                        <p className="text-sm text-gray-500">Всего чанков: {(assistant.chunks || []).length}</p>
+                                        <p className="text-sm text-gray-500">Источников знаний: {(assistant.knowledge || []).length}</p>
                                     </div>
                                 </div>
                             </div>

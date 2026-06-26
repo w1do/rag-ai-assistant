@@ -2,38 +2,58 @@
 
 namespace App\Domain\Assistant\Actions;
 
-use App\Domain\Assistant\Models\Assistant;
-use App\Domain\Shared\AI\Services\RAGService;
+use App\Domain\Knowledge\Models\Knowledge;
 use LLPhant\Audio\OpenAIAudio;
 use LLPhant\Embeddings\Document;
 use LLPhant\OpenAIConfig;
 
+/**
+ * Действие по транскрибации аудиофайлов.
+ */
 class TranscribeAudioAction
 {
-    public function __construct(private RAGService $ragService) {}
+    /**
+     * @param  IndexAssistantDocumentsAction  $indexAssistantDocumentsAction  Действие для индексации документов
+     */
+    public function __construct(private IndexAssistantDocumentsAction $indexAssistantDocumentsAction) {}
 
-    public function execute(Assistant $assistant, string $filePath): void
+    /**
+     * Выполняет транскрибацию аудио и индексацию полученного текста.
+     *
+     * @param  Knowledge  $knowledge  Объект знаний, представляющий аудиофайл
+     */
+    public function execute(Knowledge $knowledge): void
     {
-        $assistant->update(['status' => 'transcribing']);
+        $knowledge->update(['status' => 'processing']);
+        $knowledge->assistant->update(['status' => 'processing']);
 
         $config = new OpenAIConfig;
         $config->apiKey = config('llphant.openai.api_key');
         $config->url = config('llphant.openai.base_url');
 
         $audioService = new OpenAIAudio($config);
+        $filePath = storage_path('app/private/'.$knowledge->path);
         $transcription = $audioService->transcribe($filePath);
 
         if (empty($transcription->text)) {
-            $assistant->update(['status' => 'error']);
+            $knowledge->update(['status' => 'error']);
+            $knowledge->assistant->update(['status' => 'ready']);
 
             return;
         }
 
+        $knowledge->update([
+            'content' => $transcription->text,
+        ]);
+
         $document = new Document;
         $document->content = $transcription->text;
-        $document->sourceName = basename($filePath);
+        $document->sourceName = $knowledge->name;
         $document->sourceType = 'voice';
+        $document->hash = hash('sha256', $transcription->text);
 
-        $this->ragService->indexDocuments($assistant, [$document]);
+        $this->indexAssistantDocumentsAction->execute($knowledge->assistant, [$document], $knowledge->id);
+
+        $knowledge->update(['status' => 'ready']);
     }
 }

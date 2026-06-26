@@ -11,6 +11,8 @@ use App\Domain\Assistant\Actions\UploadDocumentAction;
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Assistant\Queries\GetAssistantWithDetailsQuery;
 use App\Domain\Assistant\Queries\GetUserAssistantsQuery;
+use App\Domain\Knowledge\Actions\DeleteKnowledgeAction;
+use App\Domain\Knowledge\Models\Knowledge;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -123,10 +125,23 @@ class AssistantController extends Controller
         $action->execute($assistant, $request->url);
 
         return back()->with([
-            'status' => 'URL added and article generation started.',
+            'status' => 'URL added and knowledge generation started.',
             'flash' => [
                 'message' => 'URL добавлен и обрабатывается',
             ],
         ]);
+    }
+
+    public function destroyKnowledge(Assistant $assistant, Knowledge $knowledge, DeleteKnowledgeAction $action): RedirectResponse
+    {
+        $this->authorize('update', $assistant);
+
+        if ($knowledge->assistant_id !== $assistant->id) {
+            abort(403);
+        }
+
+        $action->execute($knowledge);
+
+        return back()->with('status', 'Knowledge item deleted.');
     }
 }

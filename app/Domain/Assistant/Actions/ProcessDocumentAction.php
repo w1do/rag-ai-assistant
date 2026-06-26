@@ -2,27 +2,42 @@
 
 namespace App\Domain\Assistant\Actions;
 
-use App\Domain\Assistant\Models\Assistant;
-use App\Domain\Shared\AI\Services\RAGService;
+use App\Domain\Knowledge\Models\Knowledge;
 use LLPhant\Embeddings\DataReader\FileDataReader;
 
+/**
+ * Действие по обработке загруженных документов.
+ */
 class ProcessDocumentAction
 {
-    public function __construct(private RAGService $ragService) {}
+    /**
+     * @param  IndexAssistantDocumentsAction  $indexAssistantDocumentsAction  Действие для индексации документов
+     */
+    public function __construct(private IndexAssistantDocumentsAction $indexAssistantDocumentsAction) {}
 
-    public function execute(Assistant $assistant, string $filePath): void
+    /**
+     * Выполняет обработку и индексацию документа.
+     *
+     * @param  Knowledge  $knowledge  Объект знаний, представляющий документ
+     */
+    public function execute(Knowledge $knowledge): void
     {
-        $assistant->update(['status' => 'processing']);
+        $knowledge->update(['status' => 'processing']);
+        $knowledge->assistant->update(['status' => 'processing']);
 
+        $filePath = storage_path('app/private/'.$knowledge->path);
         $reader = new FileDataReader($filePath);
         $documents = $reader->getDocuments();
 
         if (empty($documents)) {
-            $assistant->update(['status' => 'error']);
+            $knowledge->update(['status' => 'error']);
+            $knowledge->assistant->update(['status' => 'ready']);
 
             return;
         }
 
-        $this->ragService->indexDocuments($assistant, $documents);
+        $this->indexAssistantDocumentsAction->execute($knowledge->assistant, $documents, $knowledge->id);
+
+        $knowledge->update(['status' => 'ready']);
     }
 }

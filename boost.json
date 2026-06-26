@@ -19,6 +19,7 @@
         "laravel-activitylog",
         "dtos",
         "documentation",
-        "polza-ai"
+        "polza-ai",
+        "firecrawl"
     ]
 }

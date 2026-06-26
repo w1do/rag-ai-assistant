@@ -2,8 +2,8 @@
 
 namespace App\Domain\Assistant\Models;
 
-use App\Domain\Article\Models\Article;
 use App\Domain\Chat\Models\ChatHistory;
+use App\Domain\Knowledge\Models\Knowledge;
 use App\Models\User;
 use Database\Factories\Domain\Assistant\Models\AssistantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +32,27 @@ class Assistant extends Model
         'metadata',
     ];
 
+    protected $appends = [
+        'articles',
+        'articles_count',
+    ];
+
+    /**
+     * Backward compatibility for 'articles'
+     */
+    public function getArticlesAttribute()
+    {
+        return $this->knowledge;
+    }
+
+    /**
+     * Backward compatibility for 'articles_count'
+     */
+    public function getArticlesCountAttribute()
+    {
+        return $this->knowledge_count ?? $this->knowledge()->count();
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -42,9 +63,9 @@ class Assistant extends Model
         return $this->hasMany(Chunk::class);
     }
 
-    public function articles(): HasMany
+    public function knowledge(): HasMany
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Knowledge::class);
     }
 
     public function chatHistories(): HasMany

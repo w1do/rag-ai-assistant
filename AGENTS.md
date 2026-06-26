@@ -10,26 +10,53 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
 - php - 8.5
-- inertiajs/inertia-laravel (INERTIA_LARAVEL) - v2
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
 - laravel/sanctum (SANCTUM) - v4
-- tightenco/ziggy (ZIGGY) - v2
+- larastan/larastan (LARASTAN) - v3
 - laravel/boost (BOOST) - v2
-- laravel/breeze (BREEZE) - v2
 - laravel/mcp (MCP) - v0
 - laravel/pail (PAIL) - v1
 - laravel/pint (PINT) - v1
-- laravel/sail (SAIL) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
-- @inertiajs/react (INERTIA_REACT) - v2
-- react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
+
+## Run Commands database or other only sail
+- use `sail` to run commands in the container example ./vendor/bin/sail artisan ...
 
 ## Skills Activation
 
 This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
+
+#### Documentation (`documentations/SKILL.md`)
+- **When to activate:** After completing ANY code block (class, method, function, trait, interface)
+- **What it does:** Creates comprehensive documentation in PHPDoc/DocBlock format including purpose, parameters, return values, usage examples
+- **Triggers:**
+    - Creating a new class/method
+    - Modifying public API
+    - Adding complex logic
+- **Documentation language:** Russian (or specify your language)
+
+## Documentation Rules
+
+1. **Always** activate the documentation skill after implementing code
+2. Don't wait to be asked - this is a mandatory step
+3. Use PHPDoc format
+4. Document:
+    - All public methods
+    - Classes with purpose description
+    - Complex private methods
+    - Parameters and return values
+    - Exceptions
+    - Usage examples (for complex methods)
+
+## Documentation Exceptions
+
+- Trivial getters/setters without logic
+- Standard Laravel hooks without custom logic (boot, register, etc.)
+- Inherited methods without overrides
+- Tests (document through test method names)
 
 ## Conventions
 
@@ -94,7 +121,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
 - Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+    - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === php rules ===
 
@@ -118,22 +145,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 # Test Enforcement
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
-- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
-
-=== inertia-laravel/core rules ===
-
-# Inertia
-
-- Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
-- Components live in `resources/js/Pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
-- ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
-- IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
-
-# Inertia v2
-
-- Use all Inertia features from v1 and v2. Check the documentation before making changes to ensure the correct approach.
-- New features: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
-- When using deferred props, add an empty state with a pulsing or animated skeleton.
+- Run the minimum number of tests needed to ensure code quality and speed. Use `./vendor/bin/sail php artisan test --compact` with a specific filename or filter.
 
 === laravel/core rules ===
 
@@ -178,13 +190,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - This project uses Pest for testing. Create tests: `php artisan make:test --pest {name}`.
 - The `{name}` argument should not include the test suite directory. Use `php artisan make:test --pest SomeFeatureTest` instead of `php artisan make:test --pest Feature/SomeFeatureTest`.
-- Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
+- Run tests: `./vendor/bin/sail php artisan test --compact` or filter: `./vendor/bin/sail php artisan test --compact --filter=testName`.
 - Do NOT delete tests without approval.
 
-=== inertia-react/core rules ===
-
-# Inertia + React
-
-- IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
+## Write Documentation
+- Write documentation for docs and summary.
 
 </laravel-boost-guidelines>
+
