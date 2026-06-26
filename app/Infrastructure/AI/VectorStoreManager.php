@@ -9,14 +9,20 @@ use Qdrant\Config;
 use Qdrant\Http\Transport;
 use Qdrant\Qdrant;
 
+/**
+ * Менеджер для работы с векторным хранилищем Qdrant.
+ */
 class VectorStoreManager
 {
+    /**
+     * Возвращает объект хранилища для конкретного ассистента.
+     *
+     * @param Assistant $assistant Объект ассистента.
+     * @return QdrantVectorStore Хранилище для ассистента.
+     */
     public function getStoreForAssistant(Assistant $assistant): QdrantVectorStore
     {
-        $config = new Config(
-            config('llphant.qdrant.host'),
-            config('llphant.qdrant.port')
-        );
+        $config = $this->createConfig();
 
         $collectionName = 'assistant_'.$assistant->id;
         $vectorStore = new QdrantVectorStore($config, $collectionName);
@@ -31,16 +37,43 @@ class VectorStoreManager
         return $vectorStore;
     }
 
+    /**
+     * Создает и возвращает клиент Qdrant.
+     *
+     * @return Qdrant Клиент Qdrant.
+     */
     public function getClient(): Qdrant
     {
-        $config = new Config(
-            config('llphant.qdrant.host'),
-            config('llphant.qdrant.port')
-        );
+        $config = $this->createConfig();
 
         return new Qdrant(new Transport(Psr18ClientDiscovery::find(), $config));
     }
 
+    /**
+     * Создает конфигурацию для клиента Qdrant.
+     *
+     * @return Config Конфигурация Qdrant.
+     */
+    private function createConfig(): Config
+    {
+        $config = new Config(
+            config('llphant.qdrant.host'),
+            (int) config('llphant.qdrant.port')
+        );
+
+        if ($apiKey = config('llphant.qdrant.api_key')) {
+            $config->setApiKey($apiKey);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Удаляет коллекцию, связанную с ассистентом.
+     *
+     * @param Assistant $assistant Объект ассистента.
+     * @return void
+     */
     public function deleteCollectionForAssistant(Assistant $assistant): void
     {
         $client = $this->getClient();
