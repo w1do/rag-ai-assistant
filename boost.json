@@ -9,18 +9,9 @@
     "sail": false,
     "skills": [
         "laravel-best-practices",
+        "configuring-horizon",
         "pest-testing",
         "inertia-react-development",
-        "tailwindcss-development",
-        "laravel-query-builder",
-        "medialibrary-development",
-        "sluggable-development",
-        "architecture-ddd",
-        "laravel-activitylog",
-        "dtos",
-        "documentation",
-        "polza-ai",
-        "firecrawl",
-        "design-system"
+        "tailwindcss-development"
     ]
 }

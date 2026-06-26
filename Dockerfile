@@ -71,6 +71,9 @@ RUN apk add --no-cache --virtual .build-deps \
     intl \
     pdo_pgsql \
     zip \
+    pcntl \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && apk del .build-deps
 
 # Copy Composer binary from stage 1
