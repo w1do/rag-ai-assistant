@@ -6,7 +6,7 @@ import Modal from '@/Components/Modal';
 import TextInput from '@/Components/TextInput';
 import InputLabel from '@/Components/InputLabel';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2 } from 'lucide-react';
+import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2, Pencil } from 'lucide-react';
 
 /**
  * Краткое представление ассистента для списка на странице обзора.
@@ -205,57 +205,63 @@ function AssistantRow({ assistant }: { assistant: Assistant }) {
 
                 {/* Правая часть: действия */}
                 <div className="flex flex-wrap items-center gap-2 lg:shrink-0 lg:justify-end">
-                    {/* Запись с микрофона */}
-                    <button
-                        type="button"
-                        onClick={toggleRecording}
-                        title={isRecording ? 'Остановить запись' : 'Записать голосовое сообщение'}
-                        className={`inline-flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
-                            isRecording
-                                ? 'animate-pulse border-red-200 bg-red-50 text-red-600'
-                                : 'border-gray-200 text-gray-500 hover:bg-gray-50'
-                        }`}
-                    >
-                        {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                    </button>
+                    {/* Группа добавления источников знаний */}
+                    <div className="flex items-center gap-2">
+                        {/* Запись с микрофона */}
+                        <button
+                            type="button"
+                            onClick={toggleRecording}
+                            title={isRecording ? 'Остановить запись' : 'Записать голосовое сообщение'}
+                            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
+                                isRecording
+                                    ? 'animate-pulse border-red-200 bg-red-50 text-red-600'
+                                    : 'border-gray-200 text-gray-500 hover:bg-gray-50'
+                            }`}
+                        >
+                            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                        </button>
 
-                    {/* Добавить ссылку (модальное окно) */}
-                    <button
-                        type="button"
-                        onClick={() => setShowLinkModal(true)}
-                        title="Добавить ссылку на сайт"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50"
-                    >
-                        <Link2 className="h-4 w-4" />
-                    </button>
+                        {/* Добавить ссылку (модальное окно) */}
+                        <button
+                            type="button"
+                            onClick={() => setShowLinkModal(true)}
+                            title="Добавить ссылку на сайт"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50"
+                        >
+                            <Link2 className="h-4 w-4" />
+                        </button>
 
-                    {/* Загрузить документ */}
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={docForm.processing}
-                        title="Загрузить документ"
-                        className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:opacity-50 ${docForm.processing ? 'animate-pulse' : ''}`}
-                    >
-                        <Upload className="h-4 w-4" />
-                    </button>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        className="hidden"
-                        accept=".pdf,.docx,.txt"
-                        onChange={onPickDocument}
-                    />
+                        {/* Загрузить документ */}
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={docForm.processing}
+                            title="Загрузить документ"
+                            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:opacity-50 ${docForm.processing ? 'animate-pulse' : ''}`}
+                        >
+                            <Upload className="h-4 w-4" />
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            className="hidden"
+                            accept=".pdf,.docx,.txt"
+                            onChange={onPickDocument}
+                        />
 
-                    {/* Встроить на сайт */}
-                    <button
-                        type="button"
-                        onClick={() => setShowEmbed(true)}
-                        title="Встроить на сайт"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50"
-                    >
-                        <Code className="h-4 w-4" />
-                    </button>
+                        {/* Встроить на сайт */}
+                        <button
+                            type="button"
+                            onClick={() => setShowEmbed(true)}
+                            title="Встроить на сайт"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50"
+                        >
+                            <Code className="h-4 w-4" />
+                        </button>
+                    </div>
+
+                    {/* Разделитель */}
+                    <span className="hidden h-6 w-px bg-gray-200 lg:block" />
 
                     {/* Перейти в чат */}
                     <Link
@@ -266,15 +272,30 @@ function AssistantRow({ assistant }: { assistant: Assistant }) {
                         <MessageSquare className="h-4 w-4" />
                     </Link>
 
-                    {/* Удалить */}
-                    <button
-                        type="button"
-                        onClick={deleteAssistant}
-                        title="Удалить ассистента"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </button>
+                    {/* Разделитель */}
+                    <span className="hidden h-6 w-px bg-gray-200 lg:block" />
+
+                    {/* Группа управления ассистентом */}
+                    <div className="flex items-center gap-2">
+                        {/* Редактировать ассистента */}
+                        <Link
+                            href={route('assistants.edit', assistant.id)}
+                            title="Редактировать ассистента"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 hover:text-indigo-600"
+                        >
+                            <Pencil className="h-4 w-4" />
+                        </Link>
+
+                        {/* Удалить */}
+                        <button
+                            type="button"
+                            onClick={deleteAssistant}
+                            title="Удалить ассистента"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </button>
+                    </div>
                 </div>
             </div>
 

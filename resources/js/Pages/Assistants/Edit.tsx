@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
+import { Plus, Trash2 } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
 
 /**
@@ -19,6 +20,8 @@ interface Assistant {
     phone: string | null;
     social: Record<string, string> | null;
     fallback: string | null;
+    welcome_message: string | null;
+    actions: string[] | null;
     system: string | null;
 }
 
@@ -92,6 +95,8 @@ export default function Edit({ assistant }: Props) {
         phone: assistant.phone || '',
         social: assistant.social || { telegram: '', vk: '' },
         fallback: assistant.fallback || '',
+        welcome_message: assistant.welcome_message || '',
+        actions: assistant.actions || [],
         system: assistant.system || '',
     });
 
@@ -110,7 +115,7 @@ export default function Edit({ assistant }: Props) {
     const errorsByTab: Record<TabKey, string[]> = {
         general: ['name', 'description', 'style', 'brand_name'],
         contacts: ['phone', 'social'],
-        behavior: ['fallback', 'system'],
+        behavior: ['fallback', 'welcome_message', 'system'],
     };
 
     const tabHasError = (tab: TabKey) =>
@@ -309,6 +314,65 @@ export default function Edit({ assistant }: Props) {
 
                                     {activeTab === 'behavior' && (
                                         <div className="space-y-4">
+                                            <div>
+                                                <InputLabel htmlFor="welcome_message" value="Приветственное сообщение" />
+                                                <textarea
+                                                    id="welcome_message"
+                                                    name="welcome_message"
+                                                    value={data.welcome_message || ''}
+                                                    className={fieldClass}
+                                                    rows={3}
+                                                    onChange={(e) => setData('welcome_message', e.target.value)}
+                                                    placeholder="Это сообщение будет первым в каждом чате"
+                                                />
+                                                <p className={helpClass}>
+                                                    Это сообщение будет служить приветственным в каждом боте.
+                                                </p>
+                                                <InputError message={errors.welcome_message} className="mt-1.5" />
+                                            </div>
+
+                                            <div>
+                                                <InputLabel value="Кнопки быстрого ответа (Actions)" />
+                                                <div className="mt-2 space-y-2">
+                                                    {(data.actions || []).map((action, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <TextInput
+                                                                value={action}
+                                                                onChange={(e) => {
+                                                                    const newActions = [...(data.actions || [])];
+                                                                    newActions[index] = e.target.value;
+                                                                    setData('actions', newActions);
+                                                                }}
+                                                                className="flex-grow"
+                                                                placeholder="Например: Какое гбо устанавливаете?"
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newActions = (data.actions || []).filter((_, i) => i !== index);
+                                                                    setData('actions', newActions);
+                                                                }}
+                                                                className="text-red-500 hover:text-red-700 transition-colors"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                    <SecondaryButton
+                                                        type="button"
+                                                        onClick={() => setData('actions', [...(data.actions || []), ''])}
+                                                        className="mt-1"
+                                                    >
+                                                        <Plus className="h-3.5 w-3.5 mr-1.5" />
+                                                        Добавить кнопку
+                                                    </SecondaryButton>
+                                                </div>
+                                                <p className={helpClass}>
+                                                    Эти кнопки помогут пользователю быстро задать часто встречающиеся вопросы.
+                                                </p>
+                                                <InputError message={errors.actions} className="mt-1.5" />
+                                            </div>
+
                                             <div>
                                                 <InputLabel htmlFor="fallback" value="Сообщение при отсутствии ответа (Fallback)" />
                                                 <textarea

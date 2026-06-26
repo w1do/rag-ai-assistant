@@ -45,6 +45,8 @@ class AssistantController extends Controller
             'phone' => 'nullable|string|max:20',
             'social' => 'nullable|array',
             'fallback' => 'nullable|string',
+            'welcome_message' => 'nullable|string',
+            'actions' => 'nullable|array',
             'system' => 'nullable|string',
         ]);
 
@@ -83,6 +85,8 @@ class AssistantController extends Controller
             'phone' => 'nullable|string|max:20',
             'social' => 'nullable|array',
             'fallback' => 'nullable|string',
+            'welcome_message' => 'nullable|string',
+            'actions' => 'nullable|array',
             'system' => 'nullable|string',
         ]);
 

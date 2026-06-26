@@ -5,20 +5,28 @@ use App\Domain\Assistant\Models\Assistant;
 use App\Http\Controllers\AssistantController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicChatController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use LLPhant\Embeddings\Document;
 
 Route::get('/', function () {
+    $demoAssistant = Assistant::find(2);
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'demoWelcomeMessage' => $demoAssistant?->welcome_message,
+        'demoActions' => $demoAssistant?->actions,
     ]);
 });
+
+Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -31,6 +39,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('assistants/{assistant}/chat', [ChatController::class, 'index'])->name('assistants.chat');
     Route::post('assistants/{assistant}/chat', [ChatController::class, 'store'])->name('assistants.chat.store');
+
+    Route::get('/monitoring', fn () => Inertia::render('Monitoring'))->name('monitoring');
+    Route::get('/competitors', fn () => Inertia::render('Competitors'))->name('competitors');
+    Route::get('/bots', fn () => Inertia::render('Bots'))->name('bots');
+    Route::get('/tariffs', fn () => Inertia::render('Tariffs'))->name('tariffs');
 });
 
 Route::middleware('auth')->group(function () {
@@ -38,6 +51,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+/*
+ * Общедоступный чат-виджет.
+ *
+ * Маршруты не требуют авторизации и используются встраиваемым на сторонние
+ * сайты виджетом (`public/widget.js`). Страница чата загружается внутри iframe.
+ */
+Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
+Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
 
 require __DIR__.'/auth.php';
 

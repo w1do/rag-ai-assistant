@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $phone Контактный телефон
  * @property array|null $social Социальные сети
  * @property string|null $fallback Сообщение при отсутствии ответа
+ * @property string|null $welcome_message Приветственное сообщение
+ * @property array|null $actions Кнопки быстрого действия
  * @property string|null $system Пользовательский системный промпт
  */
 class Assistant extends Model
@@ -51,6 +53,8 @@ class Assistant extends Model
         'phone',
         'social',
         'fallback',
+        'welcome_message',
+        'actions',
         'system',
         'type',
         'path',
@@ -59,6 +63,7 @@ class Assistant extends Model
     protected $casts = [
         'style' => AssistantStyle::class,
         'social' => 'array',
+        'actions' => 'array',
     ];
 
     protected $attributes = [

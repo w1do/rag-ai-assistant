@@ -19,7 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        //
+        // Публичный чат-виджет встраивается на сторонние сайты через iframe,
+        // поэтому его эндпоинт сообщений не может полагаться на CSRF-токен сессии.
+        $middleware->validateCsrfTokens(except: [
+            'share-chat/*/message',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

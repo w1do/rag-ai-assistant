@@ -7,10 +7,16 @@ use App\Domain\Chat\Models\ChatHistory;
 use App\Domain\Chat\Queries\AskAssistantQuery;
 use App\Models\User;
 
+/**
+ * Действие для обработки вопроса пользователя к ассистенту и сохранения истории.
+ */
 class AskAssistantAction
 {
     public function __construct(private AskAssistantQuery $askAssistantQuery) {}
 
+    /**
+     * Получает ответ от ассистента с учетом истории и сохраняет результат в БД.
+     */
     public function execute(Assistant $assistant, User $user, string $question): ChatHistory
     {
         $history = $assistant->chatHistories()

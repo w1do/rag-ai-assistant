@@ -1,4 +1,4 @@
-# Техническая документация AI Assistant RAG System
+# Техническая документация BotSync RAG System
 
 ## Архитектура: DDD + CQRS
 
@@ -62,3 +62,30 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 Все чувствительные данные вынесены в `.env`:
 - `QDRANT_HOST`, `QDRANT_PORT`: Настройки подключения к векторному хранилищу.
 - `OPENAI_API_KEY`, `OPENAI_BASE_URL`: Настройки AI-провайдера.
+- `QDRANT_COLLECTION`: Название основной коллекции (опционально).
+
+## Развертывание (Docker)
+
+Проект включает оптимизированную многостадийную конфигурацию Docker для продакшена.
+
+### Особенности сборки
+- **Multi-stage build**: Раздельные стадии для установки PHP-зависимостей, сборки фронтенда и финального рантайма.
+- **Минимальный размер**: Использование образов на базе Alpine Linux.
+- **Производительность**: Настроенный Opcache, кэширование конфигураций Laravel при старте, Nginx для отдачи статики.
+- **Универсальность**: PHP-FPM и Nginx управляются через Supervisor внутри одного контейнера (для простоты развертывания).
+
+### Сборка и запуск
+```bash
+# Сборка образа
+docker build -t rag-system-prod .
+
+# Запуск контейнера
+docker run -d -p 8080:80 --env-file .env rag-system-prod
+```
+
+### Структура Docker-папки
+- `Dockerfile`: Инструкции по сборке.
+- `docker/nginx.conf`: Оптимизированный конфиг Nginx.
+- `docker/php.ini`: Настройки PHP (Opcache, лимиты памяти).
+- `docker/supervisord.conf`: Конфигурация Supervisor.
+- `docker/entrypoint.sh`: Скрипт инициализации (кеширование Laravel).

@@ -39,6 +39,42 @@ export default function Authenticated({
                                 >
                                     Ассистенты
                                 </NavLink>
+                                <NavLink
+                                    href={route('monitoring')}
+                                    active={route().current('monitoring')}
+                                    className=" gap-1.5"
+                                >
+                                    Мониторинг
+                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                        Скоро
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    href={route('competitors')}
+                                    active={route().current('competitors')}
+                                    className=" gap-1.5"
+                                >
+                                    Конкуренты
+                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                        Скоро
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    href={route('bots')}
+                                    active={route().current('bots')}
+                                    className=" gap-1.5"
+                                >
+                                    Боты
+                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                        Скоро
+                                    </span>
+                                </NavLink>
+                                <NavLink
+                                    href={route('tariffs')}
+                                    active={route().current('tariffs')}
+                                >
+                                    Тарифы
+                                </NavLink>
                             </div>
                         </div>
 
@@ -148,6 +184,45 @@ export default function Authenticated({
                             active={route().current('assistants.*')}
                         >
                             Ассистенты
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('monitoring')}
+                            active={route().current('monitoring')}
+                        >
+                            <span className="inline-flex items-center gap-2">
+                                Мониторинг
+                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                    Скоро
+                                </span>
+                            </span>
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('competitors')}
+                            active={route().current('competitors')}
+                        >
+                            <span className="inline-flex items-center gap-2">
+                                Конкуренты
+                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                    Скоро
+                                </span>
+                            </span>
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('bots')}
+                            active={route().current('bots')}
+                        >
+                            <span className="inline-flex items-center gap-2">
+                                Боты
+                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                    Скоро
+                                </span>
+                            </span>
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('tariffs')}
+                            active={route().current('tariffs')}
+                        >
+                            Тарифы
                         </ResponsiveNavLink>
                     </div>
 

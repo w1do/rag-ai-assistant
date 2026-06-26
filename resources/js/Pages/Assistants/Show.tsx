@@ -4,7 +4,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { ChangeEvent, useEffect, useState } from 'react';
 
-import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
 
 interface Chunk {
     id: number;
@@ -257,7 +257,7 @@ export default function Show({ assistant }: Props) {
                                                         type="url"
                                                         value={urlForm.data.url}
                                                         onChange={(e) => urlForm.setData('url', e.target.value)}
-                                                        className="flex-grow text-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                                        className="flex-grow text-sm border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                                         placeholder="https://example.com"
                                                         required
                                                     />
@@ -318,7 +318,7 @@ export default function Show({ assistant }: Props) {
                                                             <details className="mt-2">
                                                                 <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700">Показать содержимое</summary>
                                                                 <div className="mt-2 p-3 bg-gray-50 rounded text-xs prose prose-sm max-w-none max-h-60 overflow-y-auto border border-gray-100">
-                                                                    <ReactMarkdown>{item.content}</ReactMarkdown>
+                                                                    <Markdown>{item.content}</Markdown>
                                                                 </div>
                                                             </details>
                                                         )}

@@ -32,6 +32,7 @@ class AssistantFactory extends Factory
                 'vk' => 'https://vk.com/'.$this->faker->userName(),
             ],
             'fallback' => 'Извините, я не знаю ответа на этот вопрос.',
+            'welcome_message' => 'Здравствуйте! Я ваш AI-ассистент. Чем я могу вам помочь?',
             'system' => null,
         ];
     }
