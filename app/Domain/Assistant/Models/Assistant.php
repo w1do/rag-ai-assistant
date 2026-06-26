@@ -52,6 +52,8 @@ class Assistant extends Model
         'social',
         'fallback',
         'system',
+        'type',
+        'path',
     ];
 
     protected $casts = [

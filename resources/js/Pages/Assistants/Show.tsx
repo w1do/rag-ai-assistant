@@ -144,12 +144,21 @@ export default function Show({ assistant }: Props) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="md:col-span-2 space-y-6">
-                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold mb-4">Описание</h3>
-                                    <p className="text-gray-700 whitespace-pre-wrap">
-                                        {assistant.description || 'Описание отсутствует.'}
-                                    </p>
+                            <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                                <div className="p-5">
+                                    <div className="mb-3 flex items-center gap-2">
+                                        <svg className="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <h3 className="text-sm font-semibold text-gray-900">Описание</h3>
+                                    </div>
+                                    {assistant.description ? (
+                                        <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">
+                                            {assistant.description}
+                                        </p>
+                                    ) : (
+                                        <p className="text-sm italic text-gray-400">Описание отсутствует.</p>
+                                    )}
                                 </div>
                             </div>
 
@@ -323,63 +332,88 @@ export default function Show({ assistant }: Props) {
                         </div>
 
                         <div className="space-y-6">
-                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold mb-4">Настройки ассистента</h3>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <p className="text-xs text-gray-500 uppercase font-bold">Стиль общения</p>
-                                            <p className="text-sm font-medium">
-                                                {assistant.style === 'business' ? 'Деловой' :
-                                                 assistant.style === 'commercial' ? 'Коммерческий' :
-                                                 assistant.style === 'rude' ? 'Грубый' :
-                                                 assistant.style === 'positive' ? 'Позитивный' : assistant.style}
-                                            </p>
+                            <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                                <div className="p-5">
+                                    <div className="mb-4 flex items-center gap-2">
+                                        <svg className="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <h3 className="text-sm font-semibold text-gray-900">Настройки ассистента</h3>
+                                    </div>
+                                    <dl className="divide-y divide-gray-100">
+                                        <div className="flex items-center justify-between gap-4 py-2.5">
+                                            <dt className="text-xs font-medium text-gray-400">Стиль общения</dt>
+                                            <dd>
+                                                <span className="inline-flex rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-600">
+                                                    {assistant.style === 'business' ? 'Деловой' :
+                                                     assistant.style === 'commercial' ? 'Коммерческий' :
+                                                     assistant.style === 'rude' ? 'Грубый' :
+                                                     assistant.style === 'positive' ? 'Позитивный' : assistant.style}
+                                                </span>
+                                            </dd>
                                         </div>
                                         {assistant.brand_name && (
-                                            <div>
-                                                <p className="text-xs text-gray-500 uppercase font-bold">Бренд</p>
-                                                <p className="text-sm font-medium">{assistant.brand_name}</p>
+                                            <div className="flex items-center justify-between gap-4 py-2.5">
+                                                <dt className="text-xs font-medium text-gray-400">Бренд</dt>
+                                                <dd className="text-sm font-medium text-gray-700">{assistant.brand_name}</dd>
                                             </div>
                                         )}
                                         {assistant.phone && (
-                                            <div>
-                                                <p className="text-xs text-gray-500 uppercase font-bold">Телефон</p>
-                                                <p className="text-sm font-medium">{assistant.phone}</p>
+                                            <div className="flex items-center justify-between gap-4 py-2.5">
+                                                <dt className="text-xs font-medium text-gray-400">Телефон</dt>
+                                                <dd className="text-sm font-medium text-gray-700">{assistant.phone}</dd>
                                             </div>
                                         )}
                                         {assistant.social && Object.entries(assistant.social).some(([_, v]) => v) && (
-                                            <div>
-                                                <p className="text-xs text-gray-500 uppercase font-bold">Социальные сети</p>
-                                                <div className="text-sm font-medium">
+                                            <div className="flex items-start justify-between gap-4 py-2.5">
+                                                <dt className="text-xs font-medium text-gray-400">Соцсети</dt>
+                                                <dd className="space-y-0.5 text-right text-sm font-medium text-gray-700">
                                                     {Object.entries(assistant.social).map(([key, value]) => (
-                                                        value && <div key={key}><span className="capitalize">{key}</span>: {value}</div>
+                                                        value && (
+                                                            <div key={key}>
+                                                                <span className="capitalize text-gray-400">{key}:</span> {value}
+                                                            </div>
+                                                        )
                                                     ))}
-                                                </div>
+                                                </dd>
                                             </div>
                                         )}
                                         {assistant.fallback && (
-                                            <div>
-                                                <p className="text-xs text-gray-500 uppercase font-bold">Fallback</p>
-                                                <p className="text-sm font-medium italic">"{assistant.fallback}"</p>
+                                            <div className="py-2.5">
+                                                <dt className="mb-1 text-xs font-medium text-gray-400">Fallback</dt>
+                                                <dd className="rounded-md bg-gray-50 px-3 py-2 text-sm italic text-gray-600">
+                                                    «{assistant.fallback}»
+                                                </dd>
                                             </div>
                                         )}
-                                    </div>
+                                    </dl>
                                 </div>
                             </div>
 
-                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold mb-4">Статус ассистента</h3>
-                                    <div className="flex items-center space-x-2">
-                                        <div className={`w-3 h-3 rounded-full ${
-                                            assistant.status === 'ready' ? 'bg-green-500' : 'bg-yellow-500'
-                                        }`} />
-                                        <span className="capitalize">{assistant.status}</span>
+                            <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                                <div className="p-5">
+                                    <div className="mb-4 flex items-center gap-2">
+                                        <svg className="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        <h3 className="text-sm font-semibold text-gray-900">Статус ассистента</h3>
                                     </div>
-                                    <div className="mt-4 pt-4 border-t">
-                                        <p className="text-sm text-gray-500">Всего чанков: {(assistant.chunks || []).length}</p>
-                                        <p className="text-sm text-gray-500">Источников знаний: {(assistant.knowledge || []).length}</p>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`h-2.5 w-2.5 rounded-full ${
+                                            assistant.status === 'ready' ? 'bg-green-500' : 'bg-amber-400'
+                                        }`} />
+                                        <span className="text-sm font-medium capitalize text-gray-700">{assistant.status}</span>
+                                    </div>
+                                    <div className="mt-4 grid grid-cols-2 gap-2 border-t border-gray-100 pt-4">
+                                        <div className="rounded-md bg-gray-50 px-3 py-2 text-center">
+                                            <p className="text-base font-semibold text-gray-900">{(assistant.chunks || []).length}</p>
+                                            <p className="text-xs text-gray-400">Чанков</p>
+                                        </div>
+                                        <div className="rounded-md bg-gray-50 px-3 py-2 text-center">
+                                            <p className="text-base font-semibold text-gray-900">{(assistant.knowledge || []).length}</p>
+                                            <p className="text-xs text-gray-400">Источников</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
