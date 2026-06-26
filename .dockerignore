@@ -2,8 +2,6 @@
 .github
 .env
 .phpunit.result.cache
-composer.lock
-package-lock.json
 node_modules
 vendor
 storage/*.key
@@ -14,7 +12,6 @@ storage/framework/views/*.php
 storage/logs/*.log
 public/build
 public/storage
-docker
 compose.yaml
 compose.override.yaml
 README.md
