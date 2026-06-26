@@ -26,8 +26,11 @@ COPY package.json package-lock.json ./
 # Install npm dependencies
 RUN npm ci
 
-# Copy application files and build
+# Copy application files (including vendor for Ziggy in SSR)
 COPY . .
+# Copy vendor from composer_stage to ensure Ziggy is available for SSR build
+COPY --from=composer_stage /var/www/html/vendor ./vendor
+
 RUN npm run build
 
 # Stage 3: Final Production Image

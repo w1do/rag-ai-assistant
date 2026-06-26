@@ -48,6 +48,7 @@
 - Создана оптимизированная Docker-конфигурация для продакшена (Multi-stage, Alpine, PHP 8.5, Nginx + Supervisor).
 - Исправлена критическая ошибка сборки Docker: файлы `package-lock.json`, `composer.lock` и директория `docker` удалены из `.dockerignore` для обеспечения корректной работы команд `COPY` и `npm ci`/`composer install`.
 - Устранена ошибка установки зависимостей Composer в Docker за счет использования флага `--ignore-platform-reqs`, что позволило обойти отсутствие расширения `ext-gd` на этапе сборки.
+- Исправлена ошибка сборки фронтенда `Could not resolve "../../vendor/tightenco/ziggy"` в SSR: в `Dockerfile` на этапе `node_stage` теперь копируется директория `vendor`, необходимая для импорта маршрутов Ziggy.
 
 ## Vibe Coding
 Код следует принципам DDD. Используются современные возможности Laravel (v11/v13) для работы с HTTP-клиентом.
