@@ -58,8 +58,10 @@ Route::middleware('auth')->group(function () {
  * Маршруты не требуют авторизации и используются встраиваемым на сторонние
  * сайты виджетом (`public/widget.js`). Страница чата загружается внутри iframe.
  */
-Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
-Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
+Route::middleware('allow.iframe')->group(function () {
+    Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
+    Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
+});
 
 require __DIR__.'/auth.php';
 
