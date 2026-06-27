@@ -3,6 +3,7 @@ import Dropdown from '@/Components/Dropdown';
 import MegaMenu from '@/Components/MegaMenu';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import Tooltip from '@/Components/Tooltip';
 import { Link, usePage } from '@inertiajs/react';
 import {
     Activity,
@@ -28,7 +29,7 @@ export default function Authenticated({
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+            <nav className="relative border-b border-gray-100 bg-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -66,56 +67,42 @@ export default function Authenticated({
                                     active={
                                         route().current('monitoring') ||
                                         route().current('competitors') ||
-                                        route().current('bots') ||
-                                        route().current('tariffs')
+                                        route().current('bots')
                                     }
                                 >
                                     <div className="space-y-1">
-                                        <Dropdown.Link
-                                            href={route('monitoring')}
-                                            className="flex items-center"
-                                        >
-                                            <Activity className="mr-2 h-4 w-4 text-gray-400" />
-                                            Мониторинг
-                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                                Скоро
-                                            </span>
-                                        </Dropdown.Link>
+                                        <Tooltip text="Раздел скоро станет доступен">
+                                            <div className="flex cursor-not-allowed items-center px-4 py-2 text-sm text-gray-400">
+                                                <Activity className="mr-2 h-4 w-4" />
+                                                Мониторинг
+                                            </div>
+                                        </Tooltip>
                                     </div>
                                     <div className="space-y-1 ps-6">
-                                        <Dropdown.Link
-                                            href={route('competitors')}
-                                            className="flex items-center"
-                                        >
-                                            <Users className="mr-2 h-4 w-4 text-gray-400" />
-                                            Конкуренты
-                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                                Скоро
-                                            </span>
-                                        </Dropdown.Link>
+                                        <Tooltip text="Раздел скоро станет доступен">
+                                            <div className="flex cursor-not-allowed items-center px-4 py-2 text-sm text-gray-400">
+                                                <Users className="mr-2 h-4 w-4" />
+                                                Конкуренты
+                                            </div>
+                                        </Tooltip>
                                     </div>
                                     <div className="space-y-1 ps-6">
-                                        <Dropdown.Link
-                                            href={route('bots')}
-                                            className="flex items-center"
-                                        >
-                                            <MessagesSquare className="mr-2 h-4 w-4 text-gray-400" />
-                                            Боты
-                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                                Скоро
-                                            </span>
-                                        </Dropdown.Link>
-                                    </div>
-                                    <div className="space-y-1 ps-6">
-                                        <Dropdown.Link
-                                            href={route('tariffs')}
-                                            className="flex items-center"
-                                        >
-                                            <CreditCard className="mr-2 h-4 w-4 text-gray-400" />
-                                            Тарифы
-                                        </Dropdown.Link>
+                                        <Tooltip text="Раздел скоро станет доступен">
+                                            <div className="flex cursor-not-allowed items-center px-4 py-2 text-sm text-gray-400">
+                                                <MessagesSquare className="mr-2 h-4 w-4" />
+                                                Боты
+                                            </div>
+                                        </Tooltip>
                                     </div>
                                 </MegaMenu>
+
+                                <NavLink
+                                    href={route('tariffs')}
+                                    active={route().current('tariffs')}
+                                >
+                                    <CreditCard className="mr-2 h-4 w-4" />
+                                    Тарифы
+                                </NavLink>
                             </div>
                         </div>
 
@@ -249,45 +236,18 @@ export default function Authenticated({
                             </div>
                         </div>
 
-                        <ResponsiveNavLink
-                            href={route('monitoring')}
-                            active={route().current('monitoring')}
-                            className="flex items-center"
-                        >
-                            <span className="inline-flex items-center gap-2">
-                                <Activity className="mr-1 h-5 w-5" />
-                                Мониторинг
-                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                    Скоро
-                                </span>
-                            </span>
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('competitors')}
-                            active={route().current('competitors')}
-                            className="flex items-center"
-                        >
-                            <span className="inline-flex items-center gap-2">
-                                <Users className="mr-1 h-5 w-5" />
-                                Конкуренты
-                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                    Скоро
-                                </span>
-                            </span>
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('bots')}
-                            active={route().current('bots')}
-                            className="flex items-center"
-                        >
-                            <span className="inline-flex items-center gap-2">
-                                <MessagesSquare className="mr-1 h-5 w-5" />
-                                Боты
-                                <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                    Скоро
-                                </span>
-                            </span>
-                        </ResponsiveNavLink>
+                        <div className="flex items-center px-4 py-2 text-gray-400 cursor-not-allowed">
+                            <Activity className="mr-3 h-5 w-5" />
+                            Мониторинг
+                        </div>
+                        <div className="flex items-center px-4 py-2 text-gray-400 cursor-not-allowed">
+                            <Users className="mr-3 h-5 w-5" />
+                            Конкуренты
+                        </div>
+                        <div className="flex items-center px-4 py-2 text-gray-400 cursor-not-allowed">
+                            <MessagesSquare className="mr-3 h-5 w-5" />
+                            Боты
+                        </div>
                         <ResponsiveNavLink
                             href={route('tariffs')}
                             active={route().current('tariffs')}

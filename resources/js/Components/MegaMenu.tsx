@@ -10,7 +10,7 @@ interface MegaMenuProps {
 
 export default function MegaMenu({ title, active, children }: MegaMenuProps) {
     return (
-        <Popover className="relative flex">
+        <Popover className="flex">
             {({ open }) => (
                 <>
                     <Popover.Button
@@ -36,10 +36,10 @@ export default function MegaMenu({ title, active, children }: MegaMenuProps) {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute left-0 z-50 mt-2 w-[600px] -translate-x-1/4 px-4 sm:px-0">
-                            <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                <div className="relative bg-white p-6">
-                                    <div className="grid grid-cols-4 gap-6 divide-x divide-gray-100">
+                        <Popover.Panel className="absolute inset-x-0 z-50 mt-px">
+                            <div className="bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+                                    <div className="grid grid-cols-3 gap-8 divide-x divide-gray-100">
                                         {children}
                                     </div>
                                 </div>
