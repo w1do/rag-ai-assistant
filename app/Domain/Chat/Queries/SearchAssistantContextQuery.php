@@ -19,11 +19,19 @@ class SearchAssistantContextQuery
      *
      * @return Document[]
      */
-    public function execute(Assistant $assistant, string $question, int $limit = 4): array
+    public function execute(Assistant $assistant, string $question, int $limit = 10): array
     {
-        $embedding = $this->aiClientFactory->createEmbeddingGenerator()->embedText($question);
         $vectorStore = $this->vectorStoreManager->getStoreForAssistant($assistant);
+        $embeddingGenerator = $this->aiClientFactory->createEmbeddingGenerator();
 
-        return $vectorStore->similaritySearch($embedding, $limit);
+        // 1. Семантический поиск
+        $embedding = $embeddingGenerator->embedText($question);
+        $semanticDocuments = $vectorStore->similaritySearch($embedding, $limit);
+
+        // 2. Полнотекстовый поиск
+        $textDocuments = $this->vectorStoreManager->searchByText($assistant, $question, $limit);
+
+        // 3. Объединяем результаты
+        return $this->vectorStoreManager->mergeDocuments($semanticDocuments, $textDocuments, $limit);
     }
 }

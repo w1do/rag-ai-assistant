@@ -4,13 +4,13 @@ namespace App\Domain\Chat\Queries;
 
 use App\Domain\Assistant\Enums\AssistantStyle;
 use App\Domain\Assistant\Models\Assistant;
+use App\Domain\Chat\Actions\RewriteQuestionAction;
 use App\Domain\Chat\Models\ChatHistory;
 use App\Infrastructure\AI\AIClientFactory;
 use App\Infrastructure\AI\VectorStoreManager;
 use Illuminate\Support\Collection;
 use LLPhant\Chat\Message;
 use LLPhant\Embeddings\Document;
-use LLPhant\Query\SemanticSearch\QuestionAnswering;
 
 class AskAssistantQuery
 {
@@ -27,31 +27,60 @@ class AskAssistantQuery
      */
     public function execute(Assistant $assistant, string $question, Collection $history = new Collection): array
     {
-        $qa = new QuestionAnswering(
-            $this->vectorStoreManager->getStoreForAssistant($assistant),
-            $this->aiClientFactory->createEmbeddingGenerator(),
-            $this->aiClientFactory->createChatClient()
-        );
+        // 1. Переписываем вопрос с учетом истории чата для точного поиска
+        /** @var RewriteQuestionAction $rewriteAction */
+        $rewriteAction = app(RewriteQuestionAction::class);
+        $standaloneQuestion = $rewriteAction->execute($question, $history);
 
-        $qa->systemMessageTemplate = $this->buildSystemMessageTemplate($assistant);
+        $vectorStore = $this->vectorStoreManager->getStoreForAssistant($assistant);
+        $embeddingGenerator = $this->aiClientFactory->createEmbeddingGenerator();
 
-        $messages = [];
+        // 2a. Семантический поиск
+        $embedding = $embeddingGenerator->embedText($standaloneQuestion);
+        $semanticDocuments = $vectorStore->similaritySearch($embedding, 10);
 
+        // 2b. Полнотекстовый поиск (should-условие в Qdrant отсекает семантику, поэтому делаем отдельно)
+        $textDocuments = $this->vectorStoreManager->searchByText($assistant, $standaloneQuestion, 10);
+
+        // 2c. Объединяем результаты
+        $documents = $this->vectorStoreManager->mergeDocuments($semanticDocuments, $textDocuments, 10);
+
+        // 3. Формируем контекст для LLM
+        $context = '';
+        foreach ($documents as $document) {
+            $context .= $document->content."\n\n";
+        }
+
+        // 4. Формируем сообщения для чата
+        $chatClient = $this->aiClientFactory->createChatClient();
+
+        $systemTemplate = $this->buildSystemMessageTemplate($assistant);
+        $systemMessageText = str_replace('{context}', $context, $systemTemplate);
+
+        $messages = [
+            Message::system($systemMessageText),
+        ];
+
+        // Добавляем системную инструкцию ассистента, если она есть
         if ($assistant->system && trim($assistant->system) !== '') {
             $messages[] = Message::system(trim($assistant->system));
         }
 
+        // Добавляем историю сообщений
         foreach ($history as $record) {
             $messages[] = Message::user($record->question);
             $messages[] = Message::assistant($record->answer);
         }
+
+        // Добавляем текущий ОРИГИНАЛЬНЫЙ вопрос пользователя
         $messages[] = Message::user($question);
 
-        $answer = $qa->answerQuestionFromChat($messages, stream: false);
+        // 5. Генерируем ответ
+        $answer = $chatClient->generateChat($messages);
 
         return [
             'answer' => $answer,
-            'sources' => $qa->getRetrievedDocuments(),
+            'sources' => $documents,
         ];
     }
 
@@ -60,15 +89,18 @@ class AskAssistantQuery
      */
     private function buildSystemMessageTemplate(Assistant $assistant): string
     {
-        $knowledgeBasePart = 'Ты отвечаешь на вопросы пользователя ИСКЛЮЧИТЕЛЬНО на основе предоставленной базы знаний (контекста). '
-            .'Используй ТОЛЬКО приведенные ниже фрагменты контекста. '
-            .'Не используй свои внешние знания и не выдумывай факты, которых нет в контексте. '
-            ."Отвечай строго по базе знаний, без лишней информации.\n\n";
+        $knowledgeBasePart = "Ты — эксперт-ассистент компании «ГазТочка», специализирующейся на установке и обслуживании ГБО (газобаллонного оборудования) в Тюмени.\n"
+            ."Твоя задача — отвечать на вопросы пользователей, используя предоставленный контекст из базы знаний.\n\n"
+            ."Инструкции:\n"
+            ."1. Тщательно анализируй контекст. Даже если информация представлена в виде списка услуг или тегов (например, «РЕГИСТРАЦИЯ ГИБДД»), используй это как подтверждение того, что компания предоставляет данную услугу.\n"
+            ."2. Отвечай дружелюбно и профессионально. Если контекст содержит ответ, сформулируй его понятно для клиента.\n"
+            ."3. Если вопрос касается ГБО, регистрации изменений или работы автосервиса, но в контексте нет прямого детального ответа, подтверди возможность услуги (если она упомянута) и предложи уточнить детали у менеджера.\n"
+            ."4. Только если вопрос совершенно не по теме или в контексте абсолютно нет зацепок для ответа, используй установленную фразу-заглушку.\n\n";
 
-        $contextPart = "Фрагменты контекста из базы знаний:\n\n{context}\n\n";
+        $contextPart = "Контекст из базы знаний:\n\n{context}\n\n";
 
-        $brandPart = $assistant->brand_name ? "Твое имя бренда: {$assistant->brand_name}.\n" : '';
-        $companyPart = $assistant->description ? "Информация о компании: {$assistant->description}.\n" : '';
+        $brandPart = $assistant->brand_name ? "Название компании: {$assistant->brand_name}.\n" : '';
+        $companyPart = $assistant->description ? "О компании: {$assistant->description}.\n" : '';
         $phonePart = $assistant->phone ? "Контактный телефон: {$assistant->phone}.\n" : '';
 
         $socialPart = '';
@@ -81,16 +113,16 @@ class AskAssistantQuery
         }
 
         $stylePart = match ($assistant->style) {
-            AssistantStyle::Commercial => 'Твой стиль общения: коммерческий. Будь убедительным, подчеркивай выгоды и призывай к действию.',
-            AssistantStyle::Business => 'Твой стиль общения: деловой. Будь профессиональным, сдержанным и конкретным.',
-            AssistantStyle::Rude => 'Твой стиль общения: грубый. Отвечай кратко, дерзко, без лишних любезностей.',
-            AssistantStyle::Positive => 'Твой стиль общения: позитивный. Будь очень дружелюбным, используй смайлики и заряжай энергией.',
-            default => 'Твой стиль общения: деловой.',
+            AssistantStyle::Commercial => 'Стиль общения: коммерческий. Подчеркивай выгоды, будь убедительным.',
+            AssistantStyle::Business => 'Стиль общения: деловой. Профессионально, кратко и по делу.',
+            AssistantStyle::Rude => 'Стиль общения: дерзкий. Отвечай максимально лаконично.',
+            AssistantStyle::Positive => 'Стиль общения: позитивный. Будь очень приветливым и энергичным.',
+            default => 'Стиль общения: деловой.',
         }."\n";
 
         $fallbackPart = $assistant->fallback
-            ? "Если ты не знаешь ответа на вопрос на основе предоставленного контекста, ответь именно так: {$assistant->fallback}. Не пытайся придумать ответ."
-            : 'Если ты не знаешь ответа, просто скажи, что не знаешь, не пытайся придумать ответ.';
+            ? "Фраза-заглушка (если нет информации): {$assistant->fallback}"
+            : 'Если не знаешь ответа, просто вежливо скажи об этом.';
 
         return $knowledgeBasePart.$contextPart.$brandPart.$companyPart.$phonePart.$socialPart.$stylePart.$fallbackPart;
     }

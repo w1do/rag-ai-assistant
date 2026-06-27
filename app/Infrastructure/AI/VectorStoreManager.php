@@ -4,9 +4,13 @@ namespace App\Infrastructure\AI;
 
 use App\Domain\Assistant\Models\Assistant;
 use Http\Discovery\Psr18ClientDiscovery;
+use LLPhant\Embeddings\Document;
 use LLPhant\Embeddings\VectorStores\Qdrant\QdrantVectorStore;
 use Qdrant\Config;
 use Qdrant\Http\Transport;
+use Qdrant\Models\Filter\Condition\FullTextMatch;
+use Qdrant\Models\Filter\Filter;
+use Qdrant\Models\Request\CreateIndex;
 use Qdrant\Qdrant;
 
 /**
@@ -17,7 +21,7 @@ class VectorStoreManager
     /**
      * Возвращает объект хранилища для конкретного ассистента.
      *
-     * @param Assistant $assistant Объект ассистента.
+     * @param  Assistant  $assistant  Объект ассистента.
      * @return QdrantVectorStore Хранилище для ассистента.
      */
     public function getStoreForAssistant(Assistant $assistant): QdrantVectorStore
@@ -34,7 +38,32 @@ class VectorStoreManager
         // Ensure collection exists
         $vectorStore->createCollectionIfDoesNotExist($collectionName, $dimensions);
 
+        // Гарантируем наличие полнотекстового индекса для гибридного поиска
+        $this->ensureFullTextIndex($assistant);
+
         return $vectorStore;
+    }
+
+    /**
+     * Создает полнотекстовый индекс для поля content в коллекции ассистента.
+     */
+    public function ensureFullTextIndex(Assistant $assistant): void
+    {
+        $client = $this->getClient();
+        $collectionName = 'assistant_'.$assistant->id;
+
+        try {
+            $client->collections($collectionName)->index()->create(
+                new CreateIndex('content', [
+                    'type' => 'text',
+                    'tokenizer' => 'word',
+                    'min_token_len' => 2,
+                    'lowercase' => true,
+                ])
+            );
+        } catch (\Throwable $e) {
+            // Индекс уже существует или возникла ошибка, которую мы игнорируем
+        }
     }
 
     /**
@@ -71,15 +100,14 @@ class VectorStoreManager
     /**
      * Удаляет коллекцию, связанную с ассистентом.
      *
-     * @param Assistant $assistant Объект ассистента.
-     * @return void
+     * @param  Assistant  $assistant  Объект ассистента.
      */
     public function deleteCollectionForAssistant(Assistant $assistant): void
     {
         $client = $this->getClient();
         try {
             $client->collections('assistant_'.$assistant->id)->delete();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Collection may not exist
         }
     }
@@ -99,5 +127,74 @@ class VectorStoreManager
         $client = $this->getClient();
 
         $client->collections('assistant_'.$assistant->id)->points()->delete($ids);
+    }
+
+    /**
+     * Выполняет полнотекстовый поиск документов без использования векторов.
+     *
+     * @return Document[]
+     */
+    public function searchByText(Assistant $assistant, string $query, int $limit = 5): array
+    {
+        $client = $this->getClient();
+        $collectionName = 'assistant_'.$assistant->id;
+
+        $filter = new Filter;
+        $filter->addMust(new FullTextMatch('content', $query));
+
+        try {
+            $response = $client->collections($collectionName)->points()->scroll([
+                'filter' => $filter->toArray(),
+                'limit' => $limit,
+                'with_payload' => true,
+            ]);
+
+            $results = $response->__toArray()['result']['points'] ?? [];
+
+            $documents = [];
+            foreach ($results as $point) {
+                $doc = new Document;
+                $doc->id = $point['id'];
+                $doc->content = $point['payload']['content'] ?? '';
+                $doc->hash = $point['payload']['hash'] ?? '';
+                $doc->sourceName = $point['payload']['sourceName'] ?? '';
+                $doc->sourceType = $point['payload']['sourceType'] ?? '';
+                $documents[] = $doc;
+            }
+
+            return $documents;
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Объединяет результаты семантического и полнотекстового поиска.
+     *
+     * @param  Document[]  $semanticDocs
+     * @param  Document[]  $textDocs
+     * @return Document[]
+     */
+    public function mergeDocuments(array $semanticDocs, array $textDocs, int $limit): array
+    {
+        $merged = [];
+        $ids = [];
+
+        // Текстовые совпадения часто приоритетнее для специфических терминов
+        foreach ($textDocs as $doc) {
+            if (! in_array($doc->id, $ids)) {
+                $merged[] = $doc;
+                $ids[] = $doc->id;
+            }
+        }
+
+        foreach ($semanticDocs as $doc) {
+            if (! in_array($doc->id, $ids)) {
+                $merged[] = $doc;
+                $ids[] = $doc->id;
+            }
+        }
+
+        return array_slice($merged, 0, $limit);
     }
 }
