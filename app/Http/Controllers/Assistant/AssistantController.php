@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers\Assistant;
 
-use App\Domain\Assistant\Actions\AddUrlAction;
-use App\Domain\Assistant\Actions\DeleteAssistantAction;
-use App\Domain\Assistant\Actions\UploadAudioAction;
-use App\Domain\Assistant\Actions\UploadDocumentAction;
+use App\Domain\Assistant\Commands\AddUrlCommand;
+use App\Domain\Assistant\Commands\DeleteAssistantCommand;
 use App\Domain\Assistant\Commands\StoreAssistantCommand;
 use App\Domain\Assistant\Commands\UpdateAssistantCommand;
+use App\Domain\Assistant\Commands\UploadAudioCommand;
+use App\Domain\Assistant\Commands\UploadDocumentCommand;
 use App\Domain\Assistant\DTO\AssistantDTO;
+use App\Domain\Assistant\Handlers\AddUrlHandler;
+use App\Domain\Assistant\Handlers\DeleteAssistantHandler;
 use App\Domain\Assistant\Handlers\StoreAssistantHandler;
 use App\Domain\Assistant\Handlers\UpdateAssistantHandler;
+use App\Domain\Assistant\Handlers\UploadAudioHandler;
+use App\Domain\Assistant\Handlers\UploadDocumentHandler;
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Assistant\Queries\GetAssistantWithDetailsQuery;
 use App\Domain\Assistant\Queries\GetUserAssistantsQuery;
-use App\Domain\Knowledge\Actions\DeleteKnowledgeAction;
+use App\Domain\Knowledge\Commands\DeleteKnowledgeCommand;
+use App\Domain\Knowledge\Handlers\DeleteKnowledgeHandler;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assistant\StoreAssistantRequest;
@@ -31,6 +36,17 @@ class AssistantController extends Controller
 {
     use AuthorizesRequests;
 
+    /**
+     * Отображает список ассистентов пользователя.
+     *
+     * @OA\Get(
+     *     path="/assistants",
+     *     summary="Список ассистентов пользователя",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Response(response=200, description="Успешный ответ")
+     * )
+     */
     public function index(GetUserAssistantsQuery $query): Response
     {
         /** @var User $user */
@@ -41,11 +57,35 @@ class AssistantController extends Controller
         ]);
     }
 
+    /**
+     * Отображает страницу создания ассистента.
+     *
+     * @OA\Get(
+     *     path="/assistants/create",
+     *     summary="Страница создания ассистента",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Response(response=200, description="Успешный ответ")
+     * )
+     */
     public function create(): Response
     {
         return Inertia::render('Assistants/Create');
     }
 
+    /**
+     * Создает нового ассистента.
+     *
+     * @OA\Post(
+     *     path="/assistants",
+     *     summary="Создание ассистента",
+     *     tags={"Assistant"},
+     *
+     *     @OA\RequestBody(ref="#/components/schemas/StoreAssistantRequest"),
+     *
+     *     @OA\Response(response=302, description="Перенаправление на список ассистентов")
+     * )
+     */
     public function store(StoreAssistantRequest $request, StoreAssistantHandler $handler): RedirectResponse
     {
         $dto = AssistantDTO::fromArray($request->validated());
@@ -61,6 +101,19 @@ class AssistantController extends Controller
         return redirect()->route('assistants.index');
     }
 
+    /**
+     * Отображает информацию об ассистенте.
+     *
+     * @OA\Get(
+     *     path="/assistants/{id}",
+     *     summary="Детали ассистента",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\Response(response=200, description="Успешный ответ")
+     * )
+     */
     public function show(Assistant $assistant, GetAssistantWithDetailsQuery $query): Response
     {
         $this->authorize('view', $assistant);
@@ -79,6 +132,21 @@ class AssistantController extends Controller
         ]);
     }
 
+    /**
+     * Обновляет данные ассистента.
+     *
+     * @OA\Put(
+     *     path="/assistants/{id}",
+     *     summary="Обновление ассистента",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\RequestBody(ref="#/components/schemas/UpdateAssistantRequest"),
+     *
+     *     @OA\Response(response=302, description="Перенаправление на детали ассистента")
+     * )
+     */
     public function update(UpdateAssistantRequest $request, Assistant $assistant, UpdateAssistantHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
@@ -93,16 +161,54 @@ class AssistantController extends Controller
         return redirect()->route('assistants.show', $assistant->id);
     }
 
-    public function destroy(Assistant $assistant, DeleteAssistantAction $action): RedirectResponse
+    /**
+     * Удаляет ассистента.
+     *
+     * @OA\Delete(
+     *     path="/assistants/{id}",
+     *     summary="Удаление ассистента",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\Response(response=302, description="Перенаправление на список ассистентов")
+     * )
+     */
+    public function destroy(Assistant $assistant, DeleteAssistantHandler $handler): RedirectResponse
     {
         $this->authorize('delete', $assistant);
 
-        $action->execute($assistant);
+        $handler->handle(new DeleteAssistantCommand($assistant));
 
         return redirect()->route('assistants.index');
     }
 
-    public function uploadDocument(Request $request, Assistant $assistant, UploadDocumentAction $action): RedirectResponse
+    /**
+     * Загружает документ для ассистента.
+     *
+     * @OA\Post(
+     *     path="/assistants/{id}/documents",
+     *     summary="Загрузка документа",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\RequestBody(
+     *
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *
+     *             @OA\Schema(
+     *
+     *                 @OA\Property(property="document", type="string", format="binary")
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(response=302, description="Успешная загрузка")
+     * )
+     */
+    public function uploadDocument(Request $request, Assistant $assistant, UploadDocumentHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
 
@@ -110,12 +216,37 @@ class AssistantController extends Controller
             'document' => 'required|file|mimes:pdf,docx,txt|max:10240',
         ]);
 
-        $action->execute($assistant, $request->file('document'));
+        $handler->handle(new UploadDocumentCommand($assistant, $request->file('document')));
 
         return back()->with('status', 'Document uploaded and processing started.');
     }
 
-    public function uploadAudio(Request $request, Assistant $assistant, UploadAudioAction $action): RedirectResponse
+    /**
+     * Загружает аудио для ассистента.
+     *
+     * @OA\Post(
+     *     path="/assistants/{id}/audio",
+     *     summary="Загрузка аудио",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\RequestBody(
+     *
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *
+     *             @OA\Schema(
+     *
+     *                 @OA\Property(property="audio", type="string", format="binary")
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(response=302, description="Успешная загрузка")
+     * )
+     */
+    public function uploadAudio(Request $request, Assistant $assistant, UploadAudioHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
 
@@ -123,12 +254,33 @@ class AssistantController extends Controller
             'audio' => 'required|file|mimes:mp3,wav,m4a,webm,ogg|max:25600',
         ]);
 
-        $action->execute($assistant, $request->file('audio'));
+        $handler->handle(new UploadAudioCommand($assistant, $request->file('audio')));
 
         return back()->with('status', 'Audio uploaded and transcription started.');
     }
 
-    public function addUrl(Request $request, Assistant $assistant, AddUrlAction $action): RedirectResponse
+    /**
+     * Добавляет URL для ассистента.
+     *
+     * @OA\Post(
+     *     path="/assistants/{id}/urls",
+     *     summary="Добавление URL",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\RequestBody(
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="url", type="string", format="url", example="https://example.com")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(response=302, description="Успешное добавление")
+     * )
+     */
+    public function addUrl(Request $request, Assistant $assistant, AddUrlHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
 
@@ -136,7 +288,7 @@ class AssistantController extends Controller
             'url' => 'required|url',
         ]);
 
-        $action->execute($assistant, $request->input('url'));
+        $handler->handle(new AddUrlCommand($assistant, $request->input('url')));
 
         return back()->with([
             'status' => 'URL added and knowledge generation started.',
@@ -146,7 +298,21 @@ class AssistantController extends Controller
         ]);
     }
 
-    public function destroyKnowledge(Assistant $assistant, Knowledge $knowledge, DeleteKnowledgeAction $action): RedirectResponse
+    /**
+     * Удаляет запись из базы знаний.
+     *
+     * @OA\Delete(
+     *     path="/assistants/{id}/knowledge/{knowledge_id}",
+     *     summary="Удаление знания",
+     *     tags={"Assistant"},
+     *
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="knowledge_id", in="path", required=true, @OA\Schema(type="integer")),
+     *
+     *     @OA\Response(response=302, description="Успешное удаление")
+     * )
+     */
+    public function destroyKnowledge(Assistant $assistant, Knowledge $knowledge, DeleteKnowledgeHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
 
@@ -154,7 +320,7 @@ class AssistantController extends Controller
             abort(403);
         }
 
-        $action->execute($knowledge);
+        $handler->handle(new DeleteKnowledgeCommand($knowledge));
 
         return back()->with('status', 'Knowledge item deleted.');
     }

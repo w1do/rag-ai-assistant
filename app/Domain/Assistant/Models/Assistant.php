@@ -7,6 +7,7 @@ use App\Domain\Chat\Models\ChatHistory;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Models\User;
 use Database\Factories\Domain\Assistant\Models\AssistantFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $welcome_message Приветственное сообщение
  * @property array|null $actions Кнопки быстрого действия
  * @property string|null $system Пользовательский системный промпт
+ * @property-read Collection<int, Knowledge> $knowledge
+ * @property-read Collection<int, Chunk> $chunks
+ * @property-read Collection<int, ChatHistory> $chatHistories
  */
 class Assistant extends Model
 {

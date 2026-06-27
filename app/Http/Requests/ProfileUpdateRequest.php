@@ -7,6 +7,16 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="ProfileUpdateRequest",
+ *     title="Profile Update Request",
+ *     required={"name", "email"},
+ *
+ *     @OA\Property(property="name", type="string", example="John Doe"),
+ *     @OA\Property(property="email", type="string", format="email", example="john@example.com")
+ * )
+ */
 class ProfileUpdateRequest extends FormRequest
 {
     /**

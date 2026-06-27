@@ -57,7 +57,8 @@ it('uses history from cache for public messages', function () {
 it('validates that a question is required for public messages', function () {
     $assistant = Assistant::factory()->create(['user_id' => User::factory()]);
 
-    $this->postJson(route('share-chat.message', $assistant), [])
-        ->assertStatus(422)
+    $response = $this->postJson(route('share-chat.message', $assistant), []);
+
+    $response->assertStatus(422)
         ->assertJsonPath('errors.question.0', fn ($message) => is_string($message));
 });
