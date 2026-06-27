@@ -32,11 +32,6 @@ class AskAssistantAction
             'user_id' => $user->id,
             'question' => $question,
             'answer' => $result['answer'],
-            'sources' => collect($result['sources'])->map(fn ($doc) => [
-                'content' => $doc->content,
-                'sourceName' => $doc->sourceName,
-                'sourceType' => $doc->sourceType,
-            ])->toArray(),
         ]);
     }
 }

@@ -88,6 +88,8 @@ test('the custom system prompt is injected into the dialogue messages', function
 
     $vectorStoreManager = Mockery::mock(VectorStoreManager::class);
     $vectorStoreManager->shouldReceive('getStoreForAssistant')->andReturn($vectorStore);
+    $vectorStoreManager->shouldReceive('searchByText')->andReturn([]);
+    $vectorStoreManager->shouldReceive('mergeDocuments')->andReturn([]);
 
     $query = new AskAssistantQuery($factory, $vectorStoreManager);
 

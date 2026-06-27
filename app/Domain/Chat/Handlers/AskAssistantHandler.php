@@ -28,11 +28,6 @@ class AskAssistantHandler
             'user_id' => $command->user->id,
             'question' => $command->question,
             'answer' => $result['answer'],
-            'sources' => collect($result['sources'])->map(fn ($doc) => [
-                'content' => $doc->content,
-                'sourceName' => $doc->sourceName,
-                'sourceType' => $doc->sourceType,
-            ])->toArray(),
         ]);
 
         return $chatHistory;

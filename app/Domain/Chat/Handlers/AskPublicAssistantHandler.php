@@ -22,17 +22,10 @@ readonly class AskPublicAssistantHandler
 
         $result = $this->askAssistantQuery->execute($command->assistant, $command->question, $historyCollection);
 
-        $sources = collect($result['sources'])->map(fn ($doc) => [
-            'content' => $doc->content,
-            'sourceName' => $doc->sourceName,
-            'sourceType' => $doc->sourceType,
-        ])->values()->all();
-
         // Сохраняем историю в кэш
         $cachedHistory[] = [
             'question' => $command->question,
             'answer' => $result['answer'],
-            'sources' => $sources,
         ];
 
         // Ограничиваем историю последними 20 сообщениями
@@ -42,7 +35,6 @@ readonly class AskPublicAssistantHandler
 
         return [
             'answer' => $result['answer'],
-            //'sources' => $sources,
         ];
     }
 

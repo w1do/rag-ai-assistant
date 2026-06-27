@@ -18,7 +18,7 @@ it('renders the public share-chat page', function () {
         );
 });
 
-it('answers a public message and returns sources as json', function () {
+it('answers a public message and returns json', function () {
     $assistant = Assistant::factory()->create(['user_id' => User::factory()]);
 
     $mockQuery = Mockery::mock(AskAssistantQuery::class);
@@ -36,7 +36,6 @@ it('answers a public message and returns sources as json', function () {
         ->assertOk()
         ->assertJson([
             'answer' => 'Здравствуйте!',
-            'sources' => [],
         ]);
 });
 

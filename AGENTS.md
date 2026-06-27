@@ -29,6 +29,9 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
+## Architecture ( DDD + CQRS / Documentations)
+- use `skills/arctitecture-ddd` and `dtos` , `documentations` strict rules folder `skills/`
+
 ## Run commands (Sail)
 - run only sail, example ./vendor/bin/sail ...
 
