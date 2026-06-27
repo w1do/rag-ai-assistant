@@ -7,8 +7,7 @@ description: "Реализация функционала в стиле DDD + CQ
 
 ### 📚 Инструкции и навыки (Skills)
 Перед началом работы обязательно изучи соответствующие навыки в директории `.agents/skills/`:
-- **DDD & Архитектура**: `.agents/skills/architecture-ddd`
-- **DTOs**: `.agents/skills/dtos`
+- **Refactoring & DDD**: `.agents/skills/refactoring-ddd`
 - **Laravel Best Practices**: `.agents/skills/laravel-best-practices`
 - **Тестирование**: `.agents/skills/pest-testing`
 

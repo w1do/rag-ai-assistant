@@ -26,6 +26,7 @@
         "spatie-laravel-php",
         "spatie-security",
         "spatie-version-control",
-        "laravel-deploy"
+        "laravel-deploy",
+        "refactoring-ddd"
     ]
 }
