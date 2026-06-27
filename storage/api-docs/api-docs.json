@@ -1,10 +1,10 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "BotSync RAG System API",
-        "description": "Документация API для системы BotSync RAG (Retrieval-Augmented Generation)",
+        "title": "BotSync (RAG API)",
+        "description": "Документация API для системы BotSync RAG (Retrieval-Augmented Generation), обучение систем на данных для автоматизации чат ботов",
         "contact": {
-            "email": "support@botsync.io"
+            "email": "uniqdeveloper@yandex.ru"
         },
         "version": "1.0.0"
     },

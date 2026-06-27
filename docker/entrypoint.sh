@@ -11,6 +11,7 @@ php artisan view:cache
 php artisan event:cache
 
 # Docs
+php artisan vendor:publish --tag=l5-swagger-assets
 php artisan l5-swagger:generate --ansi --no-interaction || true
 
 # Create storage link if not exists
