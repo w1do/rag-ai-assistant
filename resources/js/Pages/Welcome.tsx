@@ -1,5 +1,6 @@
 import { PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
+import Markdown from 'react-markdown';
 import { Check, Rocket, Calendar, Crown, MessageSquare, Mic, FileText, Globe, ArrowRight, Loader2 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
@@ -227,7 +228,7 @@ export default function Welcome({
 
                 {/* Test Chat Section */}
                 <section id="demo" className="py-24 bg-gray-50">
-                    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+                    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
                         <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-12">
                             Попробуйте наш чат с ИИ онлайн бесплатно
                         </h2>
@@ -245,12 +246,30 @@ export default function Welcome({
                                         key={idx} 
                                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                     >
-                                        <div className={`p-4 rounded-2xl text-sm sm:text-base max-w-[85%] border ${
+                                        <div className={`p-4 rounded-2xl text-sm sm:text-base max-w-[85%] text-left border ${
                                             msg.role === 'user' 
                                                 ? 'bg-blue-600 text-white border-blue-500 rounded-tr-none' 
                                                 : 'bg-gray-50 text-gray-700 border-gray-100 rounded-tl-none'
                                         }`}>
-                                            {msg.content}
+                                            {msg.role === 'user' ? (
+                                                msg.content
+                                            ) : (
+                                                <div className="prose prose-sm max-w-none prose-blue">
+                                                    <Markdown
+                                                        components={{
+                                                            h3: ({...props}) => <h3 className="mb-2 mt-3 text-base font-bold text-gray-900" {...props} />,
+                                                            p: ({...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
+                                                            ul: ({...props}) => <ul className="mb-2 list-disc pl-5 space-y-1" {...props} />,
+                                                            ol: ({...props}) => <ol className="mb-2 list-decimal pl-5 space-y-1" {...props} />,
+                                                            li: ({...props}) => <li className="leading-relaxed" {...props} />,
+                                                            strong: ({...props}) => <strong className="font-bold text-blue-700" {...props} />,
+                                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-200 pl-4 italic text-gray-600" {...props} />,
+                                                        }}
+                                                    >
+                                                        {msg.content}
+                                                    </Markdown>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

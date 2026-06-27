@@ -38,6 +38,9 @@ This application is a Laravel application and its main Laravel ecosystems packag
 ## Write Documentations
 - use documenation for all files, use markdown use skill
 
+## Design System UI/UX
+- strict design system use folder `design_system/`
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
