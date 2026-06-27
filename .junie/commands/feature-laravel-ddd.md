@@ -12,6 +12,17 @@ description: "Реализация функционала в стиле DDD + CQ
 - **Laravel Best Practices**: `.agents/skills/laravel-best-practices`
 - **Тестирование**: `.agents/skills/pest-testing`
 
+### 🚀 Работа через Laravel Sail (Обязательно)
+Все команды должны выполняться строго внутри Docker-контейнеров через Laravel Sail. Использование локальных PHP, Composer или Artisan напрямую в хост-системе запрещено.
+
+**Примеры использования:**
+- **Artisan**: `./vendor/bin/sail artisan make:controller ...`
+- **Composer**: `./vendor/bin/sail composer require ...`
+- **Тесты**: `./vendor/bin/sail test --compact`
+- **Статический анализ**: `./vendor/bin/sail phpstan analyse`
+- **Форматирование**: `./vendor/bin/sail pint --dirty`
+- **Shell**: `./vendor/bin/sail shell` (для входа внутрь контейнера)
+
 ### 🏗 Архитектурные слои (согласно DDD)
 
 1. **Http Layer (`app/Http`)**:
@@ -36,15 +47,15 @@ description: "Реализация функционала в стиле DDD + CQ
 Каждое изменение должно пройти следующие проверки:
 
 1. **Статический анализ (Larastan)**:
-   - Выполни: `./vendor/bin/phpstan analyse` (или соответствующую команду проекта).
+   - Выполни: `./vendor/bin/sail phpstan analyse` (или соответствующую команду проекта).
    - Исправь все ошибки типизации.
 
 2. **Форматирование (Pint)**:
-   - Выполни: `./vendor/bin/pint --dirty` для исправления стиля кода.
+   - Выполни: `./vendor/bin/sail pint --dirty` для исправления стиля кода.
 
 3. **Тестирование (Pest)**:
    - Напиши тесты для нового функционала.
-   - Запусти: `php artisan test --pest --compact`. Все тесты должны быть зелеными.
+   - Запусти: `./vendor/bin/sail artisan test --pest --compact`. Все тесты должны быть зелеными.
 
 4. **Документация (Swagger & Markdown)**:
    - Если затронуты API эндпоинты, обнови `public/swagger.json`.
