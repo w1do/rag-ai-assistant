@@ -1,91 +1,72 @@
 ---
 name: feature-laravel-ddd
-description: "Реализация функционала в стиле DDD + CQRS + CARS с использованием лучших практик Laravel"
+description: "Реализация функционала в стиле DDD + CQRS + CARS с использованием лучших практик Laravel и обязательной проверкой качества"
 ---
 
-При реализации любой фичи, правки или задачи следуй этой архитектуре и правилам.
+При реализации любой фичи, правки или задачи следуй этой архитектуре и правилам. Всегда обращайся к инструкциям в `.agents/skills` для получения актуальных паттернов.
 
-### 🏗 Архитектурные слои
+### 📚 Инструкции и навыки (Skills)
+Перед началом работы обязательно изучи соответствующие навыки в директории `.agents/skills/`:
+- **DDD & Архитектура**: `.agents/skills/architecture-ddd`
+- **DTOs**: `.agents/skills/dtos`
+- **Laravel Best Practices**: `.agents/skills/laravel-best-practices`
+- **Тестирование**: `.agents/skills/pest-testing`
+
+### 🏗 Архитектурные слои (согласно DDD)
 
 1. **Http Layer (`app/Http`)**:
-   - **Controllers**: Тонкие. Только вызывают Actions или Queries.
-   - **Requests**: Вся валидация данных (`php artisan make:request`).
+   - **Controllers**: Тонкие. Только вызывают Actions или Handlers.
+   - **Requests**: Вся валидация данных (`php artisan make:request`). Используй DTO для передачи данных дальше.
    - **Resources**: Форматирование API ответов (`php artisan make:resource`).
 
 2. **Domain Layer (`app/Domain/{DomainName}`)**:
-   - **Actions**: Простые классы для изменения состояния (Create/Update/Delete). Метод `execute()`.
-   - **Queries**: Классы для получения данных. Метод `execute()`.
+   - **Actions**: Простые классы для изменения состояния или выполнения одной бизнес-задачи.
    - **Commands**: DTO для передачи данных в Handlers.
-   - **Handlers**: Сложная бизнес-логика, обрабатывающая Commands. Метод `handle()`.
-   - **Models**: Eloquent модели, специфичные для домена.
-   - **Enums**: Перечисления для типизации.
+   - **Handlers**: Сложная бизнес-логика, обрабатывающая Commands.
+   - **Models**: Eloquent модели.
+   - **Queries**: Специализированные классы для получения данных (Read models).
 
 3. **Infrastructure Layer (`app/Infrastructure`)**:
-   - Реализации интерфейсов, работа с внешними API, векторными хранилищами.
+   - Реализации интерфейсов, внешние API, системные сервисы.
 
 ---
 
-### 📝 Примеры и структура кода
+### ✅ Обязательный Pipeline (перед сабмитом)
 
-#### Action (Изменение состояния)
+Каждое изменение должно пройти следующие проверки:
+
+1. **Статический анализ (Larastan)**:
+   - Выполни: `./vendor/bin/phpstan analyse` (или соответствующую команду проекта).
+   - Исправь все ошибки типизации.
+
+2. **Форматирование (Pint)**:
+   - Выполни: `./vendor/bin/pint --dirty` для исправления стиля кода.
+
+3. **Тестирование (Pest)**:
+   - Напиши тесты для нового функционала.
+   - Запусти: `php artisan test --pest --compact`. Все тесты должны быть зелеными.
+
+4. **Документация (Swagger & Markdown)**:
+   - Если затронуты API эндпоинты, обнови `public/swagger.json`.
+   - Обнови или создай документацию в `/docs`.
+
+---
+
+### 📝 Примеры кода
+
+Используй современные возможности PHP 8.5 (Constructor Property Promotion, Readonly, Enums) и паттерны из `.agents/skills`.
+
+#### Command & Handler
 ```php
-namespace App\Domain\Assistant\Actions;
-
-class StoreAssistantAction {
-    public function execute(User $user, array $data): Assistant {
-        return $user->assistants()->create($data);
-    }
-}
-```
-
-#### Query (Получение данных)
-```php
-namespace App\Domain\Assistant\Queries;
-
-class GetUserAssistantsQuery {
-    public function execute(User $user): Collection {
-        return $user->assistants()->latest()->get();
-    }
-}
-```
-
-#### Command & Handler (Сложная логика)
-```php
-// Command
-class IndexChunksCommand {
+// app/Domain/Assistant/Commands/IndexChunksCommand.php
+readonly class IndexChunksCommand {
     public function __construct(public int $id, public array $chunks) {}
 }
 
-// Handler
-class IndexChunksHandler {
+// app/Domain/Assistant/Handlers/IndexAssistantChunksHandler.php
+class IndexAssistantChunksHandler {
     public function handle(IndexChunksCommand $command): void {
-        // Логика...
+        // Бизнес-логика...
     }
 }
 ```
-
----
-
-### ✅ Лучшие практики
-
-1. **Database**:
-   - Всегда используй `with()` для предотвращения N+1.
-   - Выбирай только нужные колонки (`select()`).
-   - Используй `FormRequest` для валидации: `$request->validated()`.
-
-2. **Security**:
-   - Проверяй права через Policies: `$this->authorize('update', $assistant)`.
-   - Настрой `$fillable` или `$guarded` в моделях.
-
-3. **Testing (Pest)**:
-   - Создавай тесты для каждой фичи: `php artisan make:test --pest NameTest`.
-   - Используй фабрики: `Assistant::factory()->create()`.
-
-4. **Инструменты**:
-   - Используй `./vendor/bin/sail` для команд: `./vendor/bin/sail artisan ...`, `./vendor/bin/sail test`.
-   - Перед завершением запусти Pint: `./vendor/bin/sail bin pint --dirty`.
-
----
-
-### 📚 Документирование
-При создании нового функционала обновляй или создавай документацию в папке `/docs`. Вызывай `/docs` для контекста.
