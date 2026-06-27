@@ -21,6 +21,11 @@
         "lazychaser-laravel-nestedset",
         "medialibrary-development",
         "sluggable-development",
-        "tailwindcss-development"
+        "olakunlevpn-filament-skills",
+        "spatie-javascript",
+        "spatie-laravel-php",
+        "spatie-security",
+        "spatie-version-control",
+        "laravel-deploy"
     ]
 }
