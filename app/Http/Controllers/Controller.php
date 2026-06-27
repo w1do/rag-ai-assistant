@@ -10,10 +10,10 @@ use OpenApi\Attributes as OA;
     title: 'BotSync (RAG API)',
     contact: new OA\Contact(email: 'uniqdeveloper@yandex.ru')
 )]
-#[OA\Server(
-    url: 'http://localhost',
-    description: 'Локальный сервер'
-)]
+//#[OA\Server(
+//    url: 'http://localhost',
+//    description: 'Локальный сервер'
+//)]
 abstract class Controller
 {
     //

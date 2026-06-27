@@ -13,5 +13,8 @@ php artisan event:cache
 # Create storage link if not exists
 php artisan storage:link --ansi --no-interaction || true
 
+# Docs
+php artisan l5-swagger:generate
+
 # Execute the main command
 exec "$@"
