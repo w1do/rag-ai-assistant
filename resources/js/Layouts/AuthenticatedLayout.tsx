@@ -1,5 +1,6 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
+import MegaMenu from '@/Components/MegaMenu';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
@@ -59,46 +60,62 @@ export default function Authenticated({
                                     <Link2 className="mr-2 h-4 w-4" />
                                     Коннекторы
                                 </NavLink>
-                                <NavLink
-                                    href={route('monitoring')}
-                                    active={route().current('monitoring')}
-                                    className="gap-1.5"
+
+                                <MegaMenu
+                                    title="Работа с контентом"
+                                    active={
+                                        route().current('monitoring') ||
+                                        route().current('competitors') ||
+                                        route().current('bots') ||
+                                        route().current('tariffs')
+                                    }
                                 >
-                                    <Activity className="h-4 w-4" />
-                                    Мониторинг
-                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                        Скоро
-                                    </span>
-                                </NavLink>
-                                <NavLink
-                                    href={route('competitors')}
-                                    active={route().current('competitors')}
-                                    className="gap-1.5"
-                                >
-                                    <Users className="h-4 w-4" />
-                                    Конкуренты
-                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                        Скоро
-                                    </span>
-                                </NavLink>
-                                <NavLink
-                                    href={route('bots')}
-                                    active={route().current('bots')}
-                                    className="gap-1.5"
-                                >
-                                    <MessagesSquare className="h-4 w-4" />
-                                    Боты
-                                    <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
-                                        Скоро
-                                    </span>
-                                </NavLink>
-                                <NavLink
-                                    href={route('tariffs')}
-                                    active={route().current('tariffs')}
-                                >
-                                    <CreditCard className="mr-2 h-4 w-4" />
-                                    Тарифы
-                                </NavLink>
+                                    <div className="space-y-1">
+                                        <Dropdown.Link
+                                            href={route('monitoring')}
+                                            className="flex items-center"
+                                        >
+                                            <Activity className="mr-2 h-4 w-4 text-gray-400" />
+                                            Мониторинг
+                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                                Скоро
+                                            </span>
+                                        </Dropdown.Link>
+                                    </div>
+                                    <div className="space-y-1 ps-6">
+                                        <Dropdown.Link
+                                            href={route('competitors')}
+                                            className="flex items-center"
+                                        >
+                                            <Users className="mr-2 h-4 w-4 text-gray-400" />
+                                            Конкуренты
+                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                                Скоро
+                                            </span>
+                                        </Dropdown.Link>
+                                    </div>
+                                    <div className="space-y-1 ps-6">
+                                        <Dropdown.Link
+                                            href={route('bots')}
+                                            className="flex items-center"
+                                        >
+                                            <MessagesSquare className="mr-2 h-4 w-4 text-gray-400" />
+                                            Боты
+                                            <span className="ms-2 inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                                                Скоро
+                                            </span>
+                                        </Dropdown.Link>
+                                    </div>
+                                    <div className="space-y-1 ps-6">
+                                        <Dropdown.Link
+                                            href={route('tariffs')}
+                                            className="flex items-center"
+                                        >
+                                            <CreditCard className="mr-2 h-4 w-4 text-gray-400" />
+                                            Тарифы
+                                        </Dropdown.Link>
+                                    </div>
+                                </MegaMenu>
                             </div>
                         </div>
 
@@ -225,6 +242,13 @@ export default function Authenticated({
                             <Link2 className="mr-3 h-5 w-5" />
                             Коннекторы
                         </ResponsiveNavLink>
+
+                        <div className="mt-4 border-t border-gray-100 pt-4">
+                            <div className="px-4 text-xs font-semibold uppercase tracking-widest text-gray-400">
+                                Работа с контентом
+                            </div>
+                        </div>
+
                         <ResponsiveNavLink
                             href={route('monitoring')}
                             active={route().current('monitoring')}
