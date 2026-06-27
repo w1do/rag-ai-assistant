@@ -6,6 +6,7 @@ return [
         'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
         'chat_model' => env('OPENAI_CHAT_MODEL', 'gpt-4o-mini'),
         'embedding_model' => env('OPENAI_EMBEDDING_MODEL', 'text-embedding-3-small'),
+        'audio_model' => env('OPENAI_AUDIO_MODEL', 'openai/whisper-1'),
     ],
     'qdrant' => [
         'host' => env('QDRANT_HOST', 'localhost'),

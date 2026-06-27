@@ -3,9 +3,8 @@
 namespace App\Domain\Assistant\Actions;
 
 use App\Domain\Knowledge\Models\Knowledge;
-use LLPhant\Audio\OpenAIAudio;
+use App\Infrastructure\AI\AIClientFactory;
 use LLPhant\Embeddings\Document;
-use LLPhant\OpenAIConfig;
 
 /**
  * Действие по транскрибации аудиофайлов.
@@ -14,8 +13,12 @@ class TranscribeAudioAction
 {
     /**
      * @param  IndexAssistantDocumentsAction  $indexAssistantDocumentsAction  Действие для индексации документов
+     * @param  AIClientFactory  $aiClientFactory  Фабрика для создания клиентов ИИ
      */
-    public function __construct(private IndexAssistantDocumentsAction $indexAssistantDocumentsAction) {}
+    public function __construct(
+        private IndexAssistantDocumentsAction $indexAssistantDocumentsAction,
+        private AIClientFactory $aiClientFactory
+    ) {}
 
     /**
      * Выполняет транскрибацию аудио и индексацию полученного текста.
@@ -27,11 +30,7 @@ class TranscribeAudioAction
         $knowledge->update(['status' => 'processing']);
         $knowledge->assistant->update(['status' => 'processing']);
 
-        $config = new OpenAIConfig;
-        $config->apiKey = config('llphant.openai.api_key');
-        $config->url = config('llphant.openai.base_url');
-
-        $audioService = new OpenAIAudio($config);
+        $audioService = $this->aiClientFactory->createAudioTranscriber();
         $filePath = storage_path('app/private/'.$knowledge->path);
         $transcription = $audioService->transcribe($filePath);
 

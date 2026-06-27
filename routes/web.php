@@ -7,6 +7,7 @@ use App\Http\Controllers\Assistant\DashboardController;
 use App\Http\Controllers\Assistant\MarketplaceController;
 use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Chat\PublicChatController;
+use App\Http\Controllers\Connector\ConnectorController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('assistants/{assistant}/upload-audio', [AssistantController::class, 'uploadAudio'])->name('assistants.upload-audio');
     Route::post('assistants/{assistant}/add-url', [AssistantController::class, 'addUrl'])->name('assistants.add-url');
     Route::delete('assistants/{assistant}/knowledge/{knowledge}', [AssistantController::class, 'destroyKnowledge'])->name('assistants.knowledge.destroy');
+
+    Route::get('/connectors', [ConnectorController::class, 'index'])->name('connectors.index');
+    Route::post('/connectors/attach-assistant', [ConnectorController::class, 'attachAssistant'])->name('connectors.attach-assistant');
 
     Route::get('assistants/{assistant}/chat', [ChatController::class, 'index'])->name('assistants.chat');
 

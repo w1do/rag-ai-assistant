@@ -3,6 +3,17 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
+import {
+    Activity,
+    Bot,
+    CreditCard,
+    LayoutDashboard,
+    Link2,
+    LogOut,
+    MessagesSquare,
+    User,
+    Users,
+} from 'lucide-react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
 export default function Authenticated({
@@ -31,19 +42,29 @@ export default function Authenticated({
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
                                 >
+                                    <LayoutDashboard className="mr-2 h-4 w-4" />
                                     Панель управления
                                 </NavLink>
                                 <NavLink
                                     href={route('assistants.index')}
                                     active={route().current('assistants.*')}
                                 >
+                                    <Bot className="mr-2 h-4 w-4" />
                                     Ассистенты
+                                </NavLink>
+                                <NavLink
+                                    href={route('connectors.index')}
+                                    active={route().current('connectors.*')}
+                                >
+                                    <Link2 className="mr-2 h-4 w-4" />
+                                    Коннекторы
                                 </NavLink>
                                 <NavLink
                                     href={route('monitoring')}
                                     active={route().current('monitoring')}
-                                    className=" gap-1.5"
+                                    className="gap-1.5"
                                 >
+                                    <Activity className="h-4 w-4" />
                                     Мониторинг
                                     <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                         Скоро
@@ -52,8 +73,9 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('competitors')}
                                     active={route().current('competitors')}
-                                    className=" gap-1.5"
+                                    className="gap-1.5"
                                 >
+                                    <Users className="h-4 w-4" />
                                     Конкуренты
                                     <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                         Скоро
@@ -62,8 +84,9 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('bots')}
                                     active={route().current('bots')}
-                                    className=" gap-1.5"
+                                    className="gap-1.5"
                                 >
+                                    <MessagesSquare className="h-4 w-4" />
                                     Боты
                                     <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                         Скоро
@@ -73,6 +96,7 @@ export default function Authenticated({
                                     href={route('tariffs')}
                                     active={route().current('tariffs')}
                                 >
+                                    <CreditCard className="mr-2 h-4 w-4" />
                                     Тарифы
                                 </NavLink>
                             </div>
@@ -108,14 +132,18 @@ export default function Authenticated({
                                     <Dropdown.Content>
                                         <Dropdown.Link
                                             href={route('profile.edit')}
+                                            className="flex items-center"
                                         >
+                                            <User className="mr-2 h-4 w-4" />
                                             Профиль
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
                                             as="button"
+                                            className="flex items-center"
                                         >
+                                            <LogOut className="mr-2 h-4 w-4" />
                                             Выйти
                                         </Dropdown.Link>
                                     </Dropdown.Content>
@@ -176,20 +204,34 @@ export default function Authenticated({
                         <ResponsiveNavLink
                             href={route('dashboard')}
                             active={route().current('dashboard')}
+                            className="flex items-center"
                         >
+                            <LayoutDashboard className="mr-3 h-5 w-5" />
                             Панель управления
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('assistants.index')}
                             active={route().current('assistants.*')}
+                            className="flex items-center"
                         >
+                            <Bot className="mr-3 h-5 w-5" />
                             Ассистенты
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('connectors.index')}
+                            active={route().current('connectors.*')}
+                            className="flex items-center"
+                        >
+                            <Link2 className="mr-3 h-5 w-5" />
+                            Коннекторы
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('monitoring')}
                             active={route().current('monitoring')}
+                            className="flex items-center"
                         >
                             <span className="inline-flex items-center gap-2">
+                                <Activity className="mr-1 h-5 w-5" />
                                 Мониторинг
                                 <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                     Скоро
@@ -199,8 +241,10 @@ export default function Authenticated({
                         <ResponsiveNavLink
                             href={route('competitors')}
                             active={route().current('competitors')}
+                            className="flex items-center"
                         >
                             <span className="inline-flex items-center gap-2">
+                                <Users className="mr-1 h-5 w-5" />
                                 Конкуренты
                                 <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                     Скоро
@@ -210,8 +254,10 @@ export default function Authenticated({
                         <ResponsiveNavLink
                             href={route('bots')}
                             active={route().current('bots')}
+                            className="flex items-center"
                         >
                             <span className="inline-flex items-center gap-2">
+                                <MessagesSquare className="mr-1 h-5 w-5" />
                                 Боты
                                 <span className="inline-flex items-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold text-white">
                                     Скоро
@@ -221,7 +267,9 @@ export default function Authenticated({
                         <ResponsiveNavLink
                             href={route('tariffs')}
                             active={route().current('tariffs')}
+                            className="flex items-center"
                         >
+                            <CreditCard className="mr-3 h-5 w-5" />
                             Тарифы
                         </ResponsiveNavLink>
                     </div>
@@ -237,14 +285,20 @@ export default function Authenticated({
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
+                            <ResponsiveNavLink
+                                href={route('profile.edit')}
+                                className="flex items-center"
+                            >
+                                <User className="mr-3 h-5 w-5" />
                                 Профиль
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route('logout')}
                                 as="button"
+                                className="flex items-center"
                             >
+                                <LogOut className="mr-3 h-5 w-5" />
                                 Выйти
                             </ResponsiveNavLink>
                         </div>

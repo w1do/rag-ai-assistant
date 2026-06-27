@@ -27,6 +27,7 @@
         "spatie-security",
         "spatie-version-control",
         "laravel-deploy",
-        "refactoring-ddd"
+        "refactoring-ddd",
+        "polza-ai"
     ]
 }
