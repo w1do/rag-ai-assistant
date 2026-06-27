@@ -13,7 +13,7 @@ interface Chunk {
 
 interface Knowledge {
     id: number;
-    type: 'document' | 'voice' | 'website';
+    type: 'document' | 'voice' | 'website' | 'api';
     name: string | null;
     url: string | null;
     path: string | null;
@@ -41,7 +41,7 @@ interface Props {
 }
 
 export default function Show({ assistant }: Props) {
-    const [activeTab, setActiveTab] = useState<'document' | 'voice' | 'website'>('document');
+    const [activeTab, setActiveTab] = useState<'document' | 'voice' | 'website' | 'api'>('document');
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -195,6 +195,16 @@ export default function Show({ assistant }: Props) {
                                         >
                                             Веб-сайты
                                         </button>
+                                        <button
+                                            onClick={() => setActiveTab('api')}
+                                            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+                                                activeTab === 'api'
+                                                    ? 'border-indigo-500 text-indigo-600'
+                                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                        >
+                                            API
+                                        </button>
                                     </div>
 
                                     {activeTab === 'document' && (
@@ -269,6 +279,70 @@ export default function Show({ assistant }: Props) {
                                         </div>
                                     )}
 
+                                    {activeTab === 'api' && (
+                                        <div className="space-y-6">
+                                            <div className="p-4 border rounded-lg bg-gray-50">
+                                                <h4 className="font-medium text-gray-900">Интеграция через API</h4>
+                                                <p className="text-sm text-gray-500 mb-4">Отправляйте данные для обучения ассистента напрямую через API эндпоинт.</p>
+                                                
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Эндпоинт (POST)</label>
+                                                        <div className="flex items-center gap-2 bg-gray-900 rounded-md p-2.5 border border-gray-800">
+                                                            <code className="text-xs font-mono text-indigo-300 flex-1 break-all">
+                                                                {window.location.origin}/api/v1/callback
+                                                            </code>
+                                                            <button 
+                                                                onClick={() => navigator.clipboard.writeText(`${window.location.origin}/api/v1/callback`)}
+                                                                className="text-gray-500 hover:text-white p-1"
+                                                                title="Копировать"
+                                                            >
+                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Пример JSON запроса (Классический)</label>
+                                                        <div className="bg-gray-900 rounded-md p-3 border border-gray-800 overflow-x-auto mb-3">
+                                                            <pre className="text-[11px] font-mono text-green-400">
+{`{
+  "assistant_id": ${assistant.id},
+  "name": "FAQ База",
+  "chunks": [
+    {
+      "question": "Как сделать заказ?",
+      "answer": "Выберите товар и нажмите кнопку Купить."
+    }
+  ]
+}`}
+                                                            </pre>
+                                                        </div>
+
+                                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Пример JSON запроса (Любые данные)</label>
+                                                        <div className="bg-gray-900 rounded-md p-3 border border-gray-800 overflow-x-auto">
+                                                            <pre className="text-[11px] font-mono text-indigo-400">
+{`{
+  "assistant_id": ${assistant.id},
+  "name": "Каталог товаров",
+  "chunks": [
+    {
+      "title": "iPhone 15",
+      "price": "999$",
+      "category": "Смартфоны"
+    }
+  ]
+}`}
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="mt-8 space-y-4">
                                         <h3 className="text-md font-bold text-gray-700">Список источников ({(assistant.knowledge || []).filter(k => k.type === activeTab).length})</h3>
                                         
@@ -313,6 +387,12 @@ export default function Show({ assistant }: Props) {
                                                                 </button>
                                                             </div>
                                                         </div>
+
+                                                        {item.status === 'error' && item.metadata?.error && (
+                                                            <div className="mt-2 text-[10px] text-red-600 bg-red-50 p-2 rounded border border-red-100 overflow-x-auto font-mono">
+                                                                <strong>Ошибка:</strong> {item.metadata.error}
+                                                            </div>
+                                                        )}
 
                                                         {item.content && (
                                                             <details className="mt-2">

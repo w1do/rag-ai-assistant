@@ -12,6 +12,15 @@
         "configuring-horizon",
         "pest-testing",
         "inertia-react-development",
+        "tailwindcss-development",
+        "architecture-ddd",
+        "documentation",
+        "dtos",
+        "laravel-activitylog",
+        "laravel-query-builder",
+        "lazychaser-laravel-nestedset",
+        "medialibrary-development",
+        "sluggable-development",
         "tailwindcss-development"
     ]
 }

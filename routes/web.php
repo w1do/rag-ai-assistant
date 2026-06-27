@@ -28,6 +28,10 @@ Route::get('/', function () {
 
 Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
+Route::get('/docs', function () {
+    return file_get_contents(public_path('docs/index.html'));
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

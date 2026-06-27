@@ -57,6 +57,7 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 1. **ProcessDocumentJob**: Чтение файла, чанкинг, генерация эмбеддингов и сохранение в Qdrant.
 2. **TranscribeVoiceJob**: Транскрипция аудио через Whisper и последующая индексация.
 3. **GenerateKnowledgeJob**: Парсинг текста с URL и генерация записи в базу знаний через LLM.
+4. **API Callback**: Прямая индексация подготовленных данных (вопросы и ответы) через REST API.
 
 Для обеспечения надежности в Supervisor настроен стандартный воркер `queue:work`, а для расширенного мониторинга используется Laravel Horizon (доступен по адресу `/horizon`). Доступ в продакшене регулируется через `HORIZON_EMAILS` в `.env`.
 
