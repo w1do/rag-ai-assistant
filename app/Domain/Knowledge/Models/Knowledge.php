@@ -10,6 +10,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $assistant_id
+ * @property string $type
+ * @property string $name
+ * @property string|null $url
+ * @property string|null $path
+ * @property string|null $content
+ * @property string $status
+ * @property array|null $metadata
+ * @property-read Assistant $assistant
+ */
 class Knowledge extends Model
 {
     /** @use HasFactory<KnowledgeFactory> */

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Assistant;
 
 use App\Domain\Assistant\Queries\GetDashboardStatsQuery;
+use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 

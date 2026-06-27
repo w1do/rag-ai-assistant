@@ -2,12 +2,12 @@
 
 use App\Domain\Assistant\Actions\IndexAssistantDocumentsAction;
 use App\Domain\Assistant\Models\Assistant;
-use App\Http\Controllers\AssistantController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MarketplaceController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PublicChatController;
+use App\Http\Controllers\Assistant\AssistantController;
+use App\Http\Controllers\Assistant\DashboardController;
+use App\Http\Controllers\Assistant\MarketplaceController;
+use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\Chat\PublicChatController;
+use App\Http\Controllers\User\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

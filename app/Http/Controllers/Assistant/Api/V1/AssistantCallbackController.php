@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Assistant\Api\V1;
 
 use App\Domain\Assistant\Commands\IndexAssistantChunksCommand;
 use App\Domain\Assistant\Handlers\IndexAssistantChunksHandler;

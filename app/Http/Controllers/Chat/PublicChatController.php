@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Chat;
 
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Chat\Models\ChatHistory;
 use App\Domain\Chat\Queries\AskAssistantQuery;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

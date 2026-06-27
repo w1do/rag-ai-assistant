@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AssistantCallbackController;
+use App\Http\Controllers\Assistant\Api\V1\AssistantCallbackController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {

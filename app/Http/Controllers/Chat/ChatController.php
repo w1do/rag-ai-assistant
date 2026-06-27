@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Chat;
 
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Chat\Actions\AskAssistantAction;
 use App\Domain\Chat\Queries\GetChatHistoryQuery;
+use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

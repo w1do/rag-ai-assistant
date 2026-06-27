@@ -1,21 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Assistant;
 
 use App\Domain\Assistant\Actions\AddUrlAction;
 use App\Domain\Assistant\Actions\DeleteAssistantAction;
-use App\Domain\Assistant\Actions\StoreAssistantAction;
-use App\Domain\Assistant\Actions\UpdateAssistantAction;
 use App\Domain\Assistant\Actions\UploadAudioAction;
 use App\Domain\Assistant\Actions\UploadDocumentAction;
+use App\Domain\Assistant\Commands\StoreAssistantCommand;
+use App\Domain\Assistant\Commands\UpdateAssistantCommand;
+use App\Domain\Assistant\DTO\AssistantDTO;
+use App\Domain\Assistant\Handlers\StoreAssistantHandler;
+use App\Domain\Assistant\Handlers\UpdateAssistantHandler;
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Assistant\Queries\GetAssistantWithDetailsQuery;
 use App\Domain\Assistant\Queries\GetUserAssistantsQuery;
 use App\Domain\Knowledge\Actions\DeleteKnowledgeAction;
 use App\Domain\Knowledge\Models\Knowledge;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Assistant\StoreAssistantRequest;
+use App\Http\Requests\Assistant\UpdateAssistantRequest;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,8 +33,11 @@ class AssistantController extends Controller
 
     public function index(GetUserAssistantsQuery $query): Response
     {
+        /** @var User $user */
+        $user = Auth::user();
+
         return Inertia::render('Assistants/Index', [
-            'assistants' => $query->execute(auth()->user()),
+            'assistants' => $query->execute($user),
         ]);
     }
 
@@ -35,22 +46,17 @@ class AssistantController extends Controller
         return Inertia::render('Assistants/Create');
     }
 
-    public function store(Request $request, StoreAssistantAction $action): RedirectResponse
+    public function store(StoreAssistantRequest $request, StoreAssistantHandler $handler): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'style' => 'nullable|string|in:commercial,business,rude,positive',
-            'brand_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'social' => 'nullable|array',
-            'fallback' => 'nullable|string',
-            'welcome_message' => 'nullable|string',
-            'actions' => 'nullable|array',
-            'system' => 'nullable|string',
-        ]);
+        $dto = AssistantDTO::fromArray($request->validated());
 
-        $action->execute(auth()->user(), $validated);
+        /** @var User $user */
+        $user = Auth::user();
+
+        $handler->handle(new StoreAssistantCommand(
+            user: $user,
+            dto: $dto
+        ));
 
         return redirect()->route('assistants.index');
     }
@@ -73,24 +79,16 @@ class AssistantController extends Controller
         ]);
     }
 
-    public function update(Request $request, Assistant $assistant, UpdateAssistantAction $action): RedirectResponse
+    public function update(UpdateAssistantRequest $request, Assistant $assistant, UpdateAssistantHandler $handler): RedirectResponse
     {
         $this->authorize('update', $assistant);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'style' => 'nullable|string|in:commercial,business,rude,positive',
-            'brand_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'social' => 'nullable|array',
-            'fallback' => 'nullable|string',
-            'welcome_message' => 'nullable|string',
-            'actions' => 'nullable|array',
-            'system' => 'nullable|string',
-        ]);
+        $dto = AssistantDTO::fromArray($request->validated());
 
-        $action->execute($assistant, $validated);
+        $handler->handle(new UpdateAssistantCommand(
+            assistant: $assistant,
+            dto: $dto
+        ));
 
         return redirect()->route('assistants.show', $assistant->id);
     }
@@ -138,7 +136,7 @@ class AssistantController extends Controller
             'url' => 'required|url',
         ]);
 
-        $action->execute($assistant, $request->url);
+        $action->execute($assistant, $request->input('url'));
 
         return back()->with([
             'status' => 'URL added and knowledge generation started.',
