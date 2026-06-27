@@ -1,0 +1,249 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "BotSync (RAG API)",
+        "description": "Документация API для системы BotSync RAG (Retrieval-Augmented Generation), обучение систем на данных для автоматизации чат ботов",
+        "contact": {
+            "email": "uniqdeveloper@yandex.ru"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Локальный сервер"
+        }
+    ],
+    "paths": {
+        "/api/v1/callback": {
+            "post": {
+                "tags": [
+                    "Обучение ассистента на JSON"
+                ],
+                "summary": "Дообучение ассистента",
+                "description": "Этот эндпоинт позволяет отправлять подготовленные данные (вопросы и ответы) напрямую для индексации в базе знаний ассистента.",
+                "operationId": "assistantCallback",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "assistant_id",
+                                    "name",
+                                    "chunks"
+                                ],
+                                "properties": {
+                                    "assistant_id": {
+                                        "description": "ID ассистента в системе",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "description": "Название источника знаний",
+                                        "type": "string",
+                                        "example": "FAQ по пиццерии"
+                                    },
+                                    "chunks": {
+                                        "description": "Массив объектов с произвольными данными (например, пары вопрос-ответ)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "example": {
+                                                "question": "Какую пиццу вы готовите?",
+                                                "answer": "Мы готовим большую и тонкую пиццу на дровах."
+                                            }
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Данные успешно получены и проиндексированы",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Данные успешно получены и проиндексированы"
+                                        },
+                                        "assistant_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "knowledge_id": {
+                                            "type": "integer",
+                                            "example": 42
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The assistant id field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "assistant_id": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The assistant id field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ошибка при индексации данных: [Текст ошибки]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/share-chat/{id}": {
+            "get": {
+                "tags": [
+                    "Публичный чат"
+                ],
+                "summary": "Публичный чат ассистента",
+                "operationId": "32f2e5abfdfd7d88a2f65d98eb482c66",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ"
+                    }
+                }
+            }
+        },
+        "/share-chat/{id}/message": {
+            "post": {
+                "tags": [
+                    "Public Chat"
+                ],
+                "summary": "Отправка сообщения в публичный чат",
+                "operationId": "ba7c22115faf743fb2964f9096915e42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PublicMessageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ответ ассистента",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "answer": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PublicMessageRequest": {
+                "title": "Public Message Request",
+                "required": [
+                    "question"
+                ],
+                "properties": {
+                    "question": {
+                        "type": "string",
+                        "example": "Как дела?",
+                        "maxLength": 1000
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Обучение ассистента на JSON",
+            "description": "Обучение ассистента на JSON"
+        },
+        {
+            "name": "Публичный чат",
+            "description": "Публичный чат"
+        },
+        {
+            "name": "Public Chat",
+            "description": "Public Chat"
+        }
+    ]
+}

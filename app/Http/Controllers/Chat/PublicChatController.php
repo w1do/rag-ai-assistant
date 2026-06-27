@@ -12,6 +12,7 @@ use App\Http\Requests\PublicMessageRequest;
 use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use OpenApi\Attributes as OA;
 
 /**
  * Контроллер общедоступного чат-виджета.
@@ -25,53 +26,45 @@ use Inertia\Response;
  */
 class PublicChatController extends Controller
 {
-    /**
-     * Отдаёт standalone-страницу публичного чата ассистента.
-     *
-     * @OA\Get(
-     *     path="/share-chat/{id}",
-     *     summary="Публичный чат ассистента",
-     *     tags={"Public Chat"},
-     *
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *
-     *     @OA\Response(response=200, description="Успешный ответ (Inertia)")
-     * )
-     */
+    #[OA\Get(
+        path: '/share-chat/{id}',
+        summary: 'Публичный чат ассистента',
+        tags: ['Публичный чат'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Успешный ответ'),
+        ]
+    )]
     public function show(Assistant $assistant, GetPublicChatDataQuery $query): Response
     {
         return Inertia::render('ShareChat', $query->execute($assistant, session()->getId()));
     }
 
-    /**
-     * Обрабатывает сообщение пользователя в публичном чате.
-     *
-     * @OA\Post(
-     *     path="/share-chat/{id}/message",
-     *     summary="Отправка сообщения в публичный чат",
-     *     tags={"Public Chat"},
-     *
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *
-     *     @OA\RequestBody(
-     *
-     *         @OA\JsonContent(ref="#/components/schemas/PublicMessageRequest")
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Ответ ассистента",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="answer", type="string"),
-     *             @OA\Property(property="sources", type="array", @OA\Items(type="object"))
-     *         )
-     *     ),
-     *
-     *     @OA\Response(response=422, description="Ошибка валидации")
-     * )
-     */
+    #[OA\Post(
+        path: '/share-chat/{id}/message',
+        summary: 'Отправка сообщения в публичный чат',
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(ref: '#/components/schemas/PublicMessageRequest')
+        ),
+        tags: ['Public Chat'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Ответ ассистента',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'answer', type: 'string')
+                    ]
+                )
+            ),
+            new OA\Response(response: 422, description: 'Ошибка валидации'),
+        ]
+    )]
     public function message(
         PublicMessageRequest $request,
         Assistant $assistant,

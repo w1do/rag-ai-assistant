@@ -8,7 +8,7 @@ use App\Domain\Chat\Queries\AskAssistantQuery;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
-class AskPublicAssistantHandler
+readonly class AskPublicAssistantHandler
 {
     public function __construct(private AskAssistantQuery $askAssistantQuery) {}
 
@@ -42,7 +42,7 @@ class AskPublicAssistantHandler
 
         return [
             'answer' => $result['answer'],
-            'sources' => $sources,
+            //'sources' => $sources,
         ];
     }
 
