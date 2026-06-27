@@ -153,21 +153,6 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                                 <div className="prose prose-sm max-w-none">
                                     <Markdown>{msg.answer}</Markdown>
                                 </div>
-                                {msg.sources && msg.sources.length > 0 && (
-                                    <div className="mt-3 border-t border-gray-100 pt-2">
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {msg.sources.map((source, sIdx) => (
-                                                <span
-                                                    key={sIdx}
-                                                    className="rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-[10px] text-gray-500"
-                                                    title={source.content}
-                                                >
-                                                    {source.sourceName}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

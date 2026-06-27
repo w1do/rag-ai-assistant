@@ -29,7 +29,7 @@ class PublicChatController extends Controller
      * Отдаёт standalone-страницу публичного чата ассистента.
      *
      * @OA\Get(
-     *     path="/s/{id}",
+     *     path="/share-chat/{id}",
      *     summary="Публичный чат ассистента",
      *     tags={"Public Chat"},
      *
@@ -47,7 +47,7 @@ class PublicChatController extends Controller
      * Обрабатывает сообщение пользователя в публичном чате.
      *
      * @OA\Post(
-     *     path="/s/{id}/message",
+     *     path="/share-chat/{id}/message",
      *     summary="Отправка сообщения в публичный чат",
      *     tags={"Public Chat"},
      *

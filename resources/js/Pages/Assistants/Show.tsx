@@ -122,7 +122,7 @@ export default function Show({ assistant }: Props) {
                         <Link href={route('assistants.edit', assistant.id)}>
                             <SecondaryButton>Редактировать</SecondaryButton>
                         </Link>
-                        <Link href={route('assistants.chat', assistant.id)}>
+                        <Link href={route('share-chat.show', assistant.id)}>
                             <PrimaryButton>Начать чат</PrimaryButton>
                         </Link>
                         <button 

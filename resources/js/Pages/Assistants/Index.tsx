@@ -265,7 +265,7 @@ function AssistantRow({ assistant }: { assistant: Assistant }) {
 
                     {/* Перейти в чат */}
                     <Link
-                        href={route('assistants.chat', assistant.id)}
+                        href={route('share-chat.show', assistant.id)}
                         title="Перейти в чат"
                         className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-indigo-600 text-white transition-colors hover:bg-indigo-700"
                     >

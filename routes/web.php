@@ -42,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('assistants/{assistant}/knowledge/{knowledge}', [AssistantController::class, 'destroyKnowledge'])->name('assistants.knowledge.destroy');
 
     Route::get('assistants/{assistant}/chat', [ChatController::class, 'index'])->name('assistants.chat');
-    Route::post('assistants/{assistant}/chat', [ChatController::class, 'store'])->name('assistants.chat.store');
 
     Route::get('/monitoring', fn () => Inertia::render('Monitoring'))->name('monitoring');
     Route::get('/competitors', fn () => Inertia::render('Competitors'))->name('competitors');
