@@ -57,7 +57,7 @@ export default function Header({ auth }: Props) {
                             className="theme-button style-1 h-[48px]"
                         >
                             <span data-text="Dashboard">Dashboard</span>
-                            <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
+                            <i><ArrowRight size={14} /></i>
                         </Link>
                     ) : (
                         <Link 
@@ -65,7 +65,7 @@ export default function Header({ auth }: Props) {
                             className="theme-button style-1 h-[48px]"
                         >
                             <span data-text="Connect Node">Connect Node</span>
-                            <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
+                            <i><ArrowRight size={14} /></i>
                         </Link>
                     )}
 
@@ -94,7 +94,7 @@ export default function Header({ auth }: Props) {
                                 className="theme-button style-1 w-full"
                             >
                                 <span data-text="Connect Node">Connect Node</span>
-                                <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
+                                <i><ArrowRight size={14} /></i>
                             </Link>
                         )}
                     </nav>

@@ -194,7 +194,7 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                                 className="theme-button style-2 h-[40px] px-4"
                                             >
                                                 <span data-text="Перейти">Перейти</span>
-                                                <i className="fa-solid fa-arrow-right"><ArrowUpRight size={14} /></i>
+                                                <i><ArrowUpRight size={14} /></i>
                                             </Link>
                                         </li>
                                     );
@@ -209,7 +209,7 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                 className="theme-button style-1 w-full sm:w-auto"
                             >
                                 <span data-text="Добавить ассистента">Добавить ассистента</span>
-                                <i className="fa-solid fa-arrow-right"><Plus size={16} /></i>
+                                <i><Plus size={16} /></i>
                             </Link>
                         </div>
                     </div>

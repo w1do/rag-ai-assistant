@@ -1,9 +1,14 @@
-import { SVGAttributes } from 'react';
+import { Bot } from 'lucide-react';
 
-export default function ApplicationLogo({ className }: { className?: string }) {
+export default function ApplicationLogo({ className = '' }: { className?: string }) {
     return (
-        <span className={`text-xl font-serif font-bold tracking-tight text-[#111111] ${className}`}>
-            MANUFLEX
-        </span>
+        <div className={`flex items-center gap-3 ${className}`}>
+            <div className="w-12 h-12 bg-primary-color rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(223,255,0,0.3)]">
+                <Bot className="w-7 h-7 text-black-color" />
+            </div>
+            <span className="text-2xl font-title tracking-tight text-white-color uppercase">
+                Bot<span className="text-primary-color">Sync</span>
+            </span>
+        </div>
     );
 }

@@ -6,16 +6,22 @@ interface FAQItem {
     answer: string;
 }
 
+interface FAQProps {
+    items?: FAQItem[];
+    title?: React.ReactNode;
+    subtitle?: string;
+}
+
 /**
  * Компонент секции FAQ для лендинга.
  * 
  * Отображает список часто задаваемых вопросов в виде аккордеона.
  * Включает информацию по AI RAG, мониторингу конкурентов, обучению и интеграции.
  */
-export default function FAQ() {
+export default function FAQ({ items, title, subtitle }: FAQProps) {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-    const faqs: FAQItem[] = [
+    const defaultFaqs: FAQItem[] = [
         {
             question: "Что такое AI RAG чат-бот и чем он отличается от обычных ботов?",
             answer: "RAG (Retrieval-Augmented Generation) — это продвинутая технология, которая позволяет ИИ использовать вашу уникальную базу знаний для ответов. В отличие от обычных ботов, наш ассистент не \"галюцинирует\", а оперирует только вашими документами и данными, обеспечивая максимальную точность и актуальность информации."
@@ -58,37 +64,41 @@ export default function FAQ() {
         }
     ];
 
+    const faqs = items || defaultFaqs;
+
     const toggle = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
-        <section id="faq" className="py-24 bg-background-dark">
+        <section id="faq" className="py-24 bg-body-color">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
-                        Operational <span className="text-secondary">Intelligence</span> FAQ
+                    <h2 className="text-3xl font-title text-white-color sm:text-5xl">
+                        {title || <>Operational <span className="text-primary-color">Intelligence</span> FAQ</>}
                     </h2>
-                    <p className="mt-4 text-lg text-text-secondary-dark">
-                        Deep dive into the neural orchestration and industrial protocols.
-                    </p>
+                    {subtitle && (
+                        <p className="mt-4 text-lg text-text-secondary-dark">
+                            {subtitle}
+                        </p>
+                    )}
                 </div>
                 
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
                         <div 
                             key={index}
-                            className="glass rounded-2xl overflow-hidden transition-all duration-200 border-white/5 hover:border-white/10"
+                            className="bg-background-one rounded-three overflow-hidden transition-all duration-500 border border-border-color-one hover:border-primary-color/50"
                         >
                             <button
                                 onClick={() => toggle(index)}
                                 className="w-full flex items-center justify-between p-7 text-left bg-transparent hover:bg-white/5 transition-colors focus:outline-none"
                             >
-                                <span className="text-lg font-bold text-text-primary-dark pr-8">
+                                <span className="text-lg font-bold text-white-color pr-8">
                                     {faq.question}
                                 </span>
                                 {openIndex === index ? (
-                                    <ChevronUp className="h-5 w-5 text-secondary shrink-0" />
+                                    <ChevronUp className="h-5 w-5 text-primary-color shrink-0" />
                                 ) : (
                                     <ChevronDown className="h-5 w-5 text-text-secondary-dark shrink-0" />
                                 )}

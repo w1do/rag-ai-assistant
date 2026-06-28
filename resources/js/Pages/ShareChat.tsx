@@ -103,30 +103,30 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
     };
 
     return (
-        <div className="flex h-screen flex-col bg-background-dark text-text-primary-dark font-sans">
+        <div className="flex h-screen flex-col bg-body-color text-white-color font-sans">
             <Head title={`Чат: ${title}`} />
 
             {/* Шапка */}
-            <header className="sticky top-0 z-10 flex items-center justify-between border-b border-white/5 glass px-4 py-3 shadow-2xl backdrop-blur-md">
+            <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border-color-one bg-body-color/80 px-4 py-3 shadow-2xl backdrop-blur-md">
                 <div className="flex items-center gap-3">
                     <div className="relative">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[20px] gold-gradient text-base font-bold uppercase text-background-dark shadow-lg shadow-secondary/20">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-color text-base font-bold uppercase text-black-color shadow-lg shadow-primary-color/20">
                             {(title || 'A').charAt(0)}
                         </div>
-                        <span className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2 border-background-dark bg-green-500" />
+                        <span className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2 border-body-color bg-green-500" />
                     </div>
                     <div className="min-w-0">
-                        <p className="truncate text-sm font-bold text-text-primary-dark">{title}</p>
-                        <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary-dark">
+                        <p className="truncate text-sm font-title font-bold text-white-color">{title}</p>
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                             Ассистент онлайн
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="rounded-lg p-2 text-text-secondary-dark transition-colors hover:bg-white/5 hover:text-text-primary-dark">
+                    <button className="rounded-lg p-2 text-text-secondary transition-colors hover:bg-white/5 hover:text-white-color">
                         <Search className="h-5 w-5" />
                     </button>
-                    <button className="rounded-lg p-2 text-text-secondary-dark transition-colors hover:bg-white/5 hover:text-text-primary-dark">
+                    <button className="rounded-lg p-2 text-text-secondary transition-colors hover:bg-white/5 hover:text-white-color">
                         <MoreVertical className="h-5 w-5" />
                     </button>
                 </div>
@@ -137,20 +137,20 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                 {assistant.welcome_message && (
                     <div className="flex justify-start animate-in fade-in slide-in-from-left-4 duration-500">
                         <div className="flex max-w-[85%] gap-3">
-                            <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary border border-secondary/20">
+                            <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-color/10 text-primary-color border border-primary-color/20">
                                 <Bot className="h-5 w-5" />
                             </div>
-                            <div className="rounded-[20px] rounded-tl-sm glass px-4 py-3 text-sm text-text-primary-dark shadow-xl border-white/10">
+                            <div className="rounded-three rounded-tl-sm bg-background-one px-4 py-3 text-sm text-white-color shadow-xl border border-border-color-one">
                                 <div className="prose prose-sm max-w-none prose-invert">
                                     <ReactMarkdown
                                         components={{
-                                            h3: ({ node, ...props }) => <h3 className="mb-2 mt-3 text-base font-bold text-text-primary-dark" {...props} />,
-                                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed text-text-primary-dark/90" {...props} />,
-                                            ul: ({ node, ...props }) => <ul className="mb-2 list-disc pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
-                                            ol: ({ node, ...props }) => <ol className="mb-2 list-decimal pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
+                                            h3: ({ node, ...props }) => <h3 className="mb-2 mt-3 text-base font-title font-bold text-white-color" {...props} />,
+                                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed text-white-color/90" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="mb-2 list-disc pl-5 space-y-1 text-white-color/80" {...props} />,
+                                            ol: ({ node, ...props }) => <ol className="mb-2 list-decimal pl-5 space-y-1 text-white-color/80" {...props} />,
                                             li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                                            strong: ({ node, ...props }) => <strong className="font-bold text-secondary" {...props} />,
-                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-secondary/30 pl-4 italic text-text-secondary-dark" {...props} />,
+                                            strong: ({ node, ...props }) => <strong className="font-bold text-primary-color" {...props} />,
+                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary-color/30 pl-4 italic text-text-secondary" {...props} />,
                                         }}
                                     >
                                         {assistant.welcome_message}
@@ -162,7 +162,7 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                 )}
 
                 {messages.length === 0 && !assistant.welcome_message && (
-                    <div className="py-10 text-center text-sm text-text-secondary-dark">
+                    <div className="py-10 text-center text-sm text-text-secondary">
                         {assistant.description || 'Здравствуйте! Чем я могу вам помочь?'}
                     </div>
                 )}
@@ -172,10 +172,10 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                         {/* Вопрос пользователя */}
                         <div className="flex justify-end">
                             <div className="flex max-w-[85%] items-end gap-2">
-                                <div className="rounded-[20px] rounded-tr-sm bg-secondary px-4 py-3 text-sm font-medium text-background-dark shadow-lg shadow-secondary/10 selection:bg-background-dark/20">
+                                <div className="rounded-three rounded-tr-sm bg-primary-color px-4 py-3 text-sm font-medium text-black-color shadow-lg shadow-primary-color/10 selection:bg-black-color/20">
                                     {msg.question}
                                 </div>
-                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-bold text-text-secondary-dark uppercase border border-white/5">
+                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-[10px] font-bold text-text-secondary uppercase border border-white/5">
                                     Я
                                 </div>
                             </div>
@@ -184,20 +184,20 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                         {/* Ответ ассистента */}
                         <div className="flex justify-start">
                             <div className="flex max-w-[85%] gap-3">
-                                <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary border border-secondary/20">
+                                <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-color/10 text-primary-color border border-primary-color/20">
                                     <Bot className="h-5 w-5" />
                                 </div>
-                                <div className="rounded-[20px] rounded-tl-sm glass px-4 py-3 text-sm text-text-primary-dark shadow-xl border-white/10">
+                                <div className="rounded-three rounded-tl-sm bg-background-one px-4 py-3 text-sm text-white-color shadow-xl border border-border-color-one">
                                     <div className="prose prose-sm max-w-none prose-invert">
                                         <ReactMarkdown
                                             components={{
-                                                h3: ({ node, ...props }) => <h3 className="mb-2 mt-3 text-base font-bold text-text-primary-dark" {...props} />,
-                                                p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed text-text-primary-dark/90" {...props} />,
-                                                ul: ({ node, ...props }) => <ul className="mb-2 list-disc pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
-                                                ol: ({ node, ...props }) => <ol className="mb-2 list-decimal pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
+                                                h3: ({ node, ...props }) => <h3 className="mb-2 mt-3 text-base font-title font-bold text-white-color" {...props} />,
+                                                p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed text-white-color/90" {...props} />,
+                                                ul: ({ node, ...props }) => <ul className="mb-2 list-disc pl-5 space-y-1 text-white-color/80" {...props} />,
+                                                ol: ({ node, ...props }) => <ol className="mb-2 list-decimal pl-5 space-y-1 text-white-color/80" {...props} />,
                                                 li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                                                strong: ({ node, ...props }) => <strong className="font-bold text-secondary" {...props} />,
-                                                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-secondary/30 pl-4 italic text-text-secondary-dark" {...props} />,
+                                                strong: ({ node, ...props }) => <strong className="font-bold text-primary-color" {...props} />,
+                                                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary-color/30 pl-4 italic text-text-secondary" {...props} />,
                                             }}
                                         >
                                             {msg.answer}
@@ -211,8 +211,8 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
 
                 {processing && (
                     <div className="flex justify-start">
-                        <div className="animate-pulse rounded-[20px] rounded-bl-sm glass px-4 py-2 text-sm text-text-secondary-dark border-white/5">
-                            Neural Engine обработка...
+                        <div className="animate-pulse rounded-three rounded-bl-sm bg-background-one px-4 py-2 text-sm text-text-secondary border border-border-color-one">
+                            BotSync обработка...
                         </div>
                     </div>
                 )}
@@ -223,7 +223,7 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
             </div>
 
             {/* Поле ввода */}
-            <div className="border-t border-white/5 glass p-4 shadow-2xl">
+            <div className="border-t border-border-color-one bg-body-color p-4 shadow-2xl">
                 {assistant.actions && assistant.actions.length > 0 && messages.length === 0 && (
                     <div className="mb-4 flex flex-wrap justify-center gap-2">
                         {assistant.actions.filter(a => a.trim() !== '').map((action, idx) => (
@@ -231,7 +231,7 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                                 key={idx}
                                 onClick={() => sendMessage(action)}
                                 disabled={processing}
-                                className="rounded-full glass px-4 py-2 text-xs font-medium text-text-secondary-dark border-white/5 hover:border-secondary hover:text-text-primary-dark transition-all shadow-sm disabled:opacity-50"
+                                className="rounded-full bg-background-one px-4 py-2 text-xs font-medium text-text-secondary border border-border-color-one hover:border-primary-color hover:text-white-color transition-all shadow-sm disabled:opacity-50"
                             >
                                 {action}
                             </button>
@@ -246,12 +246,12 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                             onChange={(e) => setQuestion(e.target.value)}
                             placeholder="Введите ваш запрос..."
                             disabled={processing}
-                            className="w-full rounded-xl bg-background-dark/50 border-white/10 py-3.5 pl-4 pr-12 text-sm text-text-primary-dark transition-all focus:border-secondary/50 focus:ring-secondary/20 disabled:opacity-50 placeholder:text-text-secondary-dark/50"
+                            className="w-full h-[52px] rounded-full bg-form-input border-border-color-one py-3.5 pl-6 pr-12 text-sm text-white-color transition-all focus:border-primary-color/50 focus:ring-primary-color/20 disabled:opacity-50 placeholder:text-text-secondary/50"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                              <button
                                 type="button"
-                                className="rounded-lg p-1.5 text-text-secondary-dark hover:bg-white/5 hover:text-text-primary-dark transition-colors"
+                                className="rounded-lg p-1.5 text-text-secondary hover:bg-white/5 hover:text-white-color transition-colors"
                             >
                                 <Paperclip className="h-4 w-4" />
                             </button>
@@ -261,16 +261,16 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                         type="submit"
                         disabled={processing || question.trim() === ''}
                         className={cn(
-                            "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-all duration-300 shadow-lg active:scale-95 disabled:scale-100 disabled:opacity-30 disabled:grayscale",
-                            question.trim() !== '' ? "gold-gradient text-background-dark shadow-secondary/20" : "bg-white/5 text-text-secondary-dark shadow-none"
+                            "inline-flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full transition-all duration-300 shadow-lg active:scale-95 disabled:scale-100 disabled:opacity-30 disabled:grayscale",
+                            question.trim() !== '' ? "bg-primary-color text-black-color shadow-primary-color/20" : "bg-white/5 text-text-secondary shadow-none"
                         )}
                         aria-label="Отправить"
                     >
                         <SendHorizontal className={cn("h-5 w-5 transition-transform", question.trim() !== '' && "translate-x-0.5 -translate-y-0.5")} />
                     </button>
                 </form>
-                <p className="mt-3 text-center text-[10px] text-text-secondary-dark/60">
-                    Powered by <span className="font-bold text-secondary">NeuralFlow Engine</span> • Industrial Grade RAG
+                <p className="mt-3 text-center text-[10px] text-text-secondary/60">
+                    © <span className="font-bold text-primary-color">BotSync</span> • AI Industrial RAG
                 </p>
             </div>
         </div>

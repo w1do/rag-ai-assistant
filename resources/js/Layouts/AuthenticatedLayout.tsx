@@ -8,13 +8,16 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Activity,
     Bot,
+    ChevronDown,
     CreditCard,
     LayoutDashboard,
     Link2,
     LogOut,
+    Menu,
     MessagesSquare,
     User,
     Users,
+    X,
 } from 'lucide-react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
@@ -50,7 +53,6 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
-                                    className="text-white-color hover:text-primary-color"
                                 >
                                     <LayoutDashboard className="mr-2 h-4 w-4" />
                                     Панель управления
@@ -58,7 +60,6 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('assistants.index')}
                                     active={route().current('assistants.*')}
-                                    className="text-white-color hover:text-primary-color"
                                 >
                                     <Bot className="mr-2 h-4 w-4" />
                                     Ассистенты
@@ -66,7 +67,6 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('connectors.index')}
                                     active={route().current('connectors.*')}
-                                    className="text-white-color hover:text-primary-color"
                                 >
                                     <Link2 className="mr-2 h-4 w-4" />
                                     Коннекторы
@@ -74,7 +74,6 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('tariffs')}
                                     active={route().current('tariffs')}
-                                    className="text-white-color hover:text-primary-color"
                                 >
                                     <CreditCard className="mr-2 h-4 w-4" />
                                     Тарифы
@@ -93,18 +92,7 @@ export default function Authenticated({
                                             >
                                                 {user.name}
 
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
+                                                <ChevronDown className="-me-0.5 ms-2 h-4 w-4" />
                                             </button>
                                         </span>
                                     </Dropdown.Trigger>
@@ -140,35 +128,11 @@ export default function Authenticated({
                                 }
                                 className="inline-flex items-center justify-center rounded-md p-2 text-white-color transition duration-150 ease-in-out hover:bg-extra-color hover:text-primary-color focus:outline-none"
                             >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                                {showingNavigationDropdown ? (
+                                    <X className="h-6 w-6" />
+                                ) : (
+                                    <Menu className="h-6 w-6" />
+                                )}
                             </button>
                         </div>
                     </div>

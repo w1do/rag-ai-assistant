@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
-import { Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Plus, Trash2, ArrowRight, LifeBuoy } from 'lucide-react';
 import { FormEventHandler, ReactNode } from 'react';
 
 /**
@@ -367,9 +367,7 @@ export default function Create() {
                             <section className="bg-primary-color/5 border border-primary-color/20 rounded-three p-6">
                                 <div className="flex items-start gap-3">
                                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color">
-                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a9 9 0 010-12.728m0 0L3 3m2.464 2.464l2.829 2.829" />
-                                        </svg>
+                                        <LifeBuoy className="h-5 w-5" />
                                     </span>
                                     <div>
                                         <p className="text-sm font-bold uppercase tracking-tight text-white-color font-title">Проблемы?</p>

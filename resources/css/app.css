@@ -72,25 +72,28 @@
 
 @layer components {
   .theme-button {
-    @apply h-[52px] px-[15px] py-[10px] rounded-full inline-flex items-center justify-center gap-[10px] font-semibold text-[16px] uppercase transition-all duration-500 overflow-hidden relative;
+    @apply h-[52px] px-[25px] rounded-full inline-flex items-center justify-center gap-[10px] font-semibold text-[16px] transition-all duration-500 overflow-hidden relative;
+    perspective: 1000px;
     cursor: pointer;
     text-transform: capitalize;
   }
 
   .theme-button span {
-    @apply relative block transition-all duration-500;
+    @apply relative flex items-center justify-center h-full transition-all duration-500;
     transform-style: preserve-3d;
+    transform: translateY(0) rotateX(0);
   }
 
   .theme-button span::before {
-    @apply absolute top-full left-0 w-full h-full block;
+    @apply absolute top-full left-0 w-full h-full flex items-center justify-center;
     content: attr(data-text);
     transform: rotateX(-90deg);
     transform-origin: top;
+    backface-visibility: hidden;
   }
 
   .theme-button:hover span {
-    transform: rotateX(90deg);
+    transform: translateY(-50%) rotateX(90deg);
   }
 
   .theme-button.style-1 {
