@@ -94,9 +94,9 @@ function FormSection({
     children: ReactNode;
 }) {
     return (
-        <section className="bg-background-one border border-border-color-one rounded-three p-8 shadow-sm transition-all duration-500 hover:border-primary-color/30">
+        <section className="bg-background-one border border-border-color-one rounded-three p-5 sm:p-8 shadow-sm transition-all duration-500 hover:border-primary-color/30">
             <div className="mb-6">
-                <h3 className="text-lg font-bold uppercase tracking-tight text-white-color font-title">{title}</h3>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white-color font-title">{title}</h3>
                 {description && (
                     <p className="mt-2 text-sm leading-relaxed text-text-secondary">{description}</p>
                 )}
@@ -168,8 +168,8 @@ export default function Edit({ assistant }: Props) {
                         { label: 'Редактирование' }
                     ]} />
 
-                    <div className="flex items-center justify-between mb-10">
-                        <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                    <div className="flex items-center justify-between mb-6 sm:mb-10">
+                        <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
                             Редактирование
                         </h2>
                         <Link href={route('assistants.show', assistant.id)} className="theme-button style-2 !h-[44px]">
@@ -565,20 +565,21 @@ export default function Edit({ assistant }: Props) {
                                 </div>
 
                                 {/* Панель сохранения */}
-                                <div className="sticky bottom-6 flex items-center justify-between gap-6 rounded-three border border-border-color-one bg-background-one/90 px-6 py-4 shadow-xl backdrop-blur-md z-10">
-                                    <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-text-secondary">
+                                <div className="sticky bottom-6 flex items-center justify-between gap-4 rounded-three border border-border-color-one bg-background-one/90 px-4 sm:px-6 py-3 sm:py-4 shadow-xl backdrop-blur-md z-10">
+                                    <p className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-text-secondary">
                                         <span
-                                            className={`h-2.5 w-2.5 rounded-[1px] ${
+                                            className={`h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-[1px] ${
                                                 isDirty ? 'bg-amber-400 animate-pulse' : 'bg-primary-color'
                                             }`}
                                         />
-                                        {isDirty ? 'Есть изменения' : 'Сохранено'}
+                                        <span className="hidden xs:inline">{isDirty ? 'Есть изменения' : 'Сохранено'}</span>
+                                        <span className="xs:hidden">{isDirty ? 'Изм.' : 'Ок'}</span>
                                     </p>
-                                    <div className="flex items-center gap-4">
-                                        <Link href={route('assistants.show', assistant.id)} className="text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors">
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <Link href={route('assistants.show', assistant.id)} className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors">
                                             Отмена
                                         </Link>
-                                        <button disabled={processing} className="theme-button style-1 !h-[52px] min-w-[200px]">
+                                        <button disabled={processing} className="theme-button style-1 !h-[44px] sm:!h-[52px] min-w-[120px] sm:min-w-[200px] text-[10px] sm:text-sm">
                                             <span data-text={processing ? 'Сохранение...' : 'Сохранить'}>
                                                 {processing ? 'Сохранение...' : 'Сохранить'}
                                             </span>

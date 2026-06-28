@@ -69,9 +69,9 @@ function FormSection({
     children: ReactNode;
 }) {
     return (
-        <section className="bg-background-one border border-border-color-one rounded-three p-8 shadow-sm transition-all duration-500 hover:border-primary-color/30">
+        <section className="bg-background-one border border-border-color-one rounded-three p-5 sm:p-8 shadow-sm transition-all duration-500 hover:border-primary-color/30">
             <div className="mb-6">
-                <h3 className="text-lg font-bold uppercase tracking-tight text-white-color font-title">{title}</h3>
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-white-color font-title">{title}</h3>
                 {description && (
                     <p className="mt-2 text-sm leading-relaxed text-text-secondary">{description}</p>
                 )}
@@ -145,8 +145,8 @@ export default function Create() {
                         { label: 'Создать' }
                     ]} />
 
-                    <div className="flex items-center justify-between mb-10">
-                        <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                    <div className="flex items-center justify-between mb-6 sm:mb-10">
+                        <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
                             Создать ассистента
                         </h2>
                         <Link
@@ -499,14 +499,14 @@ export default function Create() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-end gap-4">
+                                <div className="flex flex-col sm:flex-row items-center justify-end gap-4">
                                     <Link
                                         href={route('assistants.index')}
-                                        className="text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors"
+                                        className="text-xs sm:text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors"
                                     >
                                         Отмена
                                     </Link>
-                                    <button disabled={processing} className="theme-button style-1 !h-[52px] min-w-[200px]">
+                                    <button disabled={processing} className="theme-button style-1 !h-[48px] sm:!h-[52px] w-full sm:w-auto sm:min-w-[200px] text-xs sm:text-sm">
                                         <span data-text={processing ? 'Создание...' : 'Создать ассистента'}>
                                             {processing ? 'Создание...' : 'Создать ассистента'}
                                         </span>

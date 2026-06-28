@@ -99,10 +99,10 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                     <Breadcrumbs items={[]} />
                     
                     <div className="section-title">
-                        <span className="sub-title before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
+                        <span className="sub-title text-xs sm:text-sm before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
                             BotSync Dashboard
                         </span>
-                        <h2 className="text-3xl font-title uppercase">
+                        <h2 className="text-xl sm:text-3xl font-title uppercase">
                             Панель <span>управления</span>
                         </h2>
                     </div>
@@ -123,14 +123,14 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                             </div>
                                         </div>
                                         <div className="pricing-top-content">
-                                            <h2 className="text-4xl font-title mb-1">{card.value}</h2>
-                                            <p className="text-text-secondary uppercase tracking-wider text-sm font-semibold">{card.label}</p>
+                                            <h2 className="text-xl sm:text-4xl font-title mb-1">{card.value}</h2>
+                                            <p className="text-text-secondary uppercase tracking-wider text-[9px] sm:text-sm font-semibold">{card.label}</p>
                                         </div>
                                     </div>
                                     <div className="p-6 text-center">
                                         <Link 
                                             href={route('assistants.index')} 
-                                            className="text-primary-color hover:text-white-color transition-colors text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2"
+                                            className="text-primary-color hover:text-white-color transition-colors text-xs sm:text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2"
                                         >
                                             Подробнее <ArrowUpRight size={16} />
                                         </Link>
@@ -145,15 +145,15 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                         <div className="flex items-center justify-between border-b border-border-color-one px-6 py-5 bg-extra-color">
                             <div className="flex items-center gap-3">
                                 <Sparkles className="h-5 w-5 text-primary-color" strokeWidth={2} />
-                                <h3 className="text-lg font-title uppercase text-white-color">
-                                    Последние ассистенты
+                                <h3 className="text-sm sm:text-lg font-title uppercase text-white-color">
+                                    Ассистенты
                                 </h3>
                             </div>
                             <Link
                                 href={route('assistants.index')}
-                                className="text-sm font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-widest flex items-center gap-1"
+                                className="text-xs sm:text-sm font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-widest flex items-center gap-1"
                             >
-                                Все ассистенты
+                                Все
                                 <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
                             </Link>
                         </div>
@@ -163,7 +163,7 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                 <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-rgb-12 text-primary-color mb-4">
                                     <Bot className="h-8 w-8" strokeWidth={2} />
                                 </span>
-                                <p className="text-lg font-title text-white-color uppercase">
+                                <p className="text-base sm:text-lg font-title text-white-color uppercase">
                                     У вас пока нет ассистентов
                                 </p>
                                 <p className="mt-2 text-text-secondary">
@@ -177,38 +177,38 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                     return (
                                         <li
                                             key={assistant.id}
-                                            className="flex items-center justify-between gap-4 px-6 py-5 transition-colors hover:bg-extra-color"
+                                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 py-5 transition-colors hover:bg-extra-color"
                                         >
-                                            <div className="flex min-w-0 items-center gap-4">
-                                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color font-bold text-lg">
+                                            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                                                <span className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color font-bold text-sm sm:text-lg">
                                                     {assistant.name.charAt(0).toUpperCase()}
                                                 </span>
                                                 <div className="min-w-0">
-                                                    <p className="truncate text-base font-bold text-white-color uppercase tracking-tight">
+                                                    <p className="truncate text-xs sm:text-base font-bold text-white-color uppercase tracking-tight">
                                                         {assistant.name}
                                                     </p>
                                                     <span
-                                                        className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-bold uppercase tracking-wider ${badge.className}`}
+                                                        className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider ${badge.className}`}
                                                     >
-                                                        <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${badge.dot}`} />
+                                                        <span className={`h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full animate-pulse ${badge.dot}`} />
                                                         {badge.label}
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 sm:justify-end">
                                                 <Link
                                                     href={route('assistants.show', assistant.id)}
-                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary-rgb-12 text-primary-color hover:bg-primary-color hover:text-black-color transition-all"
+                                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-primary-rgb-12 text-primary-color hover:bg-primary-color hover:text-black-color transition-all"
                                                     title="Просмотр"
                                                 >
-                                                    <Eye size={18} />
+                                                    <Eye size={16} className="sm:w-[18px] sm:h-[18px]" />
                                                 </Link>
                                                 <Link
                                                     href={route('assistants.edit', assistant.id)}
-                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white-color transition-all"
+                                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white-color transition-all"
                                                     title="Редактировать"
                                                 >
-                                                    <Edit2 size={18} />
+                                                    <Edit2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                                                 </Link>
                                                 <button
                                                     onClick={() => {
@@ -216,10 +216,10 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                                             router.delete(route('assistants.destroy', assistant.id));
                                                         }
                                                     }}
-                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white-color transition-all"
+                                                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white-color transition-all"
                                                     title="Удалить"
                                                 >
-                                                    <Trash2 size={18} />
+                                                    <Trash2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                                                 </button>
                                             </div>
                                         </li>
@@ -232,7 +232,7 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                         <div className="border-t border-border-color-one px-6 py-6 bg-extra-color/50">
                             <Link
                                 href={route('assistants.create')}
-                                className="theme-button style-1 w-full sm:w-auto"
+                                className="theme-button style-1 w-full sm:w-auto text-xs sm:text-sm"
                             >
                                 <span data-text="Добавить ассистента">Добавить ассистента</span>
                                 <i><Plus size={16} /></i>

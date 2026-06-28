@@ -176,51 +176,51 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
         <div className="pricing-item group flex h-full flex-col">
             <div className="pricing-top relative">
                 <div className="mb-4 flex items-center justify-between">
-                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${meta.badge}`}>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[11px] font-bold uppercase tracking-wider ${meta.badge}`}>
                         <span className={`h-1.5 w-1.5 rounded-full ${meta.dot} animate-pulse`} />
                         {meta.label}
                     </span>
-                    <span className="text-[11px] font-bold text-text-secondary">
+                    <span className="text-[9px] sm:text-[11px] font-bold text-text-secondary">
                         ID: {assistant.id}
                     </span>
                 </div>
                 
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[2px] bg-primary-color text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20">
+                <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-[2px] bg-primary-color text-lg sm:text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20">
                     {(assistant.name || 'A').charAt(0).toUpperCase()}
                 </div>
                 
-                <h3 className="mb-2 truncate text-xl font-bold text-white-color group-hover:text-primary-color transition-colors">
+                <h3 className="mb-2 truncate text-sm sm:text-xl font-bold text-white-color group-hover:text-primary-color transition-colors">
                     {assistant.name}
                 </h3>
                 
-                <p className="line-clamp-2 min-h-[40px] text-sm leading-relaxed text-text-secondary">
+                <p className="line-clamp-2 min-h-[32px] sm:min-h-[40px] text-xs sm:text-sm leading-relaxed text-text-secondary">
                     {assistant.description || 'Описание не задано — добавьте источники знаний, чтобы обучить ассистента.'}
                 </p>
             </div>
 
-            <div className="flex flex-grow flex-col p-6">
-                <div className="mb-6 grid grid-cols-4 gap-2">
+            <div className="flex flex-grow flex-col p-4 sm:p-6">
+                <div className="mb-6 grid grid-cols-4 gap-1.5 sm:gap-2">
                     <button
                         type="button"
                         onClick={toggleRecording}
                         title={isRecording ? 'Остановить запись' : 'Записать голосовое сообщение'}
                         className={cn(
-                            "flex h-10 items-center justify-center rounded-[2px] border transition-all duration-300",
+                            "flex h-9 sm:h-10 items-center justify-center rounded-[2px] border transition-all duration-300",
                             isRecording
                                 ? "border-red-500 bg-red-500/10 text-red-500 animate-pulse"
                                 : "border-border-color-one bg-extra-color text-white-color hover:border-primary-color hover:text-primary-color"
                         )}
                     >
-                        {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
+                        {isRecording ? <MicOff size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Mic size={16} className="sm:w-[18px] sm:h-[18px]" />}
                     </button>
 
                     <button
                         type="button"
                         onClick={() => setShowLinkModal(true)}
                         title="Добавить ссылку на сайт"
-                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
+                        className="flex h-9 sm:h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
                     >
-                        <Link2 size={18} />
+                        <Link2 size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
 
                     <button
@@ -228,9 +228,9 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         onClick={() => fileInputRef.current?.click()}
                         disabled={docForm.processing}
                         title="Загрузить документ"
-                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color disabled:opacity-50"
+                        className="flex h-9 sm:h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color disabled:opacity-50"
                     >
-                        <Upload size={18} className={docForm.processing ? 'animate-bounce' : ''} />
+                        <Upload size={16} className={cn("sm:w-[18px] sm:h-[18px]", docForm.processing && "animate-bounce")} />
                     </button>
                     <input
                         ref={fileInputRef}
@@ -244,9 +244,9 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         type="button"
                         onClick={() => setShowEmbed(true)}
                         title="Встроить на сайт"
-                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
+                        className="flex h-9 sm:h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
                     >
-                        <Code size={18} />
+                        <Code size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </button>
                 </div>
 
@@ -254,14 +254,14 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                     <div className="flex items-center gap-2">
                         <Link
                             href={route('share-chat.show', assistant.id)}
-                            className="theme-button style-1 flex-grow !h-[44px]"
+                            className="theme-button style-1 flex-grow !h-[40px] sm:!h-[44px] text-[9px] sm:text-sm"
                         >
                             <span data-text="Открыть чат">Открыть чат</span>
                             <i><MessageSquare size={14} /></i>
                         </Link>
                         <Link
                             href={route('assistants.show', assistant.id)}
-                            className="theme-button style-2 w-[44px] !h-[44px] !px-0"
+                            className="theme-button style-2 w-[40px] sm:w-[44px] !h-[40px] sm:!h-[44px] !px-0"
                             title="Обзор"
                         >
                             <span data-text="?"><ArrowRight size={16} /></span>
@@ -269,7 +269,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                     </div>
 
                     <div className="flex items-center justify-between border-t border-border-color-one pt-3">
-                        <div className="text-[10px] uppercase tracking-wider text-text-secondary">
+                        <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-text-secondary">
                             Создан: {assistant.created_at}
                         </div>
                         <div className="flex items-center gap-1">
@@ -392,12 +392,12 @@ export default function Index({ assistants }: Props) {
 
                     <Tips tips={assistantTips} />
 
-                    <div className="flex items-center justify-between mb-10">
-                        <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                    <div className="flex items-center justify-between mb-6 sm:mb-10">
+                        <h2 className="text-lg sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
                             Ассистенты
                         </h2>
-                        <Link href={route('assistants.create')} className="theme-button style-1">
-                            <span data-text="Создать ассистента">Создать ассистента</span>
+                        <Link href={route('assistants.create')} className="theme-button style-1 !h-[40px] sm:!h-[52px] text-[9px] sm:text-sm">
+                            <span data-text="Добавить">Добавить</span>
                             <i><Plus size={16} /></i>
                         </Link>
                     </div>
@@ -407,7 +407,7 @@ export default function Index({ assistants }: Props) {
                             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[2px] bg-extra-color text-primary-color">
                                 <Plus size={40} />
                             </div>
-                            <h3 className="mb-2 text-2xl font-bold text-white-color font-title uppercase">Пусто</h3>
+                            <h3 className="mb-2 text-xl sm:text-2xl font-bold text-white-color font-title uppercase">Пусто</h3>
                             <p className="mb-8 text-text-secondary">У вас пока нет созданных ассистентов.</p>
                             <Link href={route('assistants.create')} className="theme-button style-1">
                                 <span data-text="Создать первого ассистента">Создать первого ассистента</span>

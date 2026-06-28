@@ -12,7 +12,7 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     return (
-        <nav className="flex mb-10 overflow-x-auto pb-2 custom-scrollbar" aria-label="Breadcrumb">
+        <nav className="flex mb-6 sm:mb-10 overflow-x-auto pb-2 custom-scrollbar" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-3 whitespace-nowrap">
                 <li className="inline-flex items-center">
                     <Link
