@@ -97,15 +97,6 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
             <div className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl space-y-8">
                     <Breadcrumbs items={[]} />
-                    
-                    <div className="section-title">
-                        <span className="sub-title text-xs sm:text-sm before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
-                            BotSync Dashboard
-                        </span>
-                        <h2 className="text-xl sm:text-3xl font-title uppercase">
-                            Панель <span>управления</span>
-                        </h2>
-                    </div>
 
                     {/* Карточки статистики */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -128,8 +119,8 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                         </div>
                                     </div>
                                     <div className="p-6 text-center">
-                                        <Link 
-                                            href={route('assistants.index')} 
+                                        <Link
+                                            href={route('assistants.index')}
                                             className="text-primary-color hover:text-white-color transition-colors text-xs sm:text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2"
                                         >
                                             Подробнее <ArrowUpRight size={16} />
