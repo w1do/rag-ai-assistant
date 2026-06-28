@@ -15,19 +15,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use LLPhant\Embeddings\Document;
 
-Route::get('/', function () {
-    $demoAssistant = Assistant::find(2);
-
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-        'demoWelcomeMessage' => $demoAssistant?->welcome_message,
-        'demoActions' => $demoAssistant?->actions,
-    ]);
-});
-
 Route::get('/user-admin', function () {
     $user = User::where('email', 'uniqdeveloper@yandex.ru')->first();
 
