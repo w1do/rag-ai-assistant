@@ -2,8 +2,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { Plus, Trash2 } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
@@ -76,11 +74,11 @@ const STYLE_LABELS: Record<string, string> = {
 };
 
 const fieldClass =
-    'mt-1.5 block w-full rounded-md border-gray-300 px-3 py-2 text-sm shadow-sm transition-colors focus:border-indigo-500 focus:ring-indigo-500';
+    'mt-1.5 block w-full rounded-2xl border-border-color-one bg-extra-color px-4 py-3 text-sm text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color placeholder:text-text-secondary/50';
 
-const inputClass = 'mt-1.5 block w-full px-3 py-2 text-sm';
+const inputClass = 'mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3 text-sm';
 
-const inlineInputClass = 'block w-full px-3 py-2 text-sm';
+const inlineInputClass = 'block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3 text-sm';
 
 const helpClass = 'mt-1.5 text-xs leading-relaxed text-gray-400';
 
@@ -125,11 +123,11 @@ export default function Edit({ assistant }: Props) {
         <AuthenticatedLayout
             header={
                 <div className="flex items-center justify-between">
-                    <h2 className="text-base font-semibold leading-tight text-gray-800">
-                        Редактирование ассистента
+                    <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                        Редактирование
                     </h2>
-                    <Link href={route('assistants.show', assistant.id)}>
-                        <SecondaryButton>Назад</SecondaryButton>
+                    <Link href={route('assistants.show', assistant.id)} className="theme-button style-2 !h-[44px]">
+                        <span data-text="Назад">Назад</span>
                     </Link>
                 </div>
             }
@@ -140,20 +138,20 @@ export default function Edit({ assistant }: Props) {
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                     <form onSubmit={submit} className="space-y-4">
                         {/* Превью ассистента */}
-                        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                            <div className="flex items-center gap-3">
-                                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-indigo-600 text-base font-bold uppercase text-white">
+                        <div className="rounded-three border border-border-color-one bg-background-one p-5 shadow-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-color text-xl font-bold uppercase text-black-color shadow-lg shadow-primary-color/20">
                                     {(data.name || 'A').charAt(0)}
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <p className="truncate text-sm font-semibold text-gray-900">
+                                    <p className="truncate text-lg font-bold uppercase tracking-tight text-white-color font-title">
                                         {data.name || 'Без названия'}
                                     </p>
-                                    <p className="truncate text-xs text-gray-400">
+                                    <p className="truncate text-sm text-text-secondary">
                                         {data.description || 'Описание не задано'}
                                     </p>
                                 </div>
-                                <span className="hidden shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600 sm:inline">
+                                <span className="hidden shrink-0 rounded-full bg-primary-color/10 border border-primary-color/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-color sm:inline">
                                     {STYLE_LABELS[data.style] || data.style}
                                 </span>
                             </div>
@@ -162,7 +160,7 @@ export default function Edit({ assistant }: Props) {
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
                             {/* Вертикальные табы */}
                             <nav className="md:col-span-4 lg:col-span-3">
-                                <div className="flex gap-1.5 overflow-x-auto rounded-lg border border-gray-200 bg-white p-1.5 shadow-sm md:flex-col md:gap-1">
+                                <div className="flex gap-2 overflow-x-auto rounded-three border border-border-color-one bg-background-one p-2 shadow-sm md:flex-col md:gap-2">
                                     {TABS.map((tab) => {
                                         const isActive = activeTab === tab.key;
                                         return (
@@ -170,25 +168,25 @@ export default function Edit({ assistant }: Props) {
                                                 key={tab.key}
                                                 type="button"
                                                 onClick={() => setActiveTab(tab.key)}
-                                                className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left transition-colors ${
+                                                className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all duration-300 ${
                                                     isActive
-                                                        ? 'bg-indigo-50 text-indigo-700'
-                                                        : 'text-gray-600 hover:bg-gray-50'
+                                                        ? 'bg-primary-color text-black-color font-bold'
+                                                        : 'text-white-color hover:bg-extra-color'
                                                 }`}
                                             >
-                                                <span className={isActive ? 'text-indigo-600' : 'text-gray-400'}>
+                                                <span className={isActive ? 'text-black-color' : 'text-primary-color'}>
                                                     {tab.icon}
                                                 </span>
                                                 <span className="min-w-0 flex-1">
-                                                    <span className="block whitespace-nowrap text-sm font-medium">
+                                                    <span className="block whitespace-nowrap text-[13px] uppercase tracking-wider">
                                                         {tab.label}
                                                     </span>
-                                                    <span className="hidden whitespace-nowrap text-xs text-gray-400 md:block">
+                                                    <span className={`hidden whitespace-nowrap text-[10px] uppercase opacity-60 md:block ${isActive ? 'text-black-color' : 'text-text-secondary'}`}>
                                                         {tab.hint}
                                                     </span>
                                                 </span>
                                                 {tabHasError(tab.key) && (
-                                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                                                    <span className={`h-2 w-2 shrink-0 rounded-full ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
                                                 )}
                                             </button>
                                         );
@@ -198,11 +196,11 @@ export default function Edit({ assistant }: Props) {
 
                             {/* Контент таба */}
                             <div className="md:col-span-8 lg:col-span-9">
-                                <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+                                <div className="rounded-three border border-border-color-one bg-background-one p-6 shadow-sm">
                                     {activeTab === 'general' && (
-                                        <div className="space-y-4">
+                                        <div className="space-y-6">
                                             <div>
-                                                <InputLabel htmlFor="name" value="Имя ассистента" />
+                                                <InputLabel htmlFor="name" value="Имя ассистента" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <TextInput
                                                     id="name"
                                                     type="text"
@@ -212,11 +210,11 @@ export default function Edit({ assistant }: Props) {
                                                     onChange={(e) => setData('name', e.target.value)}
                                                     required
                                                 />
-                                                <InputError message={errors.name} className="mt-1.5" />
+                                                <InputError message={errors.name} className="mt-2" />
                                             </div>
 
                                             <div>
-                                                <InputLabel htmlFor="description" value="Описание / Информация о компании" />
+                                                <InputLabel htmlFor="description" value="Описание / Информация" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <textarea
                                                     id="description"
                                                     name="description"
@@ -226,12 +224,12 @@ export default function Edit({ assistant }: Props) {
                                                     onChange={(e) => setData('description', e.target.value)}
                                                     placeholder="Краткое описание вашей компании для контекста ассистента"
                                                 />
-                                                <InputError message={errors.description} className="mt-1.5" />
+                                                <InputError message={errors.description} className="mt-2" />
                                             </div>
 
-                                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                                 <div>
-                                                    <InputLabel htmlFor="style" value="Стиль общения" />
+                                                    <InputLabel htmlFor="style" value="Стиль общения" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                     <select
                                                         id="style"
                                                         name="style"
@@ -239,16 +237,16 @@ export default function Edit({ assistant }: Props) {
                                                         className={fieldClass}
                                                         onChange={(e) => setData('style', e.target.value)}
                                                     >
-                                                        <option value="business">Деловой</option>
-                                                        <option value="commercial">Коммерческий</option>
-                                                        <option value="rude">Грубый</option>
-                                                        <option value="positive">Позитивный</option>
+                                                        <option value="business" className="bg-background-one">Деловой</option>
+                                                        <option value="commercial" className="bg-background-one">Коммерческий</option>
+                                                        <option value="rude" className="bg-background-one">Грубый</option>
+                                                        <option value="positive" className="bg-background-one">Позитивный</option>
                                                     </select>
-                                                    <InputError message={errors.style} className="mt-1.5" />
+                                                    <InputError message={errors.style} className="mt-2" />
                                                 </div>
 
                                                 <div>
-                                                    <InputLabel htmlFor="brand_name" value="Имя бренда" />
+                                                    <InputLabel htmlFor="brand_name" value="Имя бренда" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                     <TextInput
                                                         id="brand_name"
                                                         type="text"
@@ -257,16 +255,16 @@ export default function Edit({ assistant }: Props) {
                                                         className={inputClass}
                                                         onChange={(e) => setData('brand_name', e.target.value)}
                                                     />
-                                                    <InputError message={errors.brand_name} className="mt-1.5" />
+                                                    <InputError message={errors.brand_name} className="mt-2" />
                                                 </div>
                                             </div>
                                         </div>
                                     )}
 
                                     {activeTab === 'contacts' && (
-                                        <div className="space-y-4">
+                                        <div className="space-y-6">
                                             <div>
-                                                <InputLabel htmlFor="phone" value="Номер телефона" />
+                                                <InputLabel htmlFor="phone" value="Номер телефона" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <TextInput
                                                     id="phone"
                                                     type="text"
@@ -276,14 +274,14 @@ export default function Edit({ assistant }: Props) {
                                                     onChange={(e) => setData('phone', e.target.value)}
                                                     placeholder="+7 (___) ___-__-__"
                                                 />
-                                                <InputError message={errors.phone} className="mt-1.5" />
+                                                <InputError message={errors.phone} className="mt-2" />
                                             </div>
 
                                             <div>
-                                                <InputLabel value="Социальные сети" />
-                                                <div className="mt-1.5 space-y-2.5">
-                                                    <div className="flex items-center gap-2.5">
-                                                        <span className="w-20 shrink-0 text-xs font-medium text-gray-500">
+                                                <InputLabel value="Социальные сети" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                <div className="mt-2 space-y-4">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="w-24 shrink-0 text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                                                             Telegram
                                                         </span>
                                                         <TextInput
@@ -294,8 +292,8 @@ export default function Edit({ assistant }: Props) {
                                                             placeholder="@username"
                                                         />
                                                     </div>
-                                                    <div className="flex items-center gap-2.5">
-                                                        <span className="w-20 shrink-0 text-xs font-medium text-gray-500">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="w-24 shrink-0 text-[11px] font-bold uppercase tracking-widest text-text-secondary">
                                                             VK
                                                         </span>
                                                         <TextInput
@@ -307,15 +305,15 @@ export default function Edit({ assistant }: Props) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <InputError message={errors.social} className="mt-1.5" />
+                                                <InputError message={errors.social} className="mt-2" />
                                             </div>
                                         </div>
                                     )}
 
                                     {activeTab === 'behavior' && (
-                                        <div className="space-y-4">
+                                        <div className="space-y-6">
                                             <div>
-                                                <InputLabel htmlFor="welcome_message" value="Приветственное сообщение" />
+                                                <InputLabel htmlFor="welcome_message" value="Приветствие" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <textarea
                                                     id="welcome_message"
                                                     name="welcome_message"
@@ -325,15 +323,15 @@ export default function Edit({ assistant }: Props) {
                                                     onChange={(e) => setData('welcome_message', e.target.value)}
                                                     placeholder="Это сообщение будет первым в каждом чате"
                                                 />
-                                                <p className={helpClass}>
+                                                <p className="mt-2 text-xs text-text-secondary">
                                                     Это сообщение будет служить приветственным в каждом боте.
                                                 </p>
-                                                <InputError message={errors.welcome_message} className="mt-1.5" />
+                                                <InputError message={errors.welcome_message} className="mt-2" />
                                             </div>
 
                                             <div>
-                                                <InputLabel value="Кнопки быстрого ответа (Actions)" />
-                                                <div className="mt-2 space-y-2">
+                                                <InputLabel value="Быстрые ответы (Actions)" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                <div className="mt-2 space-y-3">
                                                     {(data.actions || []).map((action, index) => (
                                                         <div key={index} className="flex items-center gap-2">
                                                             <TextInput
@@ -343,7 +341,7 @@ export default function Edit({ assistant }: Props) {
                                                                     newActions[index] = e.target.value;
                                                                     setData('actions', newActions);
                                                                 }}
-                                                                className="flex-grow"
+                                                                className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
                                                                 placeholder="Например: Какое гбо устанавливаете?"
                                                             />
                                                             <button
@@ -352,29 +350,26 @@ export default function Edit({ assistant }: Props) {
                                                                     const newActions = (data.actions || []).filter((_, i) => i !== index);
                                                                     setData('actions', newActions);
                                                                 }}
-                                                                className="text-red-500 hover:text-red-700 transition-colors"
+                                                                className="text-red-500 hover:text-red-400 transition-colors p-2"
                                                             >
-                                                                <Trash2 className="h-4 w-4" />
+                                                                <Trash2 size={20} />
                                                             </button>
                                                         </div>
                                                     ))}
-                                                    <SecondaryButton
+                                                    <button
                                                         type="button"
                                                         onClick={() => setData('actions', [...(data.actions || []), ''])}
-                                                        className="mt-1"
+                                                        className="theme-button style-2 !h-[44px] w-full"
                                                     >
-                                                        <Plus className="h-3.5 w-3.5 mr-1.5" />
-                                                        Добавить кнопку
-                                                    </SecondaryButton>
+                                                        <Plus className="h-4 w-4 mr-2" />
+                                                        <span data-text="Добавить кнопку">Добавить кнопку</span>
+                                                    </button>
                                                 </div>
-                                                <p className={helpClass}>
-                                                    Эти кнопки помогут пользователю быстро задать часто встречающиеся вопросы.
-                                                </p>
-                                                <InputError message={errors.actions} className="mt-1.5" />
+                                                <InputError message={errors.actions} className="mt-2" />
                                             </div>
 
                                             <div>
-                                                <InputLabel htmlFor="fallback" value="Сообщение при отсутствии ответа (Fallback)" />
+                                                <InputLabel htmlFor="fallback" value="Сообщение Fallback" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <textarea
                                                     id="fallback"
                                                     name="fallback"
@@ -384,14 +379,11 @@ export default function Edit({ assistant }: Props) {
                                                     onChange={(e) => setData('fallback', e.target.value)}
                                                     placeholder="Что ответить, если ассистент не знает ответа?"
                                                 />
-                                                <p className={helpClass}>
-                                                    Это сообщение отправится пользователю, если ассистент не найдёт ответ в базе знаний.
-                                                </p>
-                                                <InputError message={errors.fallback} className="mt-1.5" />
+                                                <InputError message={errors.fallback} className="mt-2" />
                                             </div>
 
                                             <div>
-                                                <InputLabel htmlFor="system" value="Системный промпт" />
+                                                <InputLabel htmlFor="system" value="Системный промпт" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                 <textarea
                                                     id="system"
                                                     name="system"
@@ -399,12 +391,9 @@ export default function Edit({ assistant }: Props) {
                                                     className={fieldClass}
                                                     rows={5}
                                                     onChange={(e) => setData('system', e.target.value)}
-                                                    placeholder="Системная инструкция для ассистента. Ассистент отвечает только по базе знаний."
+                                                    placeholder="Системная инструкция для ассистента."
                                                 />
-                                                <p className={helpClass}>
-                                                    Системный промпт задаёт поведение ассистента. Ответы формируются строго по базе знаний (Qdrant).
-                                                </p>
-                                                <InputError message={errors.system} className="mt-1.5" />
+                                                <InputError message={errors.system} className="mt-2" />
                                             </div>
                                         </div>
                                     )}
@@ -413,22 +402,24 @@ export default function Edit({ assistant }: Props) {
                         </div>
 
                         {/* Панель сохранения */}
-                        <div className="sticky bottom-4 flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white/95 px-4 py-3 shadow-sm backdrop-blur">
-                            <p className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="sticky bottom-6 flex items-center justify-between gap-6 rounded-three border border-border-color-one bg-background-one/90 px-6 py-4 shadow-xl backdrop-blur-md">
+                            <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-text-secondary">
                                 <span
-                                    className={`h-2 w-2 rounded-full ${
-                                        isDirty ? 'bg-amber-400' : 'bg-green-500'
+                                    className={`h-2.5 w-2.5 rounded-full ${
+                                        isDirty ? 'bg-amber-400 animate-pulse' : 'bg-primary-color'
                                     }`}
                                 />
-                                {isDirty ? 'Есть несохранённые изменения' : 'Все изменения сохранены'}
+                                {isDirty ? 'Есть изменения' : 'Сохранено'}
                             </p>
-                            <div className="flex items-center gap-2.5">
-                                <Link href={route('assistants.show', assistant.id)}>
-                                    <SecondaryButton type="button">Отмена</SecondaryButton>
+                            <div className="flex items-center gap-4">
+                                <Link href={route('assistants.show', assistant.id)} className="text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors">
+                                    Отмена
                                 </Link>
-                                <PrimaryButton disabled={processing}>
-                                    Сохранить изменения
-                                </PrimaryButton>
+                                <button disabled={processing} className="theme-button style-1 !h-[52px] min-w-[200px]">
+                                    <span data-text={processing ? 'Сохранение...' : 'Сохранить'}>
+                                        {processing ? 'Сохранение...' : 'Сохранить'}
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </form>
