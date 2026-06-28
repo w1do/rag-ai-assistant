@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
+import VoiceRecorder from '@/Components/VoiceRecorder';
 import InputHint from '@/Components/InputHint';
 import LimitReachedCard from '@/Components/LimitReachedCard';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
@@ -102,6 +103,15 @@ export default function Show({ assistant }: Props) {
                 forceFormData: true,
             });
         }
+    };
+
+    const handleVoiceRecording = (blob: Blob) => {
+        const extension = blob.type.includes('mp4') ? 'm4a' : (blob.type.includes('webm') ? 'webm' : 'mp3');
+        const file = new File([blob], `recording.${extension}`, { type: blob.type });
+        audioForm.setData('audio', file);
+        audioForm.post(route('assistants.upload-audio', assistant.id), {
+            forceFormData: true,
+        });
     };
 
     const submitUrl = (e: React.FormEvent) => {
@@ -279,30 +289,32 @@ export default function Show({ assistant }: Props) {
                                                         buttonText="Расширить лимиты"
                                                     />
                                                 ) : (
-                                                    <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
-                                                        <div>
-                                                            <h4 className="font-bold text-white-color uppercase tracking-tight">Голосовое сообщение</h4>
-                                                            <p className="text-sm text-text-secondary">Аудио будет транскрибировано в текст</p>
-                                                            {isStarter && (
-                                                                <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                                                                    Лимит: {voiceCount} / {voiceLimit}
-                                                                </div>
-                                                            )}
+                                                    <>
+                                                        <VoiceRecorder 
+                                                            onRecordingComplete={handleVoiceRecording} 
+                                                            isUploading={audioForm.processing}
+                                                        />
+
+                                                        <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
+                                                            <div>
+                                                                <h4 className="font-bold text-white-color uppercase tracking-tight">Или загрузите файл</h4>
+                                                                <p className="text-sm text-text-secondary">Поддерживаются MP3, WAV, M4A</p>
+                                                            </div>
+                                                            <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
+                                                                <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
+                                                                    {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                                </span>
+                                                                <i><Mic size={16} /></i>
+                                                                <input
+                                                                    type="file"
+                                                                    className="hidden"
+                                                                    accept="audio/*"
+                                                                    onChange={uploadAudio}
+                                                                    disabled={audioForm.processing}
+                                                                />
+                                                            </label>
                                                         </div>
-                                                        <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
-                                                            <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
-                                                                {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                            </span>
-                                                            <i><Mic size={16} /></i>
-                                                            <input
-                                                                type="file"
-                                                                className="hidden"
-                                                                accept="audio/*"
-                                                                onChange={uploadAudio}
-                                                                disabled={audioForm.processing}
-                                                            />
-                                                        </label>
-                                                    </div>
+                                                    </>
                                                 )}
                                             </div>
                                         )}
