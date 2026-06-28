@@ -20,8 +20,7 @@ test('assistant show page has correct props', function () {
                 ->has('status')
                 ->has('chunks')
                 ->has('knowledge')
-                ->has('articles')
-                ->has('articles_count')
+                ->has('knowledge_count')
                 ->etc()
             )
         );

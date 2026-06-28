@@ -75,22 +75,13 @@ class Assistant extends Model
     ];
 
     protected $appends = [
-        'articles',
-        'articles_count',
+        'knowledge_count',
     ];
 
     /**
-     * Backward compatibility for 'articles'
+     * Get the count of knowledge items.
      */
-    public function getArticlesAttribute()
-    {
-        return $this->knowledge;
-    }
-
-    /**
-     * Backward compatibility for 'articles_count'
-     */
-    public function getArticlesCountAttribute()
+    public function getKnowledgeCountAttribute(): int
     {
         return $this->knowledge_count ?? $this->knowledge()->count();
     }
