@@ -29,7 +29,11 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
-## Use artisan && php commands 
+# Процесс выполнения
+- после каждого процесса выполнения задачи, обязательно задокументируй все что сделал
+- используй `skill/documentation` для документации с написаниями тестов
+
+## Use artisan && php commands only Sail
 - use sail example ./vendor/bin/sail ..
 
 ## UI Design

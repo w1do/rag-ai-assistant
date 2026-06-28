@@ -56,6 +56,21 @@ export default function Authenticated({
 
     return (
         <div className="min-h-screen bg-body-color">
+            {user.balance <= 0 && (
+                <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-2">
+                    <div className="mx-auto max-w-7xl flex items-center justify-between">
+                        <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-500">
+                            Ваш баланс 0. Пожалуйста, пополните счет для продолжения работы.
+                        </p>
+                        <button 
+                            onClick={() => setShowingTopUpModal(true)}
+                            className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-white-color bg-red-500 px-3 py-1 rounded-[1px] hover:bg-red-600 transition-colors shrink-0 ml-4"
+                        >
+                            Пополнить
+                        </button>
+                    </div>
+                </div>
+            )}
             <nav className="relative border-b border-border-color-one bg-background-one">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">

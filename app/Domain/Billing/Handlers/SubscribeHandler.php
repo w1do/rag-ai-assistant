@@ -23,11 +23,10 @@ class SubscribeHandler
         }
 
         DB::transaction(function () use ($user, $plan, $price) {
-            // Cancel current active subscription if exists
-            $activeSubscription = $user->subscriptions()->active()->first();
-            if ($activeSubscription) {
-                $activeSubscription->cancel(true);
-            }
+            // Cancel all current active subscriptions if they exist
+            $user->subscriptions()->active()->get()->each(function ($subscription) {
+                $subscription->cancel(true);
+            });
 
             $user->balance -= $price;
             $user->save();

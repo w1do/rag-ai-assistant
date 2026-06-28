@@ -28,7 +28,101 @@ class AssistantPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->balance <= 0) {
+            return false;
+        }
+
+        $subscription = $user->subscriptions()->active()->first();
+        if (! $subscription) {
+            return false;
+        }
+
+        $limits = $subscription->plan->limits;
+        $assistantLimit = $limits['assistants_count'] ?? 1;
+
+        if ($assistantLimit === -1) {
+            return true;
+        }
+
+        return $user->assistants()->count() < $assistantLimit;
+    }
+
+    /**
+     * Determine whether the user can add URL to knowledge base.
+     */
+    public function addUrl(User $user, Assistant $assistant): bool
+    {
+        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+            return false;
+        }
+
+        $subscription = $user->subscriptions()->active()->first();
+        if (! $subscription) {
+            return false;
+        }
+
+        $limits = $subscription->plan->limits;
+        $urlLimit = $limits['links_count'] ?? 0;
+
+        if ($urlLimit === -1) {
+            return true;
+        }
+
+        return $assistant->knowledge()->where('type', 'website')->count() < $urlLimit;
+    }
+
+    /**
+     * Determine whether the user can upload audio to knowledge base.
+     */
+    public function uploadAudio(User $user, Assistant $assistant): bool
+    {
+        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+            return false;
+        }
+
+        $subscription = $user->subscriptions()->active()->first();
+        if (! $subscription) {
+            return false;
+        }
+
+        $limits = $subscription->plan->limits;
+        $audioLimit = $limits['voice_count'] ?? 0;
+
+        if ($audioLimit === -1) {
+            return true;
+        }
+
+        return $assistant->knowledge()->where('type', 'voice')->count() < $audioLimit;
+    }
+
+    /**
+     * Determine whether the user can upload document to knowledge base.
+     */
+    public function uploadDocument(User $user, Assistant $assistant): bool
+    {
+        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+            return false;
+        }
+
+        $subscription = $user->subscriptions()->active()->first();
+        if (! $subscription) {
+            return false;
+        }
+
+        $limits = $subscription->plan->limits;
+
+        // Для старта загрузка документов может быть запрещена (лимит 0 или отсутствует)
+        $docLimit = $limits['document_count'] ?? -1; // Если нет в лимитах, разрешаем (кроме старта, где мы не добавили)
+
+        if ($subscription->plan->slug === 'start') {
+            return false; // По ТЗ только ссылки и голосовые
+        }
+
+        if ($docLimit === -1) {
+            return true;
+        }
+
+        return $assistant->knowledge()->where('type', 'document')->count() < $docLimit;
     }
 
     /**

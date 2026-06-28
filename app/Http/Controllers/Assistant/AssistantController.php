@@ -88,6 +88,8 @@ class AssistantController extends Controller
      */
     public function store(StoreAssistantRequest $request, StoreAssistantHandler $handler): RedirectResponse
     {
+        $this->authorize('create', Assistant::class);
+
         $dto = AssistantDTO::fromArray($request->validated());
 
         /** @var User $user */
@@ -210,7 +212,7 @@ class AssistantController extends Controller
      */
     public function uploadDocument(Request $request, Assistant $assistant, UploadDocumentHandler $handler): RedirectResponse
     {
-        $this->authorize('update', $assistant);
+        $this->authorize('uploadDocument', $assistant);
 
         $request->validate([
             'document' => 'required|file|mimes:pdf,docx,txt|max:10240',
@@ -248,7 +250,7 @@ class AssistantController extends Controller
      */
     public function uploadAudio(Request $request, Assistant $assistant, UploadAudioHandler $handler): RedirectResponse
     {
-        $this->authorize('update', $assistant);
+        $this->authorize('uploadAudio', $assistant);
 
         $request->validate([
             'audio' => 'required|file|mimes:mp3,wav,m4a,webm,ogg|max:25600',
@@ -282,7 +284,7 @@ class AssistantController extends Controller
      */
     public function addUrl(Request $request, Assistant $assistant, AddUrlHandler $handler): RedirectResponse
     {
-        $this->authorize('update', $assistant);
+        $this->authorize('addUrl', $assistant);
 
         $request->validate([
             'url' => 'required|url',

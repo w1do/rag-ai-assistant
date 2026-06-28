@@ -1,8 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import InputHint from '@/Components/InputHint';
+import LimitReachedCard from '@/Components/LimitReachedCard';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import { Bot, MessageSquare, Pencil, Trash2, FileText, Mic, Globe, Code, Plus, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -42,7 +43,19 @@ interface Props {
 }
 
 export default function Show({ assistant }: Props) {
-    const [activeTab, setActiveTab] = useState<'document' | 'voice' | 'website' | 'api'>('document');
+    const { auth } = usePage().props as any;
+    const plan = auth.plan;
+    const isStarter = plan?.slug === 'start';
+    const websiteLimit = plan?.limits?.links_count ?? 3;
+    const voiceLimit = plan?.limits?.voice_count ?? 1;
+
+    const [activeTab, setActiveTab] = useState<'document' | 'voice' | 'website' | 'api'>(isStarter ? 'website' : 'document');
+
+    const websiteCount = (assistant.knowledge || []).filter(k => k.type === 'website').length;
+    const voiceCount = (assistant.knowledge || []).filter(k => k.type === 'voice').length;
+
+    const canAddWebsite = websiteLimit === -1 || websiteCount < websiteLimit;
+    const canAddVoice = voiceLimit === -1 || voiceCount < voiceLimit;
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -201,25 +214,39 @@ export default function Show({ assistant }: Props) {
                                             { id: 'voice', label: 'Голосовые', icon: <Mic size={16} /> },
                                             { id: 'website', label: 'Сайты', icon: <Globe size={16} /> },
                                             { id: 'api', label: 'API', icon: <Code size={16} /> },
-                                        ].map((tab) => (
-                                            <button
-                                                key={tab.id}
-                                                onClick={() => setActiveTab(tab.id as any)}
-                                                className={cn(
-                                                    "flex items-center gap-2 px-6 py-4 font-bold text-xs uppercase tracking-widest transition-all border-b-2 relative -mb-px",
-                                                    activeTab === tab.id
-                                                        ? "border-primary-color text-primary-color"
-                                                        : "border-transparent text-text-secondary hover:text-white-color hover:border-white-color/20"
-                                                )}
-                                            >
-                                                {tab.icon}
-                                                {tab.label}
-                                            </button>
-                                        ))}
+                                        ].map((tab) => {
+                                            const isBlocked = isStarter && (tab.id === 'document' || tab.id === 'api');
+                                            return (
+                                                <button
+                                                    key={tab.id}
+                                                    onClick={() => !isBlocked && setActiveTab(tab.id as any)}
+                                                    className={cn(
+                                                        "flex items-center gap-2 px-6 py-4 font-bold text-xs uppercase tracking-widest transition-all border-b-2 relative -mb-px whitespace-nowrap",
+                                                        activeTab === tab.id
+                                                            ? "border-primary-color text-primary-color"
+                                                            : "border-transparent text-text-secondary hover:text-white-color hover:border-white-color/20",
+                                                        isBlocked && "opacity-50 cursor-not-allowed"
+                                                    )}
+                                                >
+                                                    {tab.icon}
+                                                    {tab.label}
+                                                    {isBlocked && <span className="text-[8px] bg-amber-400 text-black px-1 rounded-[1px] ml-1">PRO</span>}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
 
                                     <div className="min-h-[200px]">
-                                        {activeTab === 'document' && (
+                                        {isStarter && (activeTab === 'document' || activeTab === 'api') ? (
+                                            <div className="py-10">
+                                                <LimitReachedCard 
+                                                    title="Доступно только в PRO" 
+                                                    description="Загрузка документов и использование API доступны только в более продвинутых тарифах. Обновите подписку, чтобы расширить возможности вашего ассистента."
+                                                />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {activeTab === 'document' && (
                                             <div className="space-y-6">
                                                 <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
                                                     <div>
@@ -245,50 +272,80 @@ export default function Show({ assistant }: Props) {
 
                                         {activeTab === 'voice' && (
                                             <div className="space-y-6">
-                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
-                                                    <div>
-                                                        <h4 className="font-bold text-white-color uppercase tracking-tight">Голосовое сообщение</h4>
-                                                        <p className="text-sm text-text-secondary">Аудио будет транскрибировано в текст</p>
+                                                {!canAddVoice ? (
+                                                    <LimitReachedCard 
+                                                        title="Лимит аудио исчерпан" 
+                                                        description={`Вы использовали лимит голосовых сообщений (${voiceLimit}) для тарифа "${plan?.name}". Обновите тариф, чтобы загружать больше голосовых данных.`}
+                                                        buttonText="Расширить лимиты"
+                                                    />
+                                                ) : (
+                                                    <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
+                                                        <div>
+                                                            <h4 className="font-bold text-white-color uppercase tracking-tight">Голосовое сообщение</h4>
+                                                            <p className="text-sm text-text-secondary">Аудио будет транскрибировано в текст</p>
+                                                            {isStarter && (
+                                                                <div className="mt-2 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                                                                    Лимит: {voiceCount} / {voiceLimit}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
+                                                            <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
+                                                                {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                            </span>
+                                                            <i><Mic size={16} /></i>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="audio/*"
+                                                                onChange={uploadAudio}
+                                                                disabled={audioForm.processing}
+                                                            />
+                                                        </label>
                                                     </div>
-                                                    <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
-                                                        <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
-                                                            {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                        </span>
-                                                        <i><Mic size={16} /></i>
-                                                        <input
-                                                            type="file"
-                                                            className="hidden"
-                                                            accept="audio/*"
-                                                            onChange={uploadAudio}
-                                                            disabled={audioForm.processing}
-                                                        />
-                                                    </label>
-                                                </div>
+                                                )}
                                             </div>
                                         )}
 
                                         {activeTab === 'website' && (
                                             <div className="space-y-6">
-                                                <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
-                                                    <h4 className="font-bold text-white-color uppercase tracking-tight">Анализ сайта</h4>
-                                                    <p className="text-sm text-text-secondary mb-4">Укажите URL для обучения ассистента</p>
-                                                    <form onSubmit={submitUrl} className="flex flex-col gap-2">
-                                                        <div className="flex gap-2">
-                                                            <input
-                                                                type="url"
-                                                                value={urlForm.data.url}
-                                                                onChange={(e) => urlForm.setData('url', e.target.value)}
-                                                                className="flex-grow bg-background-one border-border-color-one text-white-color rounded-[2px] px-4 py-3 text-sm focus:border-primary-color focus:ring-primary-color"
-                                                                placeholder="https://example.com"
-                                                                required
-                                                            />
-                                                            <button disabled={urlForm.processing} className="theme-button style-1 !h-[48px] !w-[48px] !p-0">
-                                                                <span data-text="+"><Plus size={18} /></span>
-                                                            </button>
+                                                {!canAddWebsite ? (
+                                                    <LimitReachedCard 
+                                                        title="Лимит ссылок исчерпан" 
+                                                        description={`Вы добавили максимально доступное количество ссылок (${websiteLimit}) для тарифа "${plan?.name}". Перейдите на тариф PRO для безлимитного анализа сайтов.`}
+                                                        buttonText="Расширить лимиты"
+                                                    />
+                                                ) : (
+                                                    <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <div>
+                                                                <h4 className="font-bold text-white-color uppercase tracking-tight">Анализ сайта</h4>
+                                                                <p className="text-sm text-text-secondary">Укажите URL для обучения ассистента</p>
+                                                            </div>
+                                                            {isStarter && (
+                                                                <div className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                                                                    Лимит: {websiteCount} / {websiteLimit}
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                        <InputHint message="Укажите URL — ассистент проанализирует страницу и добавит её в базу знаний." />
-                                                    </form>
-                                                </div>
+                                                        <form onSubmit={submitUrl} className="flex flex-col gap-2">
+                                                            <div className="flex gap-2">
+                                                                <input
+                                                                    type="url"
+                                                                    value={urlForm.data.url}
+                                                                    onChange={(e) => urlForm.setData('url', e.target.value)}
+                                                                    className="flex-grow bg-background-one border-border-color-one text-white-color rounded-[2px] px-4 py-3 text-sm focus:border-primary-color focus:ring-primary-color"
+                                                                    placeholder="https://example.com"
+                                                                    required
+                                                                />
+                                                                <button disabled={urlForm.processing} className="theme-button style-1 !h-[48px] !w-[48px] !p-0">
+                                                                    <span data-text="+"><Plus size={18} /></span>
+                                                                </button>
+                                                            </div>
+                                                            <InputHint message="Укажите URL — ассистент проанализирует страницу и добавит её в базу знаний." />
+                                                        </form>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
 
@@ -320,7 +377,7 @@ export default function Show({ assistant }: Props) {
                                                                 <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Пример FAQ</label>
                                                                 <div className="bg-black-color rounded-[2px] p-4 border border-border-color-one overflow-x-auto">
                                                                     <pre className="text-[11px] font-mono text-primary-color/70">
-{`{
+                                                                    {`{
   "assistant_id": ${assistant.id},
   "name": "FAQ База",
   "chunks": [
@@ -337,7 +394,7 @@ export default function Show({ assistant }: Props) {
                                                                 <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Пример данных</label>
                                                                 <div className="bg-black-color rounded-[2px] p-4 border border-border-color-one overflow-x-auto">
                                                                     <pre className="text-[11px] font-mono text-primary-color/70">
-{`{
+                                                                    {`{
   "assistant_id": ${assistant.id},
   "name": "Каталог",
   "chunks": [
@@ -354,6 +411,8 @@ export default function Show({ assistant }: Props) {
                                                     </div>
                                                 </div>
                                             </div>
+                                        )}
+                                            </>
                                         )}
 
                                         <div className="mt-10">

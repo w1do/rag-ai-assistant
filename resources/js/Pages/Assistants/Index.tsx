@@ -1,11 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import TextInput from '@/Components/TextInput';
 import InputLabel from '@/Components/InputLabel';
 import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
+import LimitReachedCard from '@/Components/LimitReachedCard';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2, Pencil, ArrowRight, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -375,6 +376,12 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
  * содержит расширенную информацию и действия над ассистентом.
  */
 export default function Index({ assistants }: Props) {
+    const { auth } = usePage().props as any;
+    const plan = auth.plan;
+    const isStarter = plan?.slug === 'start';
+    const assistantLimit = plan?.limits?.assistants_count ?? 1;
+    const canCreateAssistant = assistantLimit === -1 || assistants.length < assistantLimit;
+
     const assistantTips = [
         'Создавайте разных ассистентов для разных задач: продажи, поддержка, база знаний.',
         'Используйте иконку микрофона, чтобы быстро добавить голосовые инструкции.',
@@ -396,11 +403,22 @@ export default function Index({ assistants }: Props) {
                         <h2 className="text-lg sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
                             Ассистенты
                         </h2>
-                        <Link href={route('assistants.create')} className="theme-button style-1 !h-[40px] sm:!h-[52px] text-[9px] sm:text-sm">
-                            <span data-text="Добавить">Добавить</span>
-                            <i><Plus size={16} /></i>
-                        </Link>
+                        {canCreateAssistant && (
+                            <Link href={route('assistants.create')} className="theme-button style-1 !h-[40px] sm:!h-[52px] text-[9px] sm:text-sm">
+                                <span data-text="Добавить">Добавить</span>
+                                <i><Plus size={16} /></i>
+                            </Link>
+                        )}
                     </div>
+
+                    {!canCreateAssistant && (
+                        <div className="mb-10">
+                            <LimitReachedCard 
+                                title="Лимит ассистентов исчерпан" 
+                                description={`Вы достигли лимита ассистентов (${assistantLimit}) для вашего текущего тарифа "${plan?.name}". Перейдите на более продвинутый тариф, чтобы создавать больше умных помощников.`}
+                            />
+                        </div>
+                    )}
 
                     {assistants.length === 0 ? (
                         <div className="pricing-item px-6 py-20 text-center">
