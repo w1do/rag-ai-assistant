@@ -16,6 +16,7 @@ import {
     Bot,
     ChevronDown,
     CreditCard,
+    History,
     LayoutDashboard,
     Link2,
     LogOut,
@@ -101,6 +102,13 @@ export default function Authenticated({
                                     <CreditCard className="mr-2 h-4 w-4" />
                                     Тарифы
                                 </NavLink>
+                                <NavLink
+                                    href={route('finance')}
+                                    active={route().current('finance')}
+                                >
+                                    <History className="mr-2 h-4 w-4" />
+                                    Финансы
+                                </NavLink>
                             </div>
                         </div>
 
@@ -142,6 +150,13 @@ export default function Authenticated({
                                         >
                                             <User className="mr-2 h-4 w-4" />
                                             Профиль
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('finance')}
+                                            className="flex items-center text-white-color hover:bg-background-one"
+                                        >
+                                            <History className="mr-2 h-4 w-4" />
+                                            История финансов
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
@@ -214,6 +229,14 @@ export default function Authenticated({
                         >
                             <CreditCard className="mr-3 h-5 w-5" />
                             Тарифы
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('finance')}
+                            active={route().current('finance')}
+                            className="flex items-center text-white-color"
+                        >
+                            <History className="mr-3 h-5 w-5" />
+                            Финансы
                         </ResponsiveNavLink>
                     </div>
 

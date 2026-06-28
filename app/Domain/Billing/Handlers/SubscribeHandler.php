@@ -5,6 +5,8 @@ namespace App\Domain\Billing\Handlers;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Moffhub\Billing\Models\Payment;
 use Moffhub\Billing\Models\Plan;
 
 class SubscribeHandler
@@ -21,10 +23,31 @@ class SubscribeHandler
         }
 
         DB::transaction(function () use ($user, $plan, $price) {
+            // Cancel current active subscription if exists
+            $activeSubscription = $user->subscriptions()->active()->first();
+            if ($activeSubscription) {
+                $activeSubscription->cancel(true);
+            }
+
             $user->balance -= $price;
             $user->save();
 
-            $user->subscribe($plan->slug)->create();
+            $subscription = $user->subscribe($plan->slug)->create();
+
+            Payment::create([
+                'ulid' => (string) Str::ulid(),
+                'billable_type' => $user->getMorphClass(),
+                'billable_id' => $user->id,
+                'subscription_id' => $subscription->id,
+                'amount' => $plan->base_price,
+                'currency' => 'RUB',
+                'status' => 'completed',
+                'payment_method' => 'manual',
+                'paid_at' => now(),
+                'metadata' => [
+                    'plan_name' => $plan->name,
+                ],
+            ]);
         });
     }
 }

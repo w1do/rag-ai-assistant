@@ -9,6 +9,7 @@ use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Chat\PublicChatController;
 use App\Http\Controllers\Connector\ConnectorController;
 use App\Http\Controllers\User\BillingController;
+use App\Http\Controllers\User\FinanceController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\TariffController;
 use App\Models\User;
@@ -44,6 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/competitors', fn () => Inertia::render('Competitors'))->name('competitors');
     Route::get('/bots', fn () => Inertia::render('Bots'))->name('bots');
     Route::get('/tariffs', [TariffController::class, 'index'])->name('tariffs');
+    Route::get('/finance', [FinanceController::class, 'index'])->name('finance');
 
     Route::post('/billing/top-up', [BillingController::class, 'topUp'])->name('billing.top-up');
     Route::post('/billing/subscribe/{plan:slug}', [BillingController::class, 'subscribe'])->name('billing.subscribe');

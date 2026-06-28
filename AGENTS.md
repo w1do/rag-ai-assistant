@@ -29,13 +29,16 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
+## Use artisan && php commands 
+- use sail example ./vendor/bin/sail ..
+
 ## UI Design
 - Следуй инструкциям из [UI Design Guide](./DESIGN_UI.md) при создании новых компонентов, или редизайнаn при верстке
 
 ## Architecture
 - Используй архитектуру DDD, CQRS, перед созданием всегда проверяй реализацию создана она или нет, если нет, приступай, если есть изучи как работает.
 
-## Write Documentation
+## Write Documentation (feature, fix, refactor)
 - Обязательно документируй используя `skill/documentation` при каждом измнении файла, фичи или исправления функционала, для API пиши документацию Swagger
 
 ## Refactoring

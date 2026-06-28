@@ -15,9 +15,10 @@ function formatPrice(value: number): string {
 interface Props {
     plans: any[];
     features: any[];
+    currentPlanSlug: string | null;
 }
 
-export default function Tariffs({ plans, features }: Props) {
+export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
     const tariffTips = [
         'Выбирайте годовой тариф, чтобы сэкономить до 30% стоимости.',
         'Пробный тариф идеально подходит для тестирования базовых функций.',
@@ -65,7 +66,13 @@ export default function Tariffs({ plans, features }: Props) {
     };
 
     const handleSubscribe = (planSlug: string) => {
-        router.post(route('billing.subscribe', planSlug));
+        const message = currentPlanSlug
+            ? 'Вы точно хотите сменить текущий тарифный план?'
+            : 'Вы точно хотите выбрать этот тарифный план?';
+
+        if (confirm(message)) {
+            router.post(route('billing.subscribe', planSlug));
+        }
     };
 
     return (
@@ -135,10 +142,20 @@ export default function Tariffs({ plans, features }: Props) {
 
                                                 <button 
                                                     onClick={() => handleSubscribe(plan.slug)}
-                                                    className={`theme-button w-full ${highlighted ? 'style-1' : 'style-2'}`}
+                                                    disabled={plan.slug === currentPlanSlug}
+                                                    className={`theme-button w-full ${plan.slug === currentPlanSlug ? 'opacity-50 cursor-not-allowed' : (highlighted ? 'style-1' : 'style-2')}`}
                                                 >
-                                                    <span data-text="Выбрать тариф">Выбрать тариф</span>
-                                                    <ArrowRight className="w-5 h-5" />
+                                                    {plan.slug === currentPlanSlug ? (
+                                                        <>
+                                                            <span data-text="Уже выбрано">Уже выбрано</span>
+                                                            <Check className="w-5 h-5" />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span data-text="Выбрать тариф">Выбрать тариф</span>
+                                                            <ArrowRight className="w-5 h-5" />
+                                                        </>
+                                                    )}
                                                 </button>
                                             </div>
                                         </div>
