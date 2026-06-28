@@ -29,6 +29,21 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
+## UI Design
+- Следуй инструкциям из [UI Design Guide](./DESIGN_UI.md) при создании новых компонентов, или редизайнаn при верстке
+
+## Architecture
+- Используй архитектуру DDD, CQRS, перед созданием всегда проверяй реализацию создана она или нет, если нет, приступай, если есть изучи как работает.
+
+## Write Documentation
+- Обязательно документируй используя `skill/documentation` при каждом измнении файла, фичи или исправления функционала, для API пиши документацию Swagger
+
+## Refactoring
+- Обязательно используй `skill/refactoring-ddd`
+
+## DTOs
+- Используй `skill/dtos` для написания Dtos классов
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.

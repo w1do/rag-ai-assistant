@@ -1,32 +1,48 @@
-# Spacing & Geometry — ManuFlex
+# Размеры, радиусы и спейсинг (Sizing)
 
-## Spacing System
-| Level | Size | Usage |
-|-------|------|-------|
-| `Micro` | 4px | Fine adjustments, icons |
-| `Small` | 8px | Inner component spacing |
-| `Base` | 16px | Standard padding/gap |
-| `Medium` | 24px | Large component spacing |
-| `Large` | 40px | Desktop container margins |
-| `XL` | 56px | Large sections spacing |
-| `2XL` | 80px | Main section gaps |
-| `3XL` | 120px | Hero sections vertical spacing |
+Источник: `public/assets/css/main.css`.
 
-## Component Specific Spacing
-- **Card Padding:** 28px
-- **Section Gap:** 80px
-- **Component Gap:** 20px
+## Радиусы (Border Radius)
+| Токен | Значение | Применение |
+|-------|----------|------------|
+| `--border-radius-one` | `5px` | Мелкие элементы, алерты (`ajax-response`) |
+| `--border-radius-two` | `15px` | Средние блоки |
+| `--border-radius-three` | `24px` | Карточки, бейджи, `.sub-title`, textarea |
+| (литерал) `100px` | pill | Кнопки `.theme-button`, инпуты, круглые иконки |
+| (адаптив) `20px` | — | Карточки/textarea на `≤1199px` |
 
-## Border Radius
-- `--radius-sm`: 6px
-- `--radius-md`: 12px (Buttons, Inputs)
-- `--radius-lg`: 16px (Small Cards)
-- `--radius-xl`: 20px (Large Cards)
-- `--radius-full`: 9999px (Pills, Badges, Avatars)
+## Высоты контролов
+| Элемент | Высота | Паддинги |
+|---------|--------|----------|
+| `.theme-button` | `52px` | `10px 15px` |
+| `input` / `.form-control` / `.form-select` | `52px` | `10px 15px` |
+| круглая иконка кнопки (`.style-1 i`) | `24×24` | — |
+| иконка тарифа (`.pricing-top-icon figure`) | `100×100` | — |
 
-## Shadows
-- `--shadow-sm`: `0 1px 3px rgba(0,0,0,0.06)`
-- `--shadow-md`: `0 4px 16px rgba(0,0,0,0.10)`
-- `--shadow-lg`: `0 12px 40px rgba(0,0,0,0.18)`
+## Утилиты отступов (шаг 5px)
+`main.css` содержит сгенерированные классы с `!important`, шаг **5px**, диапазон **10–190px+**:
 
-*Note: In Dark Mode, shadows are typically removed or significantly reduced.*
+| Префикс | Свойство | Пример |
+|---------|----------|--------|
+| `.pt-{n}` | `padding-top` | `.pt-100` → `padding-top:100px` |
+| `.pb-{n}` | `padding-bottom` | `.pb-80` |
+| `.mt-{n}` | `margin-top` | `.mt-30` |
+| `.mb-{n}` | `margin-bottom` | `.mb-50` |
+
+Адаптивные варианты с префиксом `md-` (для планшетов/мобильных), напр. `md-pt-80`, `md-pb-80`.
+Типичный паттерн отступов секции: `pt-100 md-pt-80 pb-100 md-pb-80`.
+
+> `.pt-*` начинаются со строки 3259. Значения кратны 5: `…-10, -15, -20, … -100, … -190`.
+
+## Брейкпоинты (media queries)
+| Макс. ширина | Назначение |
+|--------------|------------|
+| `1399px` | Большие десктопы / уменьшение крупных заголовков |
+| `1199px` | Десктоп → уменьшение радиусов карточек до 20px |
+| `991px` | Планшет (основной перелом) |
+| `767px` | Мобильный |
+| `576px` | Малый мобильный |
+
+## Сетка (вендор Bootstrap)
+Используется стандартная сетка Bootstrap: `.container`, `.row`, `.col-12`, `.col-lg-4`, `.col-lg-8` и т.п.
+Кастомные обёртки секций часто добавляют класс `.mlr` (горизонтальные отступы) и `*-wapper`.

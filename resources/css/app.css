@@ -2,25 +2,41 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-title: "Unbounded", ui-sans-serif, system-ui, sans-serif;
 
-  --color-background: #FAFAFA;
-  --color-surface: #FFFFFF;
-  --color-text-primary: #111111;
-  --color-text-secondary: #5C5C5C;
-  --color-primary: #FFFFFF;
-  --color-secondary: #C8A645;
-  --color-accent: #C8A645;
+  --color-primary-color: #DFFF00;
+  --color-primary-rgb-12: rgba(221, 255, 0, 0.123);
+  --color-white-color: #FFFFFF;
+  --color-black-color: #000000;
+  --color-text-color: #FFFFFF;
+  --color-body-color: #0A0708;
+  --color-footer-color: #0A0708;
+  --color-background-one: #191919;
+  --color-extra-color: #0A0708;
+  --color-extra-color-two: #221F20;
+  --color-extra-color-three: #343434;
+  --color-form-input: #343434;
+  --color-border-color-one: rgba(255, 255, 255, 0.10);
+
+  --radius-three: 24px;
+  --transition-base: 500ms all ease;
+
+  /* Совместимость с существующими стилями */
+  --color-background: var(--color-body-color);
+  --color-surface: var(--color-background-one);
+  --color-text-primary: var(--color-white-color);
+  --color-text-secondary: #8A8FA0;
+  --color-primary: var(--color-primary-color);
+  --color-secondary: var(--color-primary-color);
+  --color-accent: var(--color-primary-color);
   --color-success: #34A853;
   --color-warning: #FBBC04;
   --color-error: #D93025;
 
-  --color-background-dark: #0C1019;
-  --color-surface-dark: #151B27;
-  --color-text-primary-dark: #F0F0F0;
+  --color-background-dark: var(--color-body-color);
+  --color-surface-dark: var(--color-background-one);
+  --color-text-primary-dark: var(--color-white-color);
   --color-text-secondary-dark: #8A8FA0;
-
-  --radius-xl: 20px;
 
   --animate-soft-pulse: soft-pulse 2s infinite;
   --animate-float: float 6s ease-in-out infinite;
@@ -37,8 +53,102 @@
 }
 
 @layer base {
+  @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Unbounded:wght@200..900&display=swap");
+
   body {
-    @apply bg-background text-text-primary dark:bg-background-dark dark:text-text-primary-dark;
+    @apply bg-body-color text-text-color font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-title text-white-color font-normal;
+    letter-spacing: .2px;
+  }
+
+  ::selection {
+    text-shadow: none;
+    @apply bg-primary-color text-black-color;
+  }
+}
+
+@layer components {
+  .theme-button {
+    @apply h-[52px] px-[15px] py-[10px] rounded-full inline-flex items-center justify-center gap-[10px] font-semibold text-[16px] uppercase transition-all duration-500 overflow-hidden relative;
+    cursor: pointer;
+    text-transform: capitalize;
+  }
+
+  .theme-button span {
+    @apply relative block transition-all duration-500;
+    transform-style: preserve-3d;
+  }
+
+  .theme-button span::before {
+    @apply absolute top-full left-0 w-full h-full block;
+    content: attr(data-text);
+    transform: rotateX(-90deg);
+    transform-origin: top;
+  }
+
+  .theme-button:hover span {
+    transform: rotateX(90deg);
+  }
+
+  .theme-button.style-1 {
+    @apply bg-primary-color text-black-color;
+  }
+
+  .theme-button.style-1:hover {
+    @apply text-white-color;
+  }
+
+  .theme-button.style-2 {
+    @apply bg-transparent border border-border-color-one text-white-color;
+  }
+
+  .theme-button.style-2:hover {
+    @apply bg-primary-color border-primary-color text-black-color;
+  }
+
+  /* Иконки в кнопках */
+  .theme-button i {
+    @apply flex items-center justify-center w-[24px] h-[24px] rounded-full transition-all duration-500;
+  }
+
+  .theme-button.style-1 i {
+    @apply bg-black-color text-white-color rotate-[-45deg];
+  }
+
+  .theme-button.style-1:hover i {
+    @apply bg-white-color text-primary-color rotate-0;
+  }
+
+  .theme-button.style-2 i {
+    @apply bg-white-color text-black-color;
+  }
+
+  .theme-button.style-2:hover i {
+    @apply bg-black-color text-white-color;
+  }
+
+  /* Карточки */
+  .pricing-item {
+    @apply bg-background-one border border-border-color-one rounded-three overflow-hidden transition-all duration-500;
+  }
+
+  .pricing-top {
+    @apply bg-extra-color p-[30px] text-center rounded-three transition-all duration-500;
+  }
+
+  .pricing-item:hover .pricing-top {
+    @apply bg-primary-rgb-12;
+  }
+
+  .pricing-item:hover {
+    border-color: transparent;
+    background-image: linear-gradient(var(--color-background-one), var(--color-background-one)), 
+                      linear-gradient(135deg, var(--color-primary-color) 0%, #FFFFFF 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
 }
 

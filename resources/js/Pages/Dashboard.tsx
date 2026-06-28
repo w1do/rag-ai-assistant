@@ -23,14 +23,6 @@ interface Props {
     }[];
 }
 
-/**
- * Описание одной карточки статистики на панели управления.
- *
- * @property label Подпись метрики.
- * @property value Числовое значение метрики.
- * @property icon Иконка lucide для визуального акцента.
- * @property accent Набор tailwind-классов для цветовой темы иконки.
- */
 interface StatCard {
     label: string;
     value: number;
@@ -38,91 +30,77 @@ interface StatCard {
     accent: string;
 }
 
-/**
- * Возвращает оформление бейджа статуса ассистента.
- *
- * Сопоставляет строковый статус с цветовой схемой бейджа и подписью,
- * чтобы единообразно отображать состояние ассистента в списке.
- *
- * @param status Статус ассистента из данных сервера.
- * @return Объект с CSS-классами, цветом индикатора и читаемой подписью.
- */
 function statusBadge(status: string): { className: string; dot: string; label: string } {
     switch (status) {
         case 'ready':
         case 'active':
             return {
-                className: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-                dot: 'bg-emerald-500',
+                className: 'bg-primary-rgb-12 text-primary-color border border-primary-color/20',
+                dot: 'bg-primary-color',
                 label: status === 'ready' ? 'Готов' : 'Активен',
             };
         case 'processing':
         case 'pending':
             return {
-                className: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+                className: 'bg-amber-500/10 text-amber-500 border border-amber-500/20',
                 dot: 'bg-amber-500',
                 label: 'В обработке',
             };
         case 'error':
         case 'failed':
             return {
-                className: 'bg-rose-50 text-rose-700 ring-rose-600/20',
+                className: 'bg-rose-500/10 text-rose-500 border border-rose-500/20',
                 dot: 'bg-rose-500',
                 label: 'Ошибка',
             };
         default:
             return {
-                className: 'bg-gray-100 text-gray-600 ring-gray-500/20',
-                dot: 'bg-gray-400',
+                className: 'bg-white/5 text-white/60 border border-white/10',
+                dot: 'bg-white/40',
                 label: status,
             };
     }
 }
 
-/**
- * Главная страница панели управления.
- *
- * Отображает карточки ключевых метрик (ассистенты, диалоги, база знаний)
- * с иконками lucide и аккуратными бордерами, а также блок последних
- * ассистентов с кнопкой добавления нового ассистента.
- *
- * @param stats Агрегированная статистика аккаунта.
- * @param recent_assistants Список недавно созданных ассистентов.
- */
 export default function Dashboard({ stats, recent_assistants }: Props) {
     const cards: StatCard[] = [
         {
             label: 'Ассистенты',
             value: stats.assistants_count,
             icon: Bot,
-            accent: 'bg-indigo-50 text-indigo-600 ring-indigo-100',
+            accent: 'bg-primary-rgb-12 text-primary-color',
         },
         {
             label: 'Всего диалогов',
             value: stats.chats_count,
             icon: MessagesSquare,
-            accent: 'bg-sky-50 text-sky-600 ring-sky-100',
+            accent: 'bg-primary-rgb-12 text-primary-color',
         },
         {
             label: 'База знаний',
             value: stats.knowledge_count,
             icon: Database,
-            accent: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
+            accent: 'bg-primary-rgb-12 text-primary-color',
         },
     ];
 
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Панель управления
-                </h2>
+                <div className="section-title !mb-0">
+                    <span className="sub-title before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
+                        BotSync Dashboard
+                    </span>
+                    <h2 className="text-3xl font-title uppercase">
+                        Панель <span>управления</span>
+                    </h2>
+                </div>
             }
         >
             <Head title="Панель управления" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-8 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
                     {/* Карточки статистики */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         {cards.map((card) => {
@@ -130,24 +108,26 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                             return (
                                 <div
                                     key={card.label}
-                                    className="group relative overflow-hidden rounded-[20px] border border-gray-200 bg-white p-7 shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                                    className="pricing-item group"
                                 >
-                                    {/* Hover Gradient Background (3 colors as per cards.md) */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />
-                                    <div className="relative z-10 flex items-start justify-between">
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-500">
-                                                {card.label}
-                                            </p>
-                                            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900">
-                                                {card.value}
-                                            </p>
+                                    <div className="pricing-top">
+                                        <div className="flex justify-center mb-4">
+                                            <div className="w-[80px] h-[80px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
+                                                <Icon className="h-10 w-10 text-primary-color" strokeWidth={1.5} />
+                                            </div>
                                         </div>
-                                        <span
-                                            className={`flex h-12 w-12 items-center justify-center rounded-xl ring-1 ring-inset ${card.accent}`}
+                                        <div className="pricing-top-content">
+                                            <h2 className="text-4xl font-title mb-1">{card.value}</h2>
+                                            <p className="text-text-secondary uppercase tracking-wider text-sm font-semibold">{card.label}</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-6 text-center">
+                                        <Link 
+                                            href={route('assistants.index')} 
+                                            className="text-primary-color hover:text-white-color transition-colors text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2"
                                         >
-                                            <Icon className="h-6 w-6" strokeWidth={2} />
-                                        </span>
+                                            Подробнее <ArrowUpRight size={16} />
+                                        </Link>
                                     </div>
                                 </div>
                             );
@@ -155,17 +135,17 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                     </div>
 
                     {/* Последние ассистенты */}
-                    <div className="overflow-hidden rounded-[20px] border border-gray-200 bg-white shadow-md">
-                        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
-                            <div className="flex items-center gap-2">
-                                <Sparkles className="h-5 w-5 text-indigo-500" strokeWidth={2} />
-                                <h3 className="text-base font-semibold text-gray-900">
+                    <div className="bg-background-one border border-border-color-one rounded-three overflow-hidden">
+                        <div className="flex items-center justify-between border-b border-border-color-one px-6 py-5 bg-extra-color">
+                            <div className="flex items-center gap-3">
+                                <Sparkles className="h-5 w-5 text-primary-color" strokeWidth={2} />
+                                <h3 className="text-lg font-title uppercase text-white-color">
                                     Последние ассистенты
                                 </h3>
                             </div>
                             <Link
                                 href={route('assistants.index')}
-                                className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 transition-colors hover:text-indigo-800"
+                                className="text-sm font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-widest flex items-center gap-1"
                             >
                                 Все ассистенты
                                 <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
@@ -174,47 +154,47 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
 
                         {recent_assistants.length === 0 ? (
                             <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
-                                <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500">
-                                    <Bot className="h-7 w-7" strokeWidth={2} />
+                                <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-rgb-12 text-primary-color mb-4">
+                                    <Bot className="h-8 w-8" strokeWidth={2} />
                                 </span>
-                                <p className="mt-4 text-sm font-medium text-gray-900">
+                                <p className="text-lg font-title text-white-color uppercase">
                                     У вас пока нет ассистентов
                                 </p>
-                                <p className="mt-1 text-sm text-gray-500">
+                                <p className="mt-2 text-text-secondary">
                                     Создайте первого ассистента, чтобы начать работу.
                                 </p>
                             </div>
                         ) : (
-                            <ul className="divide-y divide-gray-100">
+                            <ul className="divide-y divide-border-color-one">
                                 {recent_assistants.map((assistant) => {
                                     const badge = statusBadge(assistant.status);
                                     return (
                                         <li
                                             key={assistant.id}
-                                            className="flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-gray-50"
+                                            className="flex items-center justify-between gap-4 px-6 py-5 transition-colors hover:bg-extra-color"
                                         >
-                                            <div className="flex min-w-0 items-center gap-3">
-                                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-sky-500 text-sm font-semibold text-white">
+                                            <div className="flex min-w-0 items-center gap-4">
+                                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color font-bold text-lg">
                                                     {assistant.name.charAt(0).toUpperCase()}
                                                 </span>
                                                 <div className="min-w-0">
-                                                    <p className="truncate text-sm font-semibold text-gray-900">
+                                                    <p className="truncate text-base font-bold text-white-color uppercase tracking-tight">
                                                         {assistant.name}
                                                     </p>
                                                     <span
-                                                        className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.className}`}
+                                                        className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-bold uppercase tracking-wider ${badge.className}`}
                                                     >
-                                                        <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
+                                                        <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${badge.dot}`} />
                                                         {badge.label}
                                                     </span>
                                                 </div>
                                             </div>
                                             <Link
                                                 href={route('assistants.show', assistant.id)}
-                                                className="inline-flex shrink-0 items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 hover:text-indigo-800"
+                                                className="theme-button style-2 h-[40px] px-4"
                                             >
-                                                Перейти
-                                                <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
+                                                <span data-text="Перейти">Перейти</span>
+                                                <i className="fa-solid fa-arrow-right"><ArrowUpRight size={14} /></i>
                                             </Link>
                                         </li>
                                     );
@@ -223,13 +203,13 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                         )}
 
                         {/* Кнопка добавления ассистента */}
-                        <div className="border-t border-gray-100 px-6 py-4">
+                        <div className="border-t border-border-color-one px-6 py-6 bg-extra-color/50">
                             <Link
                                 href={route('assistants.create')}
-                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 hover:shadow sm:w-auto"
+                                className="theme-button style-1 w-full sm:w-auto"
                             >
-                                <Plus className="h-4 w-4" strokeWidth={2.5} />
-                                Добавить ассистента
+                                <span data-text="Добавить ассистента">Добавить ассистента</span>
+                                <i className="fa-solid fa-arrow-right"><Plus size={16} /></i>
                             </Link>
                         </div>
                     </div>

@@ -1,26 +1,39 @@
-# Color System — ManuFlex
+# Цвета (Color Tokens)
 
-## Light Mode
-| Category | Variable | Hex | Usage |
-|----------|----------|-----|-------|
-| **Background** | `--color-background` | `#FAFAFA` | Main app background |
-| | `--color-surface` | `#FFFFFF` | Cards, modals, surfaces |
-| **Text** | `--color-text-primary` | `#111111` | Primary headings and body |
-| | `--color-text-secondary` | `#5C5C5C` | Captions, disabled text, secondary info |
-| **Brand** | `--color-primary` | `#FFFFFF` | Primary brand color (often used with dark text) |
-| | `--color-secondary` | `#C8A645` | Gold/Industrial accent |
-| | `--color-accent` | `#C8A645` | Highlights and active states |
-| **Semantic** | `--color-success` | `#34A853` | Success messages, positive trends |
-| | `--color-warning` | `#FBBC04` | Warnings, pending states |
-| | `--color-error` | `#D93025` | Errors, alerts, negative trends |
+Источник: `public/assets/css/main.css` → блок `:root` (строки 2–23).
+Все цвета задаются как CSS-переменные. **Никогда** не хардкодить значения — использовать `var(--…)`.
 
-## Dark Mode
-| Category | Variable | Hex | Usage |
-|----------|----------|-----|-------|
-| **Background** | `--color-background-dark` | `#0C1019` | Deep navy-charcoal background |
-| **Surface** | `--color-surface-dark` | `#151B27` | Surface layers for depth |
-| **Text** | `--color-text-primary-dark` | `#F0F0F0` | High contrast text |
-| | `--color-text-secondary-dark` | `#8A8FA0` | Muted text and icons |
+## Палитра
+| Токен | HEX / RGBA | Назначение |
+|-------|-----------|------------|
+| `--primary-color` | `#DFFF00` | Главный акцент: CTA, активные табы, иконки, span-акценты в заголовках |
+| `--primary-rgb-12` | `rgba(221, 255, 0, 0.123)` | Полупрозрачный акцент: фон иконок, подложки |
+| `--white-color` | `#FFFFFF` | Текст, заголовки, белые кнопки |
+| `--black-color` | `#000000` | Текст на акцентных/белых кнопках |
+| `--text-color` | `#FFFFFF` | Базовый цвет текста `body` |
+| `--body-color` | `#0A0708` | Фон страницы (`body`) |
+| `--footer-color` | `#0A0708` | Фон футера |
+| `--background-one` | `#191919` | Фон карточек и боксов |
+| `--extra-color` | `#0A0708` | Доп. тёмный фон (верх карточек, аккордеон) |
+| `--extra-color-two` | `#221F20` | Доп. фон секций |
+| `--extra-color-three` | `#343434` | Доп. серый фон |
+| `--form-input` | `#343434` | Фон и бордер инпутов |
+| `--border-color-one` | `rgba(255,255,255,0.10)` | Тонкие бордеры карточек/секций |
 
-## Design Philosophy
-Dark mode uses a deep navy-charcoal rather than pure black, providing a cinematic and premium industrial feel. Light mode is crisp and clean with high contrast.
+## Выделение текста (`::selection`)
+Строки 25–41: при выделении текста фон становится `--primary-color`, цвет — `--black-color`, `text-shadow: none`.
+
+```css
+::selection {
+  text-shadow: none;
+  background: var(--primary-color);
+  color: var(--black-color);
+}
+```
+
+## Семантика применения
+- **Акцентная кнопка / CTA** → фон `--primary-color`, текст `--black-color`.
+- **Вторичная кнопка** → прозрачный фон, бордер `--border-color-one`, текст `--white-color`.
+- **Карточка** → фон `--background-one`, бордер `--border-color-one`.
+- **Ссылка при hover** → цвет `--primary-color`.
+- **Акцент внутри заголовка** → `<h2>текст <span>акцент</span></h2>`, где `span { color: var(--primary-color) }`.

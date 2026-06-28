@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Zap, User, Menu, X } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 
@@ -24,60 +24,55 @@ export default function Header({ auth }: Props) {
     return (
         <header 
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-                isScrolled ? "glass mt-4 mx-6 rounded-xl py-3" : "bg-transparent"
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+                isScrolled ? "bg-body-color/80 backdrop-blur-md py-3 border-b border-border-color-one" : "bg-transparent py-6"
             )}
         >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="max-w-[1320px] mx-auto px-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 gold-gradient rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(200,166,69,0.3)] group-hover:shadow-[0_0_30px_rgba(200,166,69,0.5)] transition-all">
-                        <Zap className="text-background w-6 h-6 fill-background" />
+                    <div className="w-10 h-10 bg-primary-color rounded-lg flex items-center justify-center transition-all">
+                        <div className="w-6 h-6 bg-black-color rounded-sm transform rotate-45 flex items-center justify-center">
+                           <div className="w-3 h-3 bg-primary-color rounded-full animate-pulse" />
+                        </div>
                     </div>
-                    <span className="text-2xl font-serif tracking-tight text-text-primary-dark">
-                        Neural<span className="text-secondary">Flow</span>
+                    <span className="text-2xl font-title tracking-tight text-white-color uppercase">
+                        Bot<span className="text-primary-color">Sync</span>
                     </span>
                 </Link>
 
                 {/* Navigation - Desktop */}
-                <nav className="hidden md:flex items-center gap-8">
-                    <Link href="#solutions" className="text-sm font-medium text-text-secondary-dark hover:text-text-primary-dark transition-colors tracking-wide">Solutions</Link>
-                    <Link href="#network" className="text-sm font-medium text-text-secondary-dark hover:text-text-primary-dark transition-colors tracking-wide">Network</Link>
-                    <Link href="#vault" className="text-sm font-medium text-text-secondary-dark hover:text-text-primary-dark transition-colors tracking-wide">Vault</Link>
-                    <Link href="#api" className="text-sm font-medium text-text-secondary-dark hover:text-text-primary-dark transition-colors tracking-wide">API</Link>
+                <nav className="hidden md:flex items-center gap-10">
+                    <Link href="#solutions" className="text-[16px] font-semibold text-white-color hover:text-primary-color transition-colors">Solutions</Link>
+                    <Link href="#network" className="text-[16px] font-semibold text-white-color hover:text-primary-color transition-colors">Network</Link>
+                    <Link href="#vault" className="text-[16px] font-semibold text-white-color hover:text-primary-color transition-colors">Vault</Link>
+                    <Link href="#api" className="text-[16px] font-semibold text-white-color hover:text-primary-color transition-colors">API</Link>
                 </nav>
 
-                {/* Status & Action */}
-                <div className="flex items-center gap-4 lg:gap-6">
-                    <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-dark/50 border border-white/5">
-                        <div className="w-2 h-2 rounded-full bg-success animate-pulse shadow-[0_0_10px_rgba(52,168,83,0.5)]" />
-                        <span className="text-[10px] uppercase tracking-widest font-bold text-text-secondary-dark">
-                            System: Operational
-                        </span>
-                    </div>
-
+                {/* Action */}
+                <div className="flex items-center gap-4">
                     {auth.user ? (
                         <Link 
                             href={route('dashboard')}
-                            className="hidden sm:flex items-center gap-2 bg-text-primary-dark text-background-dark px-5 py-2 rounded-full font-bold text-sm hover:bg-secondary transition-all hover:scale-105 active:scale-95"
+                            className="theme-button style-1 h-[48px]"
                         >
-                            <LayoutGrid className="w-4 h-4" />
-                            <span>Dashboard</span>
+                            <span data-text="Dashboard">Dashboard</span>
+                            <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
                         </Link>
                     ) : (
                         <Link 
                             href={route('login')}
-                            className="hidden sm:flex items-center gap-2 bg-text-primary-dark text-background-dark px-5 py-2 rounded-full font-bold text-sm hover:bg-secondary transition-all hover:scale-105 active:scale-95 animate-soft-pulse"
+                            className="theme-button style-1 h-[48px]"
                         >
-                            <User className="w-4 h-4" />
-                            <span>Connect Node</span>
+                            <span data-text="Connect Node">Connect Node</span>
+                            <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
                         </Link>
                     )}
 
                     {/* Mobile Menu Toggle */}
                     <button 
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2 glass rounded-lg border-white/10 text-text-primary-dark"
+                        className="md:hidden p-2 text-white-color"
                     >
                         {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
@@ -86,21 +81,20 @@ export default function Header({ auth }: Props) {
 
             {/* Mobile Navigation Overlay */}
             {mobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 right-0 mt-4 mx-6 p-6 glass rounded-2xl border-white/10 animate-in slide-in-from-top duration-300">
+                <div className="md:hidden absolute top-full left-0 right-0 bg-extra-color border-b border-border-color-one p-6 animate-in slide-in-from-top duration-300">
                     <nav className="flex flex-col gap-6">
-                        <Link href="#solutions" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-text-primary-dark">Solutions</Link>
-                        <Link href="#network" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-text-primary-dark">Network</Link>
-                        <Link href="#vault" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-text-primary-dark">Vault</Link>
-                        <Link href="#api" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium text-text-primary-dark">API</Link>
-                        <hr className="border-white/5" />
+                        <Link href="#solutions" onClick={() => setMobileMenuOpen(false)} className="text-lg font-semibold text-white-color">Solutions</Link>
+                        <Link href="#network" onClick={() => setMobileMenuOpen(false)} className="text-lg font-semibold text-white-color">Network</Link>
+                        <Link href="#vault" onClick={() => setMobileMenuOpen(false)} className="text-lg font-semibold text-white-color">Vault</Link>
+                        <Link href="#api" onClick={() => setMobileMenuOpen(false)} className="text-lg font-semibold text-white-color">API</Link>
                         {!auth.user && (
                             <Link 
                                 href={route('login')} 
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="flex items-center justify-center gap-2 gold-gradient text-background-dark py-4 rounded-xl font-bold"
+                                className="theme-button style-1 w-full"
                             >
-                                <User className="w-5 h-5" />
-                                Connect Node
+                                <span data-text="Connect Node">Connect Node</span>
+                                <i className="fa-solid fa-arrow-right"><ArrowRight size={14} /></i>
                             </Link>
                         )}
                     </nav>
