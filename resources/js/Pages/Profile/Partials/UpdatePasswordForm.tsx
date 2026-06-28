@@ -1,5 +1,6 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
+import InputHint from '@/Components/InputHint';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
@@ -81,6 +82,8 @@ export default function UpdatePasswordForm({
                         placeholder="Введите ваш действующий пароль"
                     />
 
+                    <InputHint message="Ваш текущий пароль для подтверждения личности." />
+
                     <InputError
                         message={errors.current_password}
                         className="mt-2"
@@ -105,6 +108,8 @@ export default function UpdatePasswordForm({
                         placeholder="Минимум 8 символов, используйте буквы и цифры"
                     />
 
+                    <InputHint message="Придумайте сложный пароль для защиты аккаунта." />
+
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
@@ -126,6 +131,8 @@ export default function UpdatePasswordForm({
                         autoComplete="new-password"
                         placeholder="Повторите новый пароль еще раз"
                     />
+
+                    <InputHint message="Введите новый пароль еще раз, чтобы исключить опечатку." />
 
                     <InputError
                         message={errors.password_confirmation}

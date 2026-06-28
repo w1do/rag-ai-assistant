@@ -18,7 +18,7 @@
   --color-form-input: #343434;
   --color-border-color-one: rgba(255, 255, 255, 0.10);
 
-  --radius-three: 24px;
+  --radius-three: 2px;
   --transition-base: 500ms all ease;
 
   /* Совместимость с существующими стилями */

@@ -1,6 +1,7 @@
 import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
+import InputHint from '@/Components/InputHint';
 import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
@@ -95,6 +96,8 @@ export default function DeleteUserForm({
                             isFocused
                             placeholder="Введите ваш пароль для подтверждения удаления"
                         />
+
+                        <InputHint message="Подтвердите действие паролем от вашего аккаунта." />
 
                         <InputError
                             message={errors.password}

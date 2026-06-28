@@ -7,13 +7,38 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { useState } from 'react';
 import { User, Lock, AlertTriangle } from 'lucide-react';
+import Tips from '@/Components/Tips';
 
 type TabKey = 'profile' | 'password' | 'danger';
 
-const TABS: { key: TabKey; label: string; icon: any }[] = [
-    { key: 'profile', label: 'Профиль', icon: <User className="w-5 h-5" /> },
-    { key: 'password', label: 'Безопасность', icon: <Lock className="w-5 h-5" /> },
-    { key: 'danger', label: 'Удаление', icon: <AlertTriangle className="w-5 h-5" /> },
+const TABS: { key: TabKey; label: string; icon: any; tips: string[] }[] = [
+    { 
+        key: 'profile', 
+        label: 'Профиль', 
+        icon: <User className="w-5 h-5" />,
+        tips: [
+            "Используйте ваше реальное имя, чтобы коллеги могли вас узнать.",
+            "Актуальный email важен для получения уведомлений и восстановления доступа."
+        ]
+    },
+    { 
+        key: 'password', 
+        label: 'Безопасность', 
+        icon: <Lock className="w-5 h-5" />,
+        tips: [
+            "Надежный пароль содержит не менее 12 символов, включая цифры и спецсимволы.",
+            "Меняйте пароль раз в несколько месяцев для повышения безопасности."
+        ]
+    },
+    { 
+        key: 'danger', 
+        label: 'Удаление', 
+        icon: <AlertTriangle className="w-5 h-5" />,
+        tips: [
+            "Удаление аккаунта необратимо. Все ваши данные будут стерты навсегда.",
+            "Если вы просто хотите отдохнуть, попробуйте временно выйти из системы."
+        ]
+    },
 ];
 
 export default function Edit({
@@ -21,6 +46,8 @@ export default function Edit({
     status,
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
     const [activeTab, setActiveTab] = useState<TabKey>('profile');
+
+    const activeTabData = TABS.find(t => t.key === activeTab);
 
     return (
         <AuthenticatedLayout>
@@ -42,7 +69,7 @@ export default function Edit({
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
                         {/* Sidebar Tabs */}
                         <div className="lg:col-span-1">
-                            <nav className="flex flex-col gap-2 p-2 bg-background-one border border-border-color-one rounded-three shadow-sm">
+                            <nav className="flex flex-col gap-2 p-2 bg-background-one border border-border-color-one rounded-three shadow-sm mb-8">
                                 {TABS.map((tab) => {
                                     const isActive = activeTab === tab.key;
                                     return (
@@ -65,6 +92,10 @@ export default function Edit({
                                     );
                                 })}
                             </nav>
+
+                            {activeTabData && (
+                                <Tips tips={activeTabData.tips} />
+                            )}
                         </div>
 
                         {/* Content area */}
@@ -74,17 +105,17 @@ export default function Edit({
                                     <UpdateProfileInformationForm
                                         mustVerifyEmail={mustVerifyEmail}
                                         status={status}
-                                        className="max-w-2xl"
+                                        className="w-full"
                                     />
                                 )}
 
                                 {activeTab === 'password' && (
-                                    <UpdatePasswordForm className="max-w-2xl" />
+                                    <UpdatePasswordForm className="w-full" />
                                 )}
 
                                 {activeTab === 'danger' && (
-                                    <div className="border-red-500/10">
-                                        <DeleteUserForm className="max-w-2xl" />
+                                    <div className="border-red-500/10 w-full">
+                                        <DeleteUserForm className="w-full" />
                                     </div>
                                 )}
                             </div>

@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
+import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import { Plus, Trash2, ArrowRight, LifeBuoy, Settings, Phone, Zap } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
@@ -41,7 +42,7 @@ const TABS: { key: TabKey; label: string; hint: string; icon: ReactNode }[] = [
  * у всех элементов ввода, чтобы форма выглядела целостно.
  */
 const fieldClass =
-    'block w-full rounded-2xl border-border-color-one bg-extra-color px-4 py-3 text-sm text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color placeholder:text-text-secondary/50';
+    'block w-full rounded-[2px] border-border-color-one bg-extra-color px-4 py-3 text-sm text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color placeholder:text-text-secondary/50';
 
 /**
  * Карточка-секция формы с заголовком и описанием.
@@ -162,7 +163,7 @@ export default function Create() {
                                                         key={tab.key}
                                                         type="button"
                                                         onClick={() => setActiveTab(tab.key)}
-                                                        className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all duration-300 ${
+                                                        className={`flex w-full items-center gap-3 rounded-[2px] px-4 py-3 text-left transition-all duration-300 ${
                                                             isActive
                                                                 ? 'bg-primary-color text-black-color font-bold'
                                                                 : 'text-white-color hover:bg-extra-color'
@@ -180,7 +181,7 @@ export default function Create() {
                                                             </span>
                                                         </span>
                                                         {tabHasError(tab.key) && (
-                                                            <span className={`h-2 w-2 shrink-0 rounded-full ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
+                                                            <span className={`h-2 w-2 shrink-0 rounded-[1px] ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
                                                         )}
                                                     </button>
                                                 );
@@ -203,11 +204,12 @@ export default function Create() {
                                                             type="text"
                                                             name="name"
                                                             value={data.name}
-                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
                                                             isFocused={true}
                                                             onChange={(e) => setData('name', e.target.value)}
                                                             required
                                                         />
+                                                        <InputHint message="Укажите уникальное имя для вашего ассистента." />
                                                         <InputError message={errors.name} className="mt-2" />
                                                     </div>
 
@@ -222,6 +224,7 @@ export default function Create() {
                                                             onChange={(e) => setData('description', e.target.value)}
                                                             placeholder="Краткое описание вашей компании для контекста ассистента"
                                                         />
+                                                        <InputHint message="Подробное описание поможет ассистенту лучше понимать контекст бизнеса." />
                                                         <InputError message={errors.description} className="mt-2" />
                                                     </div>
                                                 </FormSection>
@@ -244,6 +247,7 @@ export default function Create() {
                                                                 <option value="rude" className="bg-background-one">Грубый</option>
                                                                 <option value="positive" className="bg-background-one">Позитивный</option>
                                                             </Select>
+                                                            <InputHint message="Выберите тон, в котором ассистент будет вести диалог." />
                                                             <InputError message={errors.style} className="mt-2" />
                                                         </div>
 
@@ -254,9 +258,10 @@ export default function Create() {
                                                                 type="text"
                                                                 name="brand_name"
                                                                 value={data.brand_name}
-                                                                className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
                                                                 onChange={(e) => setData('brand_name', e.target.value)}
                                                             />
+                                                            <InputHint message="Ассистент будет представляться от имени этого бренда." />
                                                             <InputError message={errors.brand_name} className="mt-2" />
                                                         </div>
                                                     </div>
@@ -277,30 +282,37 @@ export default function Create() {
                                                             type="text"
                                                             name="phone"
                                                             value={data.phone}
-                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
                                                             onChange={(e) => setData('phone', e.target.value)}
                                                             placeholder="+7 (___) ___-__-__"
                                                         />
+                                                        <InputHint message="Используется, если клиент попросит контактные данные." />
                                                         <InputError message={errors.phone} className="mt-2" />
                                                     </div>
 
                                                     <div>
                                                         <InputLabel value="Социальные сети" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
                                                         <div className="mt-1.5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                                            <TextInput
-                                                                type="text"
-                                                                value={data.social.telegram}
-                                                                className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                                                onChange={(e) => handleSocialChange('telegram', e.target.value)}
-                                                                placeholder="Telegram: @username"
-                                                            />
-                                                            <TextInput
-                                                                type="text"
-                                                                value={data.social.vk}
-                                                                className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                                                onChange={(e) => handleSocialChange('vk', e.target.value)}
-                                                                placeholder="VK: vk.com/id"
-                                                            />
+                                                            <div>
+                                                                <TextInput
+                                                                    type="text"
+                                                                    value={data.social.telegram}
+                                                                    className="block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
+                                                                    onChange={(e) => handleSocialChange('telegram', e.target.value)}
+                                                                    placeholder="Telegram: @username"
+                                                                />
+                                                                <InputHint message="Ссылка на ваш Telegram-аккаунт или канал." />
+                                                            </div>
+                                                            <div>
+                                                                <TextInput
+                                                                    type="text"
+                                                                    value={data.social.vk}
+                                                                    className="block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
+                                                                    onChange={(e) => handleSocialChange('vk', e.target.value)}
+                                                                    placeholder="VK: vk.com/id"
+                                                                />
+                                                                <InputHint message="Ссылка на вашу группу или профиль ВКонтакте." />
+                                                            </div>
                                                         </div>
                                                         <InputError message={errors.social} className="mt-2" />
                                                     </div>
@@ -325,6 +337,7 @@ export default function Create() {
                                                             onChange={(e) => setData('welcome_message', e.target.value)}
                                                             placeholder="Это сообщение будет первым в каждом чате"
                                                         />
+                                                        <InputHint message="Первое сообщение, которое увидит пользователь в чате." />
                                                         <InputError message={errors.welcome_message} className="mt-2" />
                                                     </div>
 
@@ -340,7 +353,7 @@ export default function Create() {
                                                                             newActions[index] = e.target.value;
                                                                             setData('actions', newActions);
                                                                         }}
-                                                                        className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                        className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
                                                                         placeholder="Например: Какое гбо устанавливаете?"
                                                                     />
                                                                     <button
@@ -364,6 +377,7 @@ export default function Create() {
                                                                 <span data-text="Добавить кнопку">Добавить кнопку</span>
                                                             </button>
                                                         </div>
+                                                        <InputHint message="Часто задаваемые вопросы для быстрого старта диалога." />
                                                         <InputError message={errors.actions} className="mt-2" />
                                                     </div>
 
@@ -378,6 +392,7 @@ export default function Create() {
                                                             onChange={(e) => setData('fallback', e.target.value)}
                                                             placeholder="Что ответить, если ассистент не знает ответа?"
                                                         />
+                                                        <InputHint message="Фраза, которую скажет ассистент, если не найдет ответ в базе знаний." />
                                                         <InputError message={errors.fallback} className="mt-2" />
                                                     </div>
 
@@ -392,6 +407,7 @@ export default function Create() {
                                                             onChange={(e) => setData('system', e.target.value)}
                                                             placeholder="Системная инструкция для ассистента. Ассистент отвечает только по базе знаний."
                                                         />
+                                                        <InputHint message="Основные инструкции, определяющие логику и ограничения поведения ИИ." />
                                                         <p className="mt-1.5 text-xs leading-relaxed text-text-secondary">
                                                             Системный промпт задаёт поведение ассистента. Ассистент отвечает на вопросы строго по базе знаний (Qdrant), ничего лишнего.
                                                         </p>
@@ -423,7 +439,7 @@ export default function Create() {
                         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
                             <section className="bg-background-one border border-border-color-one rounded-three p-6 shadow-sm">
                                 <div className="flex items-center gap-3">
-                                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-color/10 text-primary-color">
+                                    <span className="flex h-10 w-10 items-center justify-center rounded-[2px] bg-primary-color/10 text-primary-color">
                                         <Plus size={20} />
                                     </span>
                                     <h3 className="text-sm font-bold uppercase tracking-tight text-white-color font-title">Как создать</h3>
@@ -448,7 +464,7 @@ export default function Create() {
                                         },
                                     ].map((step, index) => (
                                         <li key={index} className="flex gap-4">
-                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-color text-[11px] font-bold text-black-color">
+                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-[11px] font-bold text-black-color">
                                                 {index + 1}
                                             </span>
                                             <div>
@@ -463,7 +479,7 @@ export default function Create() {
                             {/* Box-сообщение о поддержке */}
                             <section className="bg-primary-color/5 border border-primary-color/20 rounded-three p-6">
                                 <div className="flex items-start gap-3">
-                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color">
+                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color">
                                         <LifeBuoy className="h-5 w-5" />
                                     </span>
                                     <div>

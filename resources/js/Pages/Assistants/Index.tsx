@@ -3,6 +3,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import Modal from '@/Components/Modal';
 import TextInput from '@/Components/TextInput';
 import InputLabel from '@/Components/InputLabel';
+import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
@@ -184,7 +185,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                     </span>
                 </div>
                 
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-color text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[2px] bg-primary-color text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20">
                     {(assistant.name || 'A').charAt(0).toUpperCase()}
                 </div>
                 
@@ -204,7 +205,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         onClick={toggleRecording}
                         title={isRecording ? 'Остановить запись' : 'Записать голосовое сообщение'}
                         className={cn(
-                            "flex h-10 items-center justify-center rounded-xl border transition-all duration-300",
+                            "flex h-10 items-center justify-center rounded-[2px] border transition-all duration-300",
                             isRecording
                                 ? "border-red-500 bg-red-500/10 text-red-500 animate-pulse"
                                 : "border-border-color-one bg-extra-color text-white-color hover:border-primary-color hover:text-primary-color"
@@ -217,7 +218,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         type="button"
                         onClick={() => setShowLinkModal(true)}
                         title="Добавить ссылку на сайт"
-                        className="flex h-10 items-center justify-center rounded-xl border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
+                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
                     >
                         <Link2 size={18} />
                     </button>
@@ -227,7 +228,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         onClick={() => fileInputRef.current?.click()}
                         disabled={docForm.processing}
                         title="Загрузить документ"
-                        className="flex h-10 items-center justify-center rounded-xl border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color disabled:opacity-50"
+                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color disabled:opacity-50"
                     >
                         <Upload size={18} className={docForm.processing ? 'animate-bounce' : ''} />
                     </button>
@@ -243,7 +244,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                         type="button"
                         onClick={() => setShowEmbed(true)}
                         title="Встроить на сайт"
-                        className="flex h-10 items-center justify-center rounded-xl border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
+                        className="flex h-10 items-center justify-center rounded-[2px] border border-border-color-one bg-extra-color text-white-color transition-all duration-300 hover:border-primary-color hover:text-primary-color"
                     >
                         <Code size={18} />
                     </button>
@@ -310,6 +311,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                             placeholder="https://example.com"
                             required
                         />
+                        <InputHint message="Укажите URL — ассистент проанализирует страницу и добавит её в базу знаний." />
                     </div>
                     <div className="mt-8 flex justify-end gap-3">
                         <button 
@@ -337,7 +339,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                     <p className="mt-2 text-sm text-text-secondary">
                         Скопируйте код и вставьте его перед закрывающим тегом <code className="rounded bg-extra-color px-1 text-primary-color">&lt;/body&gt;</code>.
                     </p>
-                    <div className="mt-6 overflow-hidden rounded-2xl border border-border-color-one bg-black-color">
+                    <div className="mt-6 overflow-hidden rounded-[2px] border border-border-color-one bg-black-color">
                         <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed text-primary-color/80">
                             <code>{embedCode}</code>
                         </pre>
@@ -402,7 +404,7 @@ export default function Index({ assistants }: Props) {
 
                     {assistants.length === 0 ? (
                         <div className="pricing-item px-6 py-20 text-center">
-                            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-extra-color text-primary-color">
+                            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[2px] bg-extra-color text-primary-color">
                                 <Plus size={40} />
                             </div>
                             <h3 className="mb-2 text-2xl font-bold text-white-color font-title uppercase">Пусто</h3>

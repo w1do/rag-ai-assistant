@@ -1,5 +1,6 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
+import InputHint from '@/Components/InputHint';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
@@ -56,6 +57,8 @@ export default function UpdateProfileInformation({
                         placeholder="Введите ваше полное имя (например: Александр)"
                     />
 
+                    <InputHint message="Имя будет отображаться в вашем профиле и сообщениях." />
+
                     <InputError className="mt-2" message={errors.name} />
                 </div>
 
@@ -72,6 +75,8 @@ export default function UpdateProfileInformation({
                         autoComplete="username"
                         placeholder="укажите актуальный email: example@mail.ru"
                     />
+
+                    <InputHint message="Используется для входа и системных уведомлений." />
 
                     <InputError className="mt-2" message={errors.email} />
                 </div>

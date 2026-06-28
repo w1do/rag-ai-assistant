@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
+import InputHint from '@/Components/InputHint';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import { Bot, MessageSquare, Pencil, Trash2, FileText, Mic, Globe, Code, Plus, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -133,7 +134,7 @@ export default function Show({ assistant }: Props) {
 
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
                         <div className="flex items-center gap-4">
-                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
                                 <Bot size={32} />
                             </div>
                             <div>
@@ -141,10 +142,10 @@ export default function Show({ assistant }: Props) {
                                     {assistant.name}
                                 </h2>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                                    <span className={`inline-flex items-center gap-1.5 rounded-[2px] px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                                         assistant.status === 'ready' ? 'bg-primary-color/10 text-primary-color border border-primary-color/20' : 'bg-amber-400/10 text-amber-400 border border-amber-400/20'
                                     }`}>
-                                        <span className={`h-1.5 w-1.5 rounded-full ${
+                                        <span className={`h-1.5 w-1.5 rounded-[1px] ${
                                             assistant.status === 'ready' ? 'bg-primary-color' : 'bg-amber-400'
                                         } ${assistant.status !== 'ready' ? 'animate-pulse' : ''}`} />
                                         {assistant.status}
@@ -166,7 +167,7 @@ export default function Show({ assistant }: Props) {
                             </Link>
                             <button 
                                 onClick={deleteAssistant}
-                                className="p-3 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
+                                className="p-3 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-[2px] transition-all"
                                 title="Удалить ассистента"
                             >
                                 <Trash2 size={20} />
@@ -178,7 +179,7 @@ export default function Show({ assistant }: Props) {
                         <div className="md:col-span-8 space-y-8">
                             <div className="bg-background-one border border-border-color-one rounded-three p-6 shadow-sm">
                                 <div className="mb-4 flex items-center gap-3">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-color/10 text-primary-color">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-[2px] bg-primary-color/10 text-primary-color">
                                         <FileText size={18} />
                                     </div>
                                     <h3 className="text-sm font-bold uppercase tracking-tight text-white-color font-title">Описание ассистента</h3>
@@ -220,7 +221,7 @@ export default function Show({ assistant }: Props) {
                                     <div className="min-h-[200px]">
                                         {activeTab === 'document' && (
                                             <div className="space-y-6">
-                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-2xl bg-extra-color gap-4">
+                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
                                                     <div>
                                                         <h4 className="font-bold text-white-color uppercase tracking-tight">Загрузить документ</h4>
                                                         <p className="text-sm text-text-secondary">Поддерживаются PDF, DOCX, TXT</p>
@@ -244,7 +245,7 @@ export default function Show({ assistant }: Props) {
 
                                         {activeTab === 'voice' && (
                                             <div className="space-y-6">
-                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-2xl bg-extra-color gap-4">
+                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
                                                     <div>
                                                         <h4 className="font-bold text-white-color uppercase tracking-tight">Голосовое сообщение</h4>
                                                         <p className="text-sm text-text-secondary">Аудио будет транскрибировано в текст</p>
@@ -268,21 +269,24 @@ export default function Show({ assistant }: Props) {
 
                                         {activeTab === 'website' && (
                                             <div className="space-y-6">
-                                                <div className="p-6 border border-border-color-one rounded-2xl bg-extra-color">
+                                                <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
                                                     <h4 className="font-bold text-white-color uppercase tracking-tight">Анализ сайта</h4>
                                                     <p className="text-sm text-text-secondary mb-4">Укажите URL для обучения ассистента</p>
-                                                    <form onSubmit={submitUrl} className="flex gap-2">
-                                                        <input
-                                                            type="url"
-                                                            value={urlForm.data.url}
-                                                            onChange={(e) => urlForm.setData('url', e.target.value)}
-                                                            className="flex-grow bg-background-one border-border-color-one text-white-color rounded-xl px-4 py-3 text-sm focus:border-primary-color focus:ring-primary-color"
-                                                            placeholder="https://example.com"
-                                                            required
-                                                        />
-                                                        <button disabled={urlForm.processing} className="theme-button style-1 !h-[48px] !w-[48px] !p-0">
-                                                            <span data-text="+"><Plus size={18} /></span>
-                                                        </button>
+                                                    <form onSubmit={submitUrl} className="flex flex-col gap-2">
+                                                        <div className="flex gap-2">
+                                                            <input
+                                                                type="url"
+                                                                value={urlForm.data.url}
+                                                                onChange={(e) => urlForm.setData('url', e.target.value)}
+                                                                className="flex-grow bg-background-one border-border-color-one text-white-color rounded-[2px] px-4 py-3 text-sm focus:border-primary-color focus:ring-primary-color"
+                                                                placeholder="https://example.com"
+                                                                required
+                                                            />
+                                                            <button disabled={urlForm.processing} className="theme-button style-1 !h-[48px] !w-[48px] !p-0">
+                                                                <span data-text="+"><Plus size={18} /></span>
+                                                            </button>
+                                                        </div>
+                                                        <InputHint message="Укажите URL — ассистент проанализирует страницу и добавит её в базу знаний." />
                                                     </form>
                                                 </div>
                                             </div>
@@ -290,14 +294,14 @@ export default function Show({ assistant }: Props) {
 
                                         {activeTab === 'api' && (
                                             <div className="space-y-6">
-                                                <div className="p-6 border border-border-color-one rounded-2xl bg-extra-color">
+                                                <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
                                                     <h4 className="font-bold text-white-color uppercase tracking-tight mb-2">Интеграция через API</h4>
                                                     <p className="text-sm text-text-secondary mb-6">Отправляйте данные для обучения напрямую через эндпоинт.</p>
                                                     
                                                     <div className="space-y-6">
                                                         <div>
                                                             <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Эндпоинт (POST)</label>
-                                                            <div className="flex items-center gap-3 bg-black-color rounded-xl p-3 border border-border-color-one">
+                                                            <div className="flex items-center gap-3 bg-black-color rounded-[2px] p-3 border border-border-color-one">
                                                                 <code className="text-xs font-mono text-primary-color flex-1 break-all">
                                                                     {typeof window !== 'undefined' ? window.location.origin : ''}/api/v1/callback
                                                                 </code>
@@ -314,7 +318,7 @@ export default function Show({ assistant }: Props) {
                                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                                             <div>
                                                                 <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Пример FAQ</label>
-                                                                <div className="bg-black-color rounded-xl p-4 border border-border-color-one overflow-x-auto">
+                                                                <div className="bg-black-color rounded-[2px] p-4 border border-border-color-one overflow-x-auto">
                                                                     <pre className="text-[11px] font-mono text-primary-color/70">
 {`{
   "assistant_id": ${assistant.id},
@@ -331,7 +335,7 @@ export default function Show({ assistant }: Props) {
                                                             </div>
                                                             <div>
                                                                 <label className="block text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-2">Пример данных</label>
-                                                                <div className="bg-black-color rounded-xl p-4 border border-border-color-one overflow-x-auto">
+                                                                <div className="bg-black-color rounded-[2px] p-4 border border-border-color-one overflow-x-auto">
                                                                     <pre className="text-[11px] font-mono text-primary-color/70">
 {`{
   "assistant_id": ${assistant.id},
@@ -355,19 +359,19 @@ export default function Show({ assistant }: Props) {
                                         <div className="mt-10">
                                             <div className="flex items-center justify-between mb-6">
                                                 <h3 className="text-sm font-bold uppercase tracking-widest text-white-color">Список источников</h3>
-                                                <span className="bg-primary-color text-black-color text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                <span className="bg-primary-color text-black-color text-[10px] font-bold px-2 py-0.5 rounded-[1px]">
                                                     {(assistant.knowledge || []).filter(k => k.type === activeTab).length}
                                                 </span>
                                             </div>
                                             
                                             {(assistant.knowledge || []).filter(k => k.type === activeTab).length === 0 ? (
-                                                <div className="text-center py-12 border-2 border-dashed border-border-color-one rounded-2xl">
+                                                <div className="text-center py-12 border-2 border-dashed border-border-color-one rounded-[2px]">
                                                     <p className="text-text-secondary text-sm">Источников этого типа пока нет.</p>
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-1 gap-4">
                                                     {(assistant.knowledge || []).filter(k => k.type === activeTab).map((item) => (
-                                                        <div key={item.id} className="p-5 bg-extra-color border border-border-color-one rounded-2xl hover:border-primary-color/30 transition-all group">
+                                                        <div key={item.id} className="p-5 bg-extra-color border border-border-color-one rounded-[2px] hover:border-primary-color/30 transition-all group">
                                                             <div className="flex justify-between items-start gap-4">
                                                                 <div className="overflow-hidden">
                                                                     <h4 className="font-bold text-white-color truncate group-hover:text-primary-color transition-colors">
@@ -383,7 +387,7 @@ export default function Show({ assistant }: Props) {
                                                                 </div>
                                                                 <div className="flex items-center gap-3 shrink-0">
                                                                     <span className={cn(
-                                                                        "text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider border",
+                                                                        "text-[10px] px-2.5 py-0.5 rounded-[1px] font-bold uppercase tracking-wider border",
                                                                         item.status === 'ready' ? 'bg-primary-color/10 text-primary-color border-primary-color/20' : 
                                                                         item.status === 'error' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
                                                                         'bg-blue-500/10 text-blue-500 border-blue-500/20 animate-pulse'
@@ -402,7 +406,7 @@ export default function Show({ assistant }: Props) {
                                                             </div>
 
                                                             {item.status === 'error' && item.metadata?.error && (
-                                                                <div className="mt-3 text-[11px] text-red-400 bg-red-500/10 p-3 rounded-xl border border-red-500/20 font-mono">
+                                                                <div className="mt-3 text-[11px] text-red-400 bg-red-500/10 p-3 rounded-[2px] border border-red-500/20 font-mono">
                                                                     <strong>Error:</strong> {item.metadata.error}
                                                                 </div>
                                                             )}
@@ -410,12 +414,12 @@ export default function Show({ assistant }: Props) {
                                                             {item.content && (
                                                                 <details className="mt-4 group/details">
                                                                     <summary className="text-xs font-bold uppercase tracking-widest text-text-secondary cursor-pointer hover:text-primary-color transition-colors list-none flex items-center gap-2">
-                                                                        <div className="w-4 h-4 rounded bg-border-color-one flex items-center justify-center group-hover/details:bg-primary-color group-hover/details:text-black-color transition-all">
+                                                                        <div className="w-4 h-4 rounded-[1px] bg-border-color-one flex items-center justify-center group-hover/details:bg-primary-color group-hover/details:text-black-color transition-all">
                                                                             <Plus size={10} className="group-open/details:rotate-45 transition-transform" />
                                                                         </div>
                                                                         Контент
                                                                     </summary>
-                                                                    <div className="mt-3 p-4 bg-black-color rounded-xl text-[13px] text-text-secondary leading-relaxed max-h-60 overflow-y-auto border border-border-color-one custom-scrollbar">
+                                                                    <div className="mt-3 p-4 bg-black-color rounded-[2px] text-[13px] text-text-secondary leading-relaxed max-h-60 overflow-y-auto border border-border-color-one custom-scrollbar">
                                                                         {item.content}
                                                                     </div>
                                                                 </details>
@@ -442,7 +446,7 @@ export default function Show({ assistant }: Props) {
                                     <div className="flex items-center justify-between gap-4 py-2 border-b border-border-color-one/50">
                                         <dt className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">Стиль</dt>
                                         <dd>
-                                            <span className="inline-flex rounded-full bg-primary-color/10 border border-primary-color/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-color">
+                                            <span className="inline-flex rounded-[1px] bg-primary-color/10 border border-primary-color/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-color">
                                                 {assistant.style}
                                             </span>
                                         </dd>
@@ -465,7 +469,7 @@ export default function Show({ assistant }: Props) {
                                             <dd className="grid grid-cols-1 gap-2">
                                                 {Object.entries(assistant.social).map(([key, value]) => (
                                                     value && (
-                                                        <div key={key} className="flex items-center justify-between bg-extra-color p-2 rounded-xl border border-border-color-one">
+                                                        <div key={key} className="flex items-center justify-between bg-extra-color p-2 rounded-[2px] border border-border-color-one">
                                                             <span className="text-[10px] uppercase font-bold text-text-secondary">{key}</span>
                                                             <span className="text-xs font-bold text-white-color truncate max-w-[150px]">{value}</span>
                                                         </div>
@@ -477,7 +481,7 @@ export default function Show({ assistant }: Props) {
                                     {assistant.fallback && (
                                         <div className="py-2">
                                             <dt className="mb-2 text-[11px] font-bold uppercase tracking-widest text-text-secondary">Fallback ответ</dt>
-                                            <dd className="rounded-xl bg-extra-color border border-border-color-one px-4 py-3 text-sm italic text-text-secondary leading-relaxed">
+                                            <dd className="rounded-[2px] bg-extra-color border border-border-color-one px-4 py-3 text-sm italic text-text-secondary leading-relaxed">
                                                 "{assistant.fallback}"
                                             </dd>
                                         </div>
@@ -493,11 +497,11 @@ export default function Show({ assistant }: Props) {
                                     <h3 className="text-sm font-bold uppercase tracking-tight text-white-color font-title">Статистика</h3>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-extra-color border border-border-color-one rounded-2xl p-4 text-center">
+                                    <div className="bg-extra-color border border-border-color-one rounded-[2px] p-4 text-center">
                                         <p className="text-2xl font-bold text-white-color font-title">{(assistant.chunks || []).length}</p>
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary mt-1">Чанков</p>
                                     </div>
-                                    <div className="bg-extra-color border border-border-color-one rounded-2xl p-4 text-center">
+                                    <div className="bg-extra-color border border-border-color-one rounded-[2px] p-4 text-center">
                                         <p className="text-2xl font-bold text-white-color font-title">{(assistant.knowledge || []).length}</p>
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-text-secondary mt-1">Источников</p>
                                     </div>

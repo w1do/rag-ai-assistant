@@ -4,6 +4,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import Modal from '@/Components/Modal';
 import Select from '@/Components/Select';
+import InputHint from '@/Components/InputHint';
 import { useState } from 'react';
 import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
@@ -44,7 +45,7 @@ function ConnectorCard({ connector, onConnect }: { connector: Connector; onConne
         <div className={`pricing-item group flex flex-col ${isSoon ? 'opacity-75' : ''}`}>
             <div className="pricing-top">
                 <div className="flex justify-center mb-6">
-                    <div className={`w-[80px] h-[80px] border rounded-full flex items-center justify-center transition-all duration-500 ${
+                    <div className={`w-[80px] h-[80px] border rounded-[2px] flex items-center justify-center transition-all duration-500 ${
                         isSoon ? 'bg-extra-color-three border-extra-color-three text-text-secondary-dark' : 'bg-primary-rgb-12 border-primary-color text-primary-color group-hover:bg-primary-color group-hover:text-black-color'
                     }`}>
                         <Icon className="h-8 w-8" />
@@ -53,11 +54,11 @@ function ConnectorCard({ connector, onConnect }: { connector: Connector; onConne
                 <div className="pricing-top-content">
                     <h3 className="text-xl font-title text-white-color">{connector.name}</h3>
                     {isSoon ? (
-                        <span className="text-[10px] font-title px-3 py-0.5 rounded-full border border-text-secondary-dark/30 text-text-secondary-dark uppercase">
+                        <span className="text-[10px] font-title px-3 py-0.5 rounded-[2px] border border-text-secondary-dark/30 text-text-secondary-dark uppercase">
                             В разработке
                         </span>
                     ) : (
-                        <span className="text-[10px] font-title px-3 py-0.5 rounded-full bg-primary-color text-black-color uppercase">
+                        <span className="text-[10px] font-title px-3 py-0.5 rounded-[2px] bg-primary-color text-black-color uppercase">
                             Активен
                         </span>
                     )}
@@ -74,7 +75,7 @@ function ConnectorCard({ connector, onConnect }: { connector: Connector; onConne
                         <p className="text-[10px] font-title text-white-color uppercase mb-2">Подключено:</p>
                         <div className="flex flex-wrap gap-2">
                             {connector.assistants.map(assistant => (
-                                <span key={assistant.id} className="inline-flex items-center rounded-full bg-extra-color-three px-2.5 py-0.5 text-[11px] text-white-color border border-border-color-one">
+                                <span key={assistant.id} className="inline-flex items-center rounded-[2px] bg-extra-color-three px-2.5 py-0.5 text-[11px] text-white-color border border-border-color-one">
                                     {assistant.name}
                                 </span>
                             ))}
@@ -118,7 +119,7 @@ function ConnectorSidebar({ connectors }: { connectors: Connector[] }) {
                     {socialStatuses.map((social) => (
                         <div key={social.name} className="flex items-center justify-between group">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-extra-color border border-border-color-one text-text-secondary-dark group-hover:text-primary-color transition-colors">
+                                <div className="p-2 rounded-[2px] bg-extra-color border border-border-color-one text-text-secondary-dark group-hover:text-primary-color transition-colors">
                                     <social.icon className="w-4 h-4" />
                                 </div>
                                 <span className="text-sm text-white-color">{social.name}</span>
@@ -153,9 +154,9 @@ function ConnectorSidebar({ connectors }: { connectors: Connector[] }) {
                     <h4 className="text-sm font-title text-white-color uppercase">Готовность платформы</h4>
                     <span className="text-primary-color font-title text-sm">{progress}%</span>
                 </div>
-                <div className="w-full bg-extra-color-three rounded-full h-2 mb-4">
+                <div className="w-full bg-extra-color-three rounded-[2px] h-2 mb-4">
                     <div 
-                        className="bg-primary-color h-2 rounded-full shadow-[0_0_10px_rgba(223,255,0,0.5)] transition-all duration-1000" 
+                        className="bg-primary-color h-2 rounded-[2px] shadow-[0_0_10px_rgba(223,255,0,0.5)] transition-all duration-1000" 
                         style={{ width: `${progress}%` }}
                     />
                 </div>
@@ -303,6 +304,7 @@ export default function Index({ connectors, assistants }: Props) {
                                 </option>
                             ))}
                         </Select>
+                        <InputHint message="Выберите ассистента, который будет обрабатывать сообщения из этого канала." />
                     </div>
 
                     <div className="mt-8 flex flex-col sm:flex-row gap-3">

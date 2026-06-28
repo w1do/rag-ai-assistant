@@ -10,7 +10,7 @@ export default function Select({
             <select
                 {...props}
                 className={
-                    'block w-full h-[52px] rounded-full border-form-input bg-form-input px-[25px] py-2 text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color appearance-none ' +
+                    'block w-full h-[52px] rounded-[2px] border-form-input bg-form-input px-[25px] py-2 text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color appearance-none ' +
                     className
                 }
             >

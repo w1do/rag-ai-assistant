@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
+import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import { Plus, Trash2, Settings, Phone, Zap, ArrowRight, LifeBuoy } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
@@ -64,7 +65,7 @@ const STYLE_LABELS: Record<string, string> = {
 };
 
 const fieldClass =
-    'block w-full rounded-2xl border-border-color-one bg-extra-color px-4 py-3 text-sm text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color placeholder:text-text-secondary/50';
+    'block w-full rounded-[2px] border-border-color-one bg-extra-color px-4 py-3 text-sm text-white-color shadow-sm transition-all focus:border-primary-color focus:ring-primary-color placeholder:text-text-secondary/50';
 
 /**
  * Карточка-секция формы с заголовком и описанием.
@@ -97,9 +98,9 @@ function FormSection({
     );
 }
 
-const inputClass = 'mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3 text-sm';
+const inputClass = 'mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3 text-sm';
 
-const inlineInputClass = 'block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3 text-sm';
+const inlineInputClass = 'block w-full bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3 text-sm';
 
 const helpClass = 'mt-1.5 text-xs leading-relaxed text-gray-400';
 
@@ -169,7 +170,7 @@ export default function Edit({ assistant }: Props) {
                                 {/* Превью ассистента */}
                                 <div className="rounded-three border border-border-color-one bg-background-one p-5 shadow-sm">
                                     <div className="flex items-center gap-4">
-                                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-color text-xl font-bold uppercase text-black-color shadow-lg shadow-primary-color/20">
+                                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-xl font-bold uppercase text-black-color shadow-lg shadow-primary-color/20">
                                             {(data.name || 'A').charAt(0)}
                                         </div>
                                         <div className="min-w-0 flex-1">
@@ -180,7 +181,7 @@ export default function Edit({ assistant }: Props) {
                                                 {data.description || 'Описание не задано'}
                                             </p>
                                         </div>
-                                        <span className="hidden shrink-0 rounded-full bg-primary-color/10 border border-primary-color/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-color sm:inline">
+                                        <span className="hidden shrink-0 rounded-[2px] bg-primary-color/10 border border-primary-color/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-color sm:inline">
                                             {STYLE_LABELS[data.style] || data.style}
                                         </span>
                                     </div>
@@ -197,7 +198,7 @@ export default function Edit({ assistant }: Props) {
                                                         key={tab.key}
                                                         type="button"
                                                         onClick={() => setActiveTab(tab.key)}
-                                                        className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all duration-300 ${
+                                                        className={`flex w-full items-center gap-3 rounded-[2px] px-4 py-3 text-left transition-all duration-300 ${
                                                             isActive
                                                                 ? 'bg-primary-color text-black-color font-bold'
                                                                 : 'text-white-color hover:bg-extra-color'
@@ -215,7 +216,7 @@ export default function Edit({ assistant }: Props) {
                                                             </span>
                                                         </span>
                                                         {tabHasError(tab.key) && (
-                                                            <span className={`h-2 w-2 shrink-0 rounded-full ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
+                                                            <span className={`h-2 w-2 shrink-0 rounded-[1px] ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
                                                         )}
                                                     </button>
                                                 );
@@ -242,6 +243,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('name', e.target.value)}
                                                             required
                                                         />
+                                                        <InputHint message="Название ассистента." />
                                                         <InputError message={errors.name} className="mt-2" />
                                                     </div>
 
@@ -256,6 +258,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('description', e.target.value)}
                                                             placeholder="Краткое описание вашей компании для контекста ассистента"
                                                         />
+                                                        <InputHint message="Контекстная информация для ИИ." />
                                                         <InputError message={errors.description} className="mt-2" />
                                                     </div>
                                                 </FormSection>
@@ -278,6 +281,7 @@ export default function Edit({ assistant }: Props) {
                                                                 <option value="rude" className="bg-background-one">Грубый</option>
                                                                 <option value="positive" className="bg-background-one">Позитивный</option>
                                                             </Select>
+                                                            <InputHint message="Тональность ответов." />
                                                             <InputError message={errors.style} className="mt-2" />
                                                         </div>
 
@@ -291,6 +295,7 @@ export default function Edit({ assistant }: Props) {
                                                                 className={inputClass}
                                                                 onChange={(e) => setData('brand_name', e.target.value)}
                                                             />
+                                                            <InputHint message="Название вашей компании или продукта." />
                                                             <InputError message={errors.brand_name} className="mt-2" />
                                                         </div>
                                                     </div>
@@ -315,6 +320,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('phone', e.target.value)}
                                                             placeholder="+7 (___) ___-__-__"
                                                         />
+                                                        <InputHint message="Контактный номер для связи." />
                                                         <InputError message={errors.phone} className="mt-2" />
                                                     </div>
 
@@ -332,6 +338,7 @@ export default function Edit({ assistant }: Props) {
                                                                     onChange={(e) => handleSocialChange('telegram', e.target.value)}
                                                                     placeholder="@username"
                                                                 />
+                                                                <InputHint message="@username вашего аккаунта." />
                                                             </div>
                                                             <div className="flex items-center gap-4">
                                                                 <span className="w-24 shrink-0 text-[11px] font-bold uppercase tracking-widest text-text-secondary">
@@ -344,6 +351,7 @@ export default function Edit({ assistant }: Props) {
                                                                     onChange={(e) => handleSocialChange('vk', e.target.value)}
                                                                     placeholder="vk.com/id"
                                                                 />
+                                                                <InputHint message="Ссылка на страницу или сообщество." />
                                                             </div>
                                                         </div>
                                                         <InputError message={errors.social} className="mt-2" />
@@ -369,6 +377,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('welcome_message', e.target.value)}
                                                             placeholder="Это сообщение будет первым в каждом чате"
                                                         />
+                                                        <InputHint message="Текст приветствия в начале чата." />
                                                         <p className="mt-2 text-xs text-text-secondary">
                                                             Это сообщение будет служить приветственным в каждом боте.
                                                         </p>
@@ -387,7 +396,7 @@ export default function Edit({ assistant }: Props) {
                                                                             newActions[index] = e.target.value;
                                                                             setData('actions', newActions);
                                                                         }}
-                                                                        className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                        className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-[2px] px-4 py-3"
                                                                         placeholder="Например: Какое гбо устанавливаете?"
                                                                     />
                                                                     <button
@@ -411,6 +420,7 @@ export default function Edit({ assistant }: Props) {
                                                                 <span data-text="Добавить кнопку">Добавить кнопку</span>
                                                             </button>
                                                         </div>
+                                                        <InputHint message="Кнопки с готовыми вопросами." />
                                                         <InputError message={errors.actions} className="mt-2" />
                                                     </div>
 
@@ -425,6 +435,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('fallback', e.target.value)}
                                                             placeholder="Что ответить, если ассистент не знает ответа?"
                                                         />
+                                                        <InputHint message="Ответ при неопределенности." />
                                                         <InputError message={errors.fallback} className="mt-2" />
                                                     </div>
 
@@ -439,6 +450,7 @@ export default function Edit({ assistant }: Props) {
                                                             onChange={(e) => setData('system', e.target.value)}
                                                             placeholder="Системная инструкция для ассистента."
                                                         />
+                                                        <InputHint message="Глобальные правила поведения ассистента." />
                                                         <InputError message={errors.system} className="mt-2" />
                                                     </div>
                                                 </FormSection>
@@ -451,7 +463,7 @@ export default function Edit({ assistant }: Props) {
                                 <div className="sticky bottom-6 flex items-center justify-between gap-6 rounded-three border border-border-color-one bg-background-one/90 px-6 py-4 shadow-xl backdrop-blur-md z-10">
                                     <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-text-secondary">
                                         <span
-                                            className={`h-2.5 w-2.5 rounded-full ${
+                                            className={`h-2.5 w-2.5 rounded-[1px] ${
                                                 isDirty ? 'bg-amber-400 animate-pulse' : 'bg-primary-color'
                                             }`}
                                         />
@@ -475,7 +487,7 @@ export default function Edit({ assistant }: Props) {
                         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
                             <section className="bg-background-one border border-border-color-one rounded-three p-6 shadow-sm">
                                 <div className="flex items-center gap-3">
-                                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-color/10 text-primary-color">
+                                    <span className="flex h-10 w-10 items-center justify-center rounded-[2px] bg-primary-color/10 text-primary-color">
                                         <Settings size={20} />
                                     </span>
                                     <h3 className="text-sm font-bold uppercase tracking-tight text-white-color font-title">Редактирование</h3>
@@ -500,7 +512,7 @@ export default function Edit({ assistant }: Props) {
                                         },
                                     ].map((step, index) => (
                                         <li key={index} className="flex gap-4">
-                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-color text-[11px] font-bold text-black-color">
+                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-[11px] font-bold text-black-color">
                                                 {index + 1}
                                             </span>
                                             <div>
@@ -514,7 +526,7 @@ export default function Edit({ assistant }: Props) {
 
                             <section className="bg-primary-color/5 border border-primary-color/20 rounded-three p-6">
                                 <div className="flex items-start gap-3">
-                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-color text-black-color">
+                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color">
                                         <LifeBuoy className="h-5 w-5" />
                                     </span>
                                     <div>
