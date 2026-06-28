@@ -106,7 +106,7 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
         <div className="flex h-dvh flex-col bg-body-color text-white-color font-sans">
             <Head>
                 <title>{`Чат: ${title}`}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover, interactive-widget=resizes-content" />
             </Head>
 
             {/* Шапка */}

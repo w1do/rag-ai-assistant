@@ -56,19 +56,23 @@
         '  #' + container.id + '.ai-chat-widget-open {' +
         '    width: 100% !important;' +
         '    height: 100% !important;' +
+        '    top: 0 !important;' +
         '    bottom: 0 !important;' +
         '    left: 0 !important;' +
         '    right: 0 !important;' +
+        '    position: fixed !important;' +
         '  }' +
         '  #' + container.id + '.ai-chat-widget-open .ai-chat-frame-wrapper {' +
         '    width: 100% !important;' +
         '    height: 100% !important;' +
         '    max-width: 100% !important;' +
         '    max-height: 100% !important;' +
+        '    top: 0 !important;' +
         '    bottom: 0 !important;' +
         '    left: 0 !important;' +
         '    right: 0 !important;' +
         '    border-radius: 0 !important;' +
+        '    position: fixed !important;' +
         '  }' +
         '  #' + container.id + '.ai-chat-widget-open .ai-chat-button {' +
         '    bottom: auto !important;' +
@@ -126,11 +130,15 @@
     iframe.style.cssText = 'width: 100%; height: 100%; border: none;';
     frameWrapper.appendChild(iframe);
 
-    var isOpen = false;
+    var originalOverflow = '';
     var toggle = function () {
         isOpen = !isOpen;
         if (isOpen) {
             container.classList.add('ai-chat-widget-open');
+            if (window.innerWidth <= 768) {
+                originalOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+            }
             frameWrapper.style.display = 'block';
             // Запускаем анимацию появления на следующем кадре.
             requestAnimationFrame(function () {
@@ -141,6 +149,9 @@
             button.setAttribute('aria-label', 'Закрыть чат');
         } else {
             container.classList.remove('ai-chat-widget-open');
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = originalOverflow;
+            }
             frameWrapper.style.opacity = '0';
             frameWrapper.style.transform = 'translateY(10px)';
             button.innerHTML = iconChat;
