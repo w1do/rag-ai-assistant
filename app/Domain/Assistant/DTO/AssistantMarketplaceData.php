@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'integer'),
         new OA\Property(property: 'name', type: 'string'),
+        new OA\Property(property: 'slug', type: 'string'),
         new OA\Property(property: 'description', type: 'string', nullable: true),
         new OA\Property(property: 'category', type: 'string'),
         new OA\Property(property: 'status', type: 'string'),
@@ -23,6 +24,7 @@ readonly class AssistantMarketplaceData
     public function __construct(
         public int $id,
         public string $name,
+        public string $slug,
         public ?string $description,
         public string $category,
         public string $status,
@@ -35,6 +37,7 @@ readonly class AssistantMarketplaceData
         return new self(
             id: $assistant->id,
             name: $assistant->name,
+            slug: $assistant->slug,
             description: $assistant->description,
             category: $category,
             status: $assistant->status,

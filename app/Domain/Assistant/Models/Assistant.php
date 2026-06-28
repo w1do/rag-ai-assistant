@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 /**
  * Модель ассистента.
@@ -19,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property int $user_id
  * @property string $name
+ * @property string $slug
  * @property string|null $description Описание компании/ассистента
  * @property string $status
  * @property AssistantStyle $style Стиль общения
@@ -36,7 +39,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Assistant extends Model
 {
     /** @use HasFactory<AssistantFactory> */
-    use HasFactory;
+    use HasFactory, HasSlug;
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
 
     protected static function newFactory()
     {
@@ -46,6 +56,7 @@ class Assistant extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'slug',
         'description',
         'status',
         'url',

@@ -29,21 +29,6 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
-## Architecture ( DDD + CQRS / Documentations)
-- use `skills/arctitecture-ddd` and `dtos` , `documentations` strict rules folder `skills/`
-
-## Run commands (Sail)
-- run only sail, example ./vendor/bin/sail ...
-
-## Write Documentations
-- use documenation for all files, use markdown use skill
-
-## Design System UI/UX
-- strict design system use folder `design_system/` and `design_system/DESIGN.md` and Layouts 
-
-## API Services integrations
-- **polza-ai**: use folder and reference `polza-ai/` read examples
-
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.

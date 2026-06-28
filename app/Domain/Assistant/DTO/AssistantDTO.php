@@ -6,6 +6,7 @@ readonly class AssistantDTO
 {
     public function __construct(
         public string $name,
+        public ?string $slug = null,
         public ?string $description = null,
         public ?string $style = null,
         public ?string $brandName = null,
@@ -24,6 +25,7 @@ readonly class AssistantDTO
     {
         return new self(
             name: $data['name'],
+            slug: $data['slug'] ?? null,
             description: $data['description'] ?? null,
             style: $data['style'] ?? null,
             brandName: $data['brand_name'] ?? null,
@@ -43,6 +45,7 @@ readonly class AssistantDTO
     {
         return array_filter([
             'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
             'style' => $this->style,
             'brand_name' => $this->brandName,

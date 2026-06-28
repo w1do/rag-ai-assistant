@@ -14,6 +14,7 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'id', type: 'integer'),
         new OA\Property(property: 'name', type: 'string'),
+        new OA\Property(property: 'slug', type: 'string'),
         new OA\Property(property: 'description', type: 'string', nullable: true),
         new OA\Property(property: 'brand_name', type: 'string', nullable: true),
         new OA\Property(property: 'phone', type: 'string', nullable: true),
@@ -38,6 +39,7 @@ class AssistantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'description' => $this->description,
             'brand_name' => $this->brand_name,
             'phone' => $this->phone,

@@ -373,6 +373,9 @@
                     "name": {
                         "type": "string"
                     },
+                    "slug": {
+                        "type": "string"
+                    },
                     "description": {
                         "type": "string",
                         "nullable": true
@@ -536,6 +539,9 @@
                         "type": "integer"
                     },
                     "name": {
+                        "type": "string"
+                    },
+                    "slug": {
                         "type": "string"
                     },
                     "description": {
