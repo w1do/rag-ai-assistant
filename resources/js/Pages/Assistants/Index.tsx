@@ -4,6 +4,7 @@ import Modal from '@/Components/Modal';
 import TextInput from '@/Components/TextInput';
 import InputLabel from '@/Components/InputLabel';
 import Breadcrumbs from '@/Components/Breadcrumbs';
+import Tips from '@/Components/Tips';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2, Pencil, ArrowRight, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -372,6 +373,12 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
  * содержит расширенную информацию и действия над ассистентом.
  */
 export default function Index({ assistants }: Props) {
+    const assistantTips = [
+        'Создавайте разных ассистентов для разных задач: продажи, поддержка, база знаний.',
+        'Используйте иконку микрофона, чтобы быстро добавить голосовые инструкции.',
+        'Вы всегда можете отредактировать промпт ассистента в разделе правки.',
+    ];
+
     return (
         <AuthenticatedLayout
         >
@@ -380,6 +387,8 @@ export default function Index({ assistants }: Props) {
             <div className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Ассистенты' }]} />
+
+                    <Tips tips={assistantTips} />
 
                     <div className="flex items-center justify-between mb-10">
                         <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">

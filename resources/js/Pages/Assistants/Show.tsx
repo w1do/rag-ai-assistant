@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
+import Tips from '@/Components/Tips';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import { Bot, MessageSquare, Pencil, Trash2, FileText, Mic, Globe, Code, Plus, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -110,6 +111,12 @@ export default function Show({ assistant }: Props) {
         }
     };
 
+    const assistantTips = [
+        'Загрузите PDF или DOCX файлы, чтобы ассистент мог отвечать на вопросы по вашим документам.',
+        'Добавьте ссылку на ваш сайт, и ассистент автоматически проанализирует его содержимое.',
+        'Протестируйте ассистента в чате, прежде чем встраивать его на сайт.',
+    ];
+
     return (
         <AuthenticatedLayout
         >
@@ -121,6 +128,8 @@ export default function Show({ assistant }: Props) {
                         { label: 'Ассистенты', href: route('assistants.index') },
                         { label: assistant.name }
                     ]} />
+
+                    <Tips tips={assistantTips} />
 
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
                         <div className="flex items-center gap-4">

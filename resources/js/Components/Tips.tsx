@@ -1,10 +1,9 @@
 import { Lightbulb, Quote } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 interface TipsProps {
@@ -16,17 +15,19 @@ export default function Tips({ title = 'Полезные советы', tips }: 
     return (
         <div className="mb-8 relative group">
             <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
+                modules={[Pagination, Autoplay]}
                 spaceBetween={20}
                 slidesPerView={1}
-                navigation
                 pagination={{ clickable: true }}
                 autoplay={{ delay: 5000, disableOnInteraction: false }}
                 className="tips-swiper !pb-10"
             >
                 {tips.map((tip, index) => (
                     <SwiperSlide key={index}>
-                        <blockquote className="bg-background-one border-r-2 border-primary-color rounded-[5px] p-8 relative overflow-hidden flex flex-col min-h-[180px] justify-center">
+                        <blockquote className="bg-background-one border-r-2 border-primary-color rounded-[5px] p-8 relative overflow-hidden flex flex-col min-h-[160px] justify-center shadow-[inset_0_0_20px_rgba(223,255,0,0.03)] group-hover:shadow-[inset_0_0_30px_rgba(223,255,0,0.05)] transition-all duration-500">
+                            {/* Decorative background element */}
+                            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary-color/5 rounded-full blur-3xl pointer-events-none" />
+                            
                             {/* 3D Icon Effect */}
                             <div className="absolute top-4 right-8 opacity-10 pointer-events-none">
                                 <div className="relative w-16 h-16 transform-gpu rotate-12 transition-transform duration-700 group-hover:rotate-0">
@@ -55,16 +56,6 @@ export default function Tips({ title = 'Полезные советы', tips }: 
             </Swiper>
 
             <style dangerouslySetInnerHTML={{ __html: `
-                .tips-swiper .swiper-button-next,
-                .tips-swiper .swiper-button-prev {
-                    color: var(--color-primary-color) !important;
-                    transform: scale(0.6);
-                    background: rgba(25, 25, 25, 0.8);
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    border: 1px solid rgba(223, 255, 0, 0.2);
-                }
                 .tips-swiper .swiper-pagination-bullet {
                     background: var(--color-white-color) !important;
                     opacity: 0.3;
@@ -75,6 +66,7 @@ export default function Tips({ title = 'Полезные советы', tips }: 
                     width: 20px;
                     border-radius: 4px;
                     transition: all 0.3s ease;
+                    box-shadow: 0 0 10px var(--color-primary-color);
                 }
             `}} />
         </div>

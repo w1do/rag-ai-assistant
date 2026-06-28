@@ -103,6 +103,8 @@ export default function Tariffs() {
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Тарифы' }]} />
 
+                    <Tips tips={tariffTips} />
+
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                         <div className="lg:col-span-2">
                             <div className="mb-12">
@@ -166,9 +168,7 @@ export default function Tariffs() {
                             </div>
                         </div>
 
-                        <div>
-                            <Tips tips={tariffTips} />
-                            
+                        <div className="lg:col-span-1">
                             <div className="bg-background-one border border-border-color-one rounded-three p-8 relative overflow-hidden">
                                 <div className="relative z-10">
                                     <h4 className="text-xl font-title text-white-color mb-4">Нужен <span className="text-primary-color">Enterprise</span>?</h4>

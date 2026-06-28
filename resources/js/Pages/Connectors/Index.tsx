@@ -238,6 +238,8 @@ export default function Index({ connectors, assistants }: Props) {
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Коннекторы' }]} />
 
+                    <Tips tips={connectorTips} />
+
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
                         <div className="lg:col-span-3">
                             <div className="mb-12">
@@ -257,10 +259,6 @@ export default function Index({ connectors, assistants }: Props) {
                                         onConnect={openModal}
                                     />
                                 ))}
-                            </div>
-
-                            <div className="mt-12">
-                                <Tips tips={connectorTips} />
                             </div>
                         </div>
 
