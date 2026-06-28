@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::prefix('/')->group(function () {
-    Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
+Route::prefix('/dashboard')->group(function () {
+  //  Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
