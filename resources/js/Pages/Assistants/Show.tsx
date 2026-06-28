@@ -4,6 +4,7 @@ import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import VoiceRecorder from '@/Components/VoiceRecorder';
 import InputHint from '@/Components/InputHint';
+import InputError from '@/Components/InputError';
 import LimitReachedCard from '@/Components/LimitReachedCard';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import { Bot, MessageSquare, Pencil, Trash2, FileText, Mic, Globe, Code, Plus, ArrowRight, ExternalLink } from 'lucide-react';
@@ -258,24 +259,27 @@ export default function Show({ assistant }: Props) {
                                             <>
                                                 {activeTab === 'document' && (
                                             <div className="space-y-6">
-                                                <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
-                                                    <div>
-                                                        <h4 className="font-bold text-white-color uppercase tracking-tight">Загрузить документ</h4>
-                                                        <p className="text-sm text-text-secondary">Поддерживаются PDF, DOCX, TXT</p>
+                                                <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
+                                                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                                        <div>
+                                                            <h4 className="font-bold text-white-color uppercase tracking-tight">Загрузить документ</h4>
+                                                            <p className="text-sm text-text-secondary">Поддерживаются PDF, DOCX, TXT, TEXT</p>
+                                                        </div>
+                                                        <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
+                                                            <span data-text={docForm.processing ? 'Загрузка...' : 'Загрузить'}>
+                                                                {docForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                            </span>
+                                                            <i><Plus size={16} /></i>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept=".pdf,.docx,.txt,.text"
+                                                                onChange={uploadDoc}
+                                                                disabled={docForm.processing}
+                                                            />
+                                                        </label>
                                                     </div>
-                                                    <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
-                                                        <span data-text={docForm.processing ? 'Загрузка...' : 'Загрузить'}>
-                                                            {docForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                        </span>
-                                                        <i><Plus size={16} /></i>
-                                                        <input
-                                                            type="file"
-                                                            className="hidden"
-                                                            accept=".pdf,.docx,.txt"
-                                                            onChange={uploadDoc}
-                                                            disabled={docForm.processing}
-                                                        />
-                                                    </label>
+                                                    <InputError message={docForm.errors.document} className="mt-2" />
                                                 </div>
                                             </div>
                                         )}
@@ -295,24 +299,27 @@ export default function Show({ assistant }: Props) {
                                                             isUploading={audioForm.processing}
                                                         />
 
-                                                        <div className="flex flex-col sm:flex-row justify-between items-center p-6 border border-border-color-one rounded-[2px] bg-extra-color gap-4">
-                                                            <div>
-                                                                <h4 className="font-bold text-white-color uppercase tracking-tight">Или загрузите файл</h4>
-                                                                <p className="text-sm text-text-secondary">Поддерживаются MP3, WAV, M4A</p>
+                                                        <div className="p-6 border border-border-color-one rounded-[2px] bg-extra-color">
+                                                            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                                                <div>
+                                                                    <h4 className="font-bold text-white-color uppercase tracking-tight">Или загрузите файл</h4>
+                                                                    <p className="text-sm text-text-secondary">Поддерживаются MP3, WAV, M4A</p>
+                                                                </div>
+                                                                <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
+                                                                    <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
+                                                                        {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
+                                                                    </span>
+                                                                    <i><Mic size={16} /></i>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="audio/*"
+                                                                        onChange={uploadAudio}
+                                                                        disabled={audioForm.processing}
+                                                                    />
+                                                                </label>
                                                             </div>
-                                                            <label className="theme-button style-1 !h-[48px] cursor-pointer min-w-[160px]">
-                                                                <span data-text={audioForm.processing ? 'Загрузка...' : 'Загрузить'}>
-                                                                    {audioForm.processing ? 'Загрузка...' : 'Загрузить'}
-                                                                </span>
-                                                                <i><Mic size={16} /></i>
-                                                                <input
-                                                                    type="file"
-                                                                    className="hidden"
-                                                                    accept="audio/*"
-                                                                    onChange={uploadAudio}
-                                                                    disabled={audioForm.processing}
-                                                                />
-                                                            </label>
+                                                            <InputError message={audioForm.errors.audio} className="mt-2" />
                                                         </div>
                                                     </>
                                                 )}
@@ -354,6 +361,7 @@ export default function Show({ assistant }: Props) {
                                                                     <span data-text="+"><Plus size={18} /></span>
                                                                 </button>
                                                             </div>
+                                                            <InputError message={urlForm.errors.url} />
                                                             <InputHint message="Укажите URL — ассистент проанализирует страницу и добавит её в базу знаний." />
                                                         </form>
                                                     </div>

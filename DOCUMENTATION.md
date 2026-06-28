@@ -55,7 +55,7 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 
 ### Фоновые процессы
 Длительные операции вынесены в очереди (управляются через Supervisor и Laravel Horizon):
-1. **ProcessDocumentJob**: Чтение файла, чанкинг, генерация эмбеддингов и сохранение в Qdrant.
+1. **ProcessKnowledgeJob**: Чтение файла, извлечение текста (расшифровка), чанкинг, генерация эмбеддингов и сохранение в Qdrant.
 2. **TranscribeVoiceJob**: Транскрипция аудио через Whisper и последующая индексация.
 3. **GenerateKnowledgeJob**: Парсинг текста с URL и генерация записи в базу знаний через LLM.
 4. **API Callback**: Прямая индексация подготовленных данных (вопросы и ответы) через REST API.
@@ -67,6 +67,7 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 Система поддерживает гибкую настройку тарифов и контроль баланса. Подробности реализации:
 - [Тарифные планы и ограничения](docs/starter-plan.md): Лимиты для тарифа "Старт", логика проверок.
 - [Система биллинга](docs/billing_system.md): Архитектура домена Billing, пополнение баланса, смена тарифов.
+- [Загрузка документов и расшифровка](docs/document_decoding.md): Описание процесса извлечения текста из документов.
 
 ## Переменные окружения (.env)
 Все чувствительные данные вынесены в `.env`:

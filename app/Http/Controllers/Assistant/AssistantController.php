@@ -7,19 +7,20 @@ use App\Domain\Assistant\Commands\DeleteAssistantCommand;
 use App\Domain\Assistant\Commands\StoreAssistantCommand;
 use App\Domain\Assistant\Commands\UpdateAssistantCommand;
 use App\Domain\Assistant\Commands\UploadAudioCommand;
-use App\Domain\Assistant\Commands\UploadDocumentCommand;
 use App\Domain\Assistant\DTO\AssistantDTO;
 use App\Domain\Assistant\Handlers\AddUrlHandler;
 use App\Domain\Assistant\Handlers\DeleteAssistantHandler;
 use App\Domain\Assistant\Handlers\StoreAssistantHandler;
 use App\Domain\Assistant\Handlers\UpdateAssistantHandler;
 use App\Domain\Assistant\Handlers\UploadAudioHandler;
-use App\Domain\Assistant\Handlers\UploadDocumentHandler;
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Assistant\Queries\GetAssistantWithDetailsQuery;
 use App\Domain\Assistant\Queries\GetUserAssistantsQuery;
 use App\Domain\Knowledge\Commands\DeleteKnowledgeCommand;
+use App\Domain\Knowledge\Commands\UploadKnowledgeCommand;
+use App\Domain\Knowledge\DTO\UploadKnowledgeDTO;
 use App\Domain\Knowledge\Handlers\DeleteKnowledgeHandler;
+use App\Domain\Knowledge\Handlers\UploadKnowledgeHandler;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assistant\StoreAssistantRequest;
@@ -186,11 +187,12 @@ class AssistantController extends Controller
     }
 
     /**
-     * Загружает документ для ассистента.
+     * Загружает документ для ассистента с расшифровкой данных.
      *
      * @OA\Post(
      *     path="/assistants/{id}/documents",
-     *     summary="Загрузка документа",
+     *     summary="Загрузка документа с расшифровкой",
+     *     description="Загружает PDF, DOCX или TXT файл, извлекает из него текст и индексирует в базе знаний",
      *     tags={"Assistant"},
      *
      *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
@@ -202,25 +204,29 @@ class AssistantController extends Controller
      *
      *             @OA\Schema(
      *
-     *                 @OA\Property(property="document", type="string", format="binary")
+     *                 @OA\Property(property="document", type="string", format="binary", description="Файл для загрузки")
      *             )
      *         )
      *     ),
      *
-     *     @OA\Response(response=302, description="Успешная загрузка")
+     *     @OA\Response(response=302, description="Успешная загрузка, начата обработка"),
+     *     @OA\Response(response=403, description="Недостаточно прав"),
+     *     @OA\Response(response=422, description="Ошибка валидации")
      * )
      */
-    public function uploadDocument(Request $request, Assistant $assistant, UploadDocumentHandler $handler): RedirectResponse
+    public function uploadDocument(Request $request, Assistant $assistant, UploadKnowledgeHandler $handler): RedirectResponse
     {
         $this->authorize('uploadDocument', $assistant);
 
         $request->validate([
-            'document' => 'required|file|mimes:pdf,docx,txt|max:10240',
+            'document' => 'required|file|extensions:pdf,docx,txt,text|max:10240',
         ]);
 
-        $handler->handle(new UploadDocumentCommand($assistant, $request->file('document')));
+        $dto = UploadKnowledgeDTO::fromArray($request->all());
 
-        return back()->with('status', 'Document uploaded and processing started.');
+        $handler->handle(new UploadKnowledgeCommand($assistant, $dto));
+
+        return back()->with('status', 'Документ загружен, начата расшифровка данных.');
     }
 
     /**
@@ -253,7 +259,7 @@ class AssistantController extends Controller
         $this->authorize('uploadAudio', $assistant);
 
         $request->validate([
-            'audio' => 'required|file|mimes:mp3,wav,m4a,webm,ogg|max:25600',
+            'audio' => 'required|file|extensions:mp3,wav,m4a,webm,ogg|max:25600',
         ]);
 
         $handler->handle(new UploadAudioCommand($assistant, $request->file('audio')));

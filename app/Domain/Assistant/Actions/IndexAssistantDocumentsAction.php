@@ -58,16 +58,36 @@ class IndexAssistantDocumentsAction
         }
 
         $vectorStore = $this->vectorStoreManager->getStoreForAssistant($assistant);
+        $collectionName = 'assistant_'.$assistant->id;
+
+        // Если это переиндексация существующего документа, удаляем старые точки из Qdrant
+        if ($knowledgeId) {
+            $oldQdrantIds = $assistant->chunks()
+                ->where('knowledge_id', $knowledgeId)
+                ->whereNotNull('qdrant_id')
+                ->pluck('qdrant_id')
+                ->toArray();
+
+            if (! empty($oldQdrantIds)) {
+                try {
+                    $this->vectorStoreManager->deletePoints($assistant, $oldQdrantIds);
+                } catch (\Throwable $e) {
+                    Log::warning("Failed to delete old points for knowledge ID: {$knowledgeId} from Qdrant: ".$e->getMessage());
+                }
+            }
+
+            // Удаляем старые записи чанков из локальной БД
+            $assistant->chunks()->where('knowledge_id', $knowledgeId)->delete();
+        }
 
         retry(3, function () use ($vectorStore, $allEmbeddedDocuments) {
-            $vectorStore->addDocuments($allEmbeddedDocuments);
+            $response = $vectorStore->addDocuments($allEmbeddedDocuments);
+
+            // Проверяем статус ответа от Qdrant, если это возможно
+            // LLPhant's QdrantVectorStore::addDocuments returns void, but the client might throw on failure
         }, 1000);
 
         Log::info('Successfully indexed '.count($allEmbeddedDocuments)." chunks for assistant ID: {$assistant->id}");
-
-        if ($knowledgeId) {
-            $assistant->chunks()->where('knowledge_id', $knowledgeId)->delete();
-        }
 
         foreach ($allEmbeddedDocuments as $doc) {
             $qdrantId = $doc->id ?? DocumentUtils::formatUUIDFromUniqueId(DocumentUtils::getUniqueId($doc));

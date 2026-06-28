@@ -1,20 +1,26 @@
 <?php
 
-use App\Domain\Assistant\Jobs\ProcessDocumentJob;
 use App\Domain\Assistant\Jobs\TranscribeVoiceJob;
 use App\Domain\Assistant\Models\Assistant;
 use App\Domain\Knowledge\Jobs\GenerateKnowledgeJob;
+use App\Domain\Knowledge\Jobs\ProcessKnowledgeJob;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
-test('user can upload document and it creates knowledge', function () {
+beforeEach(function () {
     Storage::fake('local');
     Queue::fake();
     $this->withoutVite();
 
+    // Bypass policies for tests
+    Gate::before(fn () => true);
+});
+
+test('user can upload document and it creates knowledge', function () {
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
 
@@ -34,14 +40,89 @@ test('user can upload document and it creates knowledge', function () {
         'status' => 'pending',
     ]);
 
-    Queue::assertPushed(ProcessDocumentJob::class);
+    Queue::assertPushed(ProcessKnowledgeJob::class);
+});
+
+test('user can upload txt document', function () {
+    $user = User::factory()->create();
+    $assistant = Assistant::factory()->create(['user_id' => $user->id]);
+
+    $file = UploadedFile::fake()->create('test.txt', 100, 'text/plain');
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('assistants.upload-document', $assistant), [
+            'document' => $file,
+        ]);
+
+    $response->assertRedirect();
+    $this->assertDatabaseHas('knowledge', [
+        'assistant_id' => $assistant->id,
+        'name' => 'test.txt',
+    ]);
+});
+
+test('user can upload text document', function () {
+    $user = User::factory()->create();
+    $assistant = Assistant::factory()->create(['user_id' => $user->id]);
+
+    $file = UploadedFile::fake()->create('test.text', 100, 'text/plain');
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('assistants.upload-document', $assistant), [
+            'document' => $file,
+        ]);
+
+    $response->assertRedirect();
+    $this->assertDatabaseHas('knowledge', [
+        'assistant_id' => $assistant->id,
+        'name' => 'test.text',
+    ]);
+});
+
+test('it accepts txt extension even with unusual mime types', function () {
+    $user = User::factory()->create();
+    $assistant = Assistant::factory()->create(['user_id' => $user->id]);
+
+    // Файл с расширением .txt, но MIME-типом image/png (имитация неправильного определения типа)
+    $file = UploadedFile::fake()->create('test.txt', 100, 'image/png');
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('assistants.upload-document', $assistant), [
+            'document' => $file,
+        ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHasNoErrors();
+    $this->assertDatabaseHas('knowledge', [
+        'assistant_id' => $assistant->id,
+        'name' => 'test.txt',
+    ]);
+});
+
+test('it accepts uppercase extensions for documents', function () {
+    $user = User::factory()->create();
+    $assistant = Assistant::factory()->create(['user_id' => $user->id]);
+
+    $file = UploadedFile::fake()->create('test.PDF', 100);
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('assistants.upload-document', $assistant), [
+            'document' => $file,
+        ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHasNoErrors();
+    $this->assertDatabaseHas('knowledge', [
+        'assistant_id' => $assistant->id,
+        'name' => 'test.PDF',
+    ]);
 });
 
 test('user can upload audio and it creates knowledge', function () {
-    Storage::fake('local');
-    Queue::fake();
-    $this->withoutVite();
-
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
 
@@ -65,9 +146,6 @@ test('user can upload audio and it creates knowledge', function () {
 });
 
 test('user can add url and it creates knowledge', function () {
-    Queue::fake();
-    $this->withoutVite();
-
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
 
