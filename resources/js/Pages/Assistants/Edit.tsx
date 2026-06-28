@@ -6,7 +6,7 @@ import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
 import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
-import { Plus, Trash2, Settings, Phone, Zap, ArrowRight, LifeBuoy } from 'lucide-react';
+import { Plus, Trash2, Settings, Phone, Zap, ArrowRight, LifeBuoy, Image as ImageIcon } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
 
 /**
@@ -24,13 +24,15 @@ interface Assistant {
     welcome_message: string | null;
     actions: string[] | null;
     system: string | null;
+    avatar: string | null;
+    background_image: string | null;
 }
 
 interface Props {
     assistant: Assistant;
 }
 
-type TabKey = 'general' | 'contacts' | 'behavior';
+type TabKey = 'general' | 'contacts' | 'behavior' | 'appearance';
 
 /**
  * Описание вкладок формы редактирования.
@@ -42,6 +44,12 @@ const TABS: { key: TabKey; label: string; hint: string; icon: ReactNode }[] = [
         label: 'Основное',
         hint: 'Имя, описание и стиль',
         icon: <Settings className="h-4 w-4" />,
+    },
+    {
+        key: 'appearance',
+        label: 'Фото и стиль',
+        hint: 'Аватар и фон бота',
+        icon: <ImageIcon className="h-4 w-4" />,
     },
     {
         key: 'contacts',
@@ -107,7 +115,7 @@ const helpClass = 'mt-1.5 text-xs leading-relaxed text-gray-400';
 export default function Edit({ assistant }: Props) {
     const [activeTab, setActiveTab] = useState<TabKey>('general');
 
-    const { data, setData, patch, processing, errors, isDirty } = useForm({
+    const { data, setData, post, processing, errors, isDirty } = useForm({
         name: assistant.name || '',
         description: assistant.description || '',
         style: assistant.style || 'business',
@@ -118,11 +126,16 @@ export default function Edit({ assistant }: Props) {
         welcome_message: assistant.welcome_message || '',
         actions: assistant.actions || [],
         system: assistant.system || '',
+        avatar: null as File | null,
+        background_image: null as File | null,
+        _method: 'PATCH',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        patch(route('assistants.update', assistant.id));
+        post(route('assistants.update', assistant.id), {
+            forceFormData: true,
+        });
     };
 
     const handleSocialChange = (key: string, value: string) => {
@@ -134,6 +147,7 @@ export default function Edit({ assistant }: Props) {
 
     const errorsByTab: Record<TabKey, string[]> = {
         general: ['name', 'description', 'style', 'brand_name'],
+        appearance: ['avatar', 'background_image'],
         contacts: ['phone', 'social'],
         behavior: ['fallback', 'welcome_message', 'system', 'actions'],
     };
@@ -168,10 +182,26 @@ export default function Edit({ assistant }: Props) {
                         <div className="lg:col-span-3">
                             <form onSubmit={submit} className="space-y-6">
                                 {/* Превью ассистента */}
-                                <div className="rounded-three border border-border-color-one bg-background-one p-5 shadow-sm">
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-xl font-bold uppercase text-black-color shadow-lg shadow-primary-color/20">
-                                            {(data.name || 'A').charAt(0)}
+                                <div className="rounded-three border border-border-color-one bg-background-one p-5 shadow-sm relative overflow-hidden">
+                                    {/* Фоновое изображение (превью) */}
+                                    {(data.background_image || assistant.background_image) && (
+                                        <div className="absolute inset-0 opacity-10 pointer-events-none">
+                                            <img 
+                                                src={data.background_image ? URL.createObjectURL(data.background_image) : `/storage/${assistant.background_image}`} 
+                                                alt="" 
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex items-center gap-4 relative z-10">
+                                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-xl font-bold uppercase text-black-color shadow-lg shadow-primary-color/20 overflow-hidden">
+                                            {data.avatar ? (
+                                                <img src={URL.createObjectURL(data.avatar)} alt="" className="w-full h-full object-cover" />
+                                            ) : assistant.avatar ? (
+                                                <img src={`/storage/${assistant.avatar}`} alt="" className="w-full h-full object-cover" />
+                                            ) : (
+                                                (data.name || 'A').charAt(0)
+                                            )}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-lg font-bold uppercase tracking-tight text-white-color font-title">
@@ -297,6 +327,81 @@ export default function Edit({ assistant }: Props) {
                                                             />
                                                             <InputHint message="Название вашей компании или продукта." />
                                                             <InputError message={errors.brand_name} className="mt-2" />
+                                                        </div>
+                                                    </div>
+                                                </FormSection>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'appearance' && (
+                                            <div className="space-y-6">
+                                                <FormSection
+                                                    title="Фото и стиль"
+                                                    description="Настройте внешний вид вашего ассистента."
+                                                >
+                                                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                                                        {/* Аватар */}
+                                                        <div>
+                                                            <InputLabel value="Аватар ассистента" className="text-xs text-text-secondary uppercase tracking-widest mb-4" />
+                                                            <div className="flex flex-col items-center gap-4">
+                                                                <div className="relative group">
+                                                                    <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-border-color-one bg-extra-color flex items-center justify-center overflow-hidden">
+                                                                        {data.avatar ? (
+                                                                            <img src={URL.createObjectURL(data.avatar)} alt="Preview" className="w-full h-full object-cover" />
+                                                                        ) : assistant.avatar ? (
+                                                                            <img src={`/storage/${assistant.avatar}`} alt="Current" className="w-full h-full object-cover" />
+                                                                        ) : (
+                                                                            <ImageIcon className="w-12 h-12 text-text-secondary" />
+                                                                        )}
+                                                                    </div>
+                                                                    <label htmlFor="avatar-upload" className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-2xl">
+                                                                        <span className="text-white text-xs font-bold uppercase">Изменить</span>
+                                                                    </label>
+                                                                    <input
+                                                                        id="avatar-upload"
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="image/*"
+                                                                        onChange={(e) => setData('avatar', e.target.files?.[0] || null)}
+                                                                    />
+                                                                </div>
+                                                                <div className="text-center">
+                                                                    <p className="text-[10px] text-text-secondary uppercase tracking-widest">JPG, PNG до 2MB</p>
+                                                                    <InputError message={errors.avatar} className="mt-2" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Фон */}
+                                                        <div>
+                                                            <InputLabel value="Фоновое изображение" className="text-xs text-text-secondary uppercase tracking-widest mb-4" />
+                                                            <div className="flex flex-col items-center gap-4">
+                                                                <div className="relative group w-full">
+                                                                    <div className="w-full h-32 rounded-2xl border-2 border-dashed border-border-color-one bg-extra-color flex items-center justify-center overflow-hidden">
+                                                                        {data.background_image ? (
+                                                                            <img src={URL.createObjectURL(data.background_image)} alt="Preview" className="w-full h-full object-cover" />
+                                                                        ) : assistant.background_image ? (
+                                                                            <img src={`/storage/${assistant.background_image}`} alt="Current" className="w-full h-full object-cover" />
+                                                                        ) : (
+                                                                            <ImageIcon className="w-12 h-12 text-text-secondary" />
+                                                                        )}
+                                                                    </div>
+                                                                    <label htmlFor="bg-upload" className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-2xl">
+                                                                        <span className="text-white text-xs font-bold uppercase">Изменить</span>
+                                                                    </label>
+                                                                    <input
+                                                                        id="bg-upload"
+                                                                        type="file"
+                                                                        className="hidden"
+                                                                        accept="image/*"
+                                                                        onChange={(e) => setData('background_image', e.target.files?.[0] || null)}
+                                                                    />
+                                                                </div>
+                                                                <div className="text-center">
+                                                                    <p className="text-[10px] text-text-secondary uppercase tracking-widest">JPG, PNG до 5MB</p>
+                                                                    <InputError message={errors.background_image} className="mt-2" />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </FormSection>

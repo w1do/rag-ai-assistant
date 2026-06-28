@@ -2,6 +2,8 @@
 
 namespace App\Domain\Assistant\DTO;
 
+use Illuminate\Http\UploadedFile;
+
 readonly class AssistantDTO
 {
     public function __construct(
@@ -16,6 +18,8 @@ readonly class AssistantDTO
         public ?string $welcomeMessage = null,
         public ?array $actions = null,
         public ?string $system = null,
+        public ?UploadedFile $avatar = null,
+        public ?UploadedFile $backgroundImage = null,
     ) {}
 
     /**
@@ -35,6 +39,8 @@ readonly class AssistantDTO
             welcomeMessage: $data['welcome_message'] ?? null,
             actions: $data['actions'] ?? null,
             system: $data['system'] ?? null,
+            avatar: $data['avatar'] ?? null,
+            backgroundImage: $data['background_image'] ?? null,
         );
     }
 
@@ -55,6 +61,8 @@ readonly class AssistantDTO
             'welcome_message' => $this->welcomeMessage,
             'actions' => $this->actions,
             'system' => $this->system,
+            'avatar' => $this->avatar,
+            'background_image' => $this->backgroundImage,
         ], fn ($value) => $value !== null);
     }
 }

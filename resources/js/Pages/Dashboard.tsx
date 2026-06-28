@@ -8,8 +8,12 @@ import {
     ArrowUpRight,
     Plus,
     Sparkles,
+    Edit2,
+    Trash2,
+    Eye,
     type LucideIcon,
 } from 'lucide-react';
+import { router } from '@inertiajs/react';
 
 interface Props {
     stats: {
@@ -90,8 +94,8 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
         >
             <Head title="Панель управления" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+            <div className="py-12 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl space-y-8">
                     <Breadcrumbs items={[]} />
                     
                     <div className="section-title">
@@ -191,13 +195,33 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <Link
-                                                href={route('assistants.show', assistant.id)}
-                                                className="theme-button style-2 h-[40px] px-4"
-                                            >
-                                                <span data-text="Перейти">Перейти</span>
-                                                <i><ArrowUpRight size={14} /></i>
-                                            </Link>
+                                            <div className="flex items-center gap-2">
+                                                <Link
+                                                    href={route('assistants.show', assistant.id)}
+                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary-rgb-12 text-primary-color hover:bg-primary-color hover:text-black-color transition-all"
+                                                    title="Просмотр"
+                                                >
+                                                    <Eye size={18} />
+                                                </Link>
+                                                <Link
+                                                    href={route('assistants.edit', assistant.id)}
+                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white-color transition-all"
+                                                    title="Редактировать"
+                                                >
+                                                    <Edit2 size={18} />
+                                                </Link>
+                                                <button
+                                                    onClick={() => {
+                                                        if (confirm('Вы уверены, что хотите удалить этого ассистента?')) {
+                                                            router.delete(route('assistants.destroy', assistant.id));
+                                                        }
+                                                    }}
+                                                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white-color transition-all"
+                                                    title="Удалить"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </div>
                                         </li>
                                     );
                                 })}

@@ -23,6 +23,8 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'welcome_message', type: 'string', nullable: true),
         new OA\Property(property: 'actions', type: 'array', items: new OA\Items(type: 'string'), nullable: true),
         new OA\Property(property: 'knowledge_count', type: 'integer'),
+        new OA\Property(property: 'avatar', type: 'string', nullable: true),
+        new OA\Property(property: 'background_image', type: 'string', nullable: true),
     ]
 )]
 /**
@@ -49,6 +51,8 @@ class AssistantResource extends JsonResource
             'welcome_message' => $this->welcome_message,
             'actions' => $this->actions,
             'knowledge_count' => $this->knowledge_count,
+            'avatar' => $this->avatar,
+            'background_image' => $this->background_image,
         ];
     }
 }

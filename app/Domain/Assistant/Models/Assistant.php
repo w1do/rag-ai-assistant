@@ -73,6 +73,8 @@ class Assistant extends Model
         'system',
         'type',
         'path',
+        'avatar',
+        'background_image',
     ];
 
     protected $casts = [

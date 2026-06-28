@@ -19,8 +19,8 @@ export default function Bots() {
         >
             <Head title="Боты" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="py-12 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
                     <div className="flex flex-col items-center justify-center rounded-[20px] border border-gray-200 bg-white px-7 py-16 text-center shadow-md">
                         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-inset ring-indigo-100">
                             <Bot className="h-8 w-8" strokeWidth={2} />

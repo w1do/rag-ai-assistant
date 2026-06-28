@@ -9,8 +9,18 @@ class StoreAssistantHandler
 {
     public function handle(StoreAssistantCommand $command): Assistant
     {
+        $data = $command->dto->toArray();
+
+        if ($command->dto->avatar) {
+            $data['avatar'] = $command->dto->avatar->store('assistants/avatars', 'public');
+        }
+
+        if ($command->dto->backgroundImage) {
+            $data['background_image'] = $command->dto->backgroundImage->store('assistants/backgrounds', 'public');
+        }
+
         /** @var Assistant $assistant */
-        $assistant = $command->user->assistants()->create($command->dto->toArray());
+        $assistant = $command->user->assistants()->create($data);
 
         return $assistant;
     }

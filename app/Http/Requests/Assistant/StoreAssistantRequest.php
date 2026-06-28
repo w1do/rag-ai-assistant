@@ -13,14 +13,16 @@ use OpenApi\Attributes as OA;
     properties: [
         new OA\Property(property: 'name', type: 'string', maxLength: 255),
         new OA\Property(property: 'description', type: 'string', nullable: true),
-        new OA\Property(property: 'style', type: 'string', enum: ['commercial', 'business', 'rude', 'positive'], nullable: true),
-        new OA\Property(property: 'brand_name', type: 'string', maxLength: 255, nullable: true),
-        new OA\Property(property: 'phone', type: 'string', maxLength: 20, nullable: true),
+        new OA\Property(property: 'style', type: 'string', nullable: true, enum: ['commercial', 'business', 'rude', 'positive']),
+        new OA\Property(property: 'brand_name', type: 'string', nullable: true, maxLength: 255),
+        new OA\Property(property: 'phone', type: 'string', nullable: true, maxLength: 20),
         new OA\Property(property: 'social', type: 'object', nullable: true),
         new OA\Property(property: 'fallback', type: 'string', nullable: true),
         new OA\Property(property: 'welcome_message', type: 'string', nullable: true),
         new OA\Property(property: 'actions', type: 'array', items: new OA\Items(type: 'string'), nullable: true),
         new OA\Property(property: 'system', type: 'string', nullable: true),
+        new OA\Property(property: 'avatar', type: 'string', format: 'binary', nullable: true),
+        new OA\Property(property: 'background_image', type: 'string', format: 'binary', nullable: true),
     ]
 )]
 class StoreAssistantRequest extends FormRequest
@@ -49,6 +51,8 @@ class StoreAssistantRequest extends FormRequest
             'welcome_message' => 'nullable|string',
             'actions' => 'nullable|array',
             'system' => 'nullable|string',
+            'avatar' => 'nullable|image|max:2048',
+            'background_image' => 'nullable|image|max:5120',
         ];
     }
 }
