@@ -103,8 +103,11 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
     };
 
     return (
-        <div className="flex h-screen flex-col bg-body-color text-white-color font-sans">
-            <Head title={`Чат: ${title}`} />
+        <div className="flex h-dvh flex-col bg-body-color text-white-color font-sans">
+            <Head>
+                <title>{`Чат: ${title}`}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+            </Head>
 
             {/* Шапка */}
             <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border-color-one bg-body-color/80 px-4 py-3 shadow-2xl backdrop-blur-md">
@@ -246,7 +249,7 @@ export default function ShareChat({ assistant, csrfToken, initialMessages = [] }
                             onChange={(e) => setQuestion(e.target.value)}
                             placeholder="Введите ваш запрос..."
                             disabled={processing}
-                            className="w-full h-[52px] rounded-full bg-form-input border-border-color-one py-3.5 pl-6 pr-12 text-sm text-white-color transition-all focus:border-primary-color/50 focus:ring-primary-color/20 disabled:opacity-50 placeholder:text-text-secondary/50"
+                            className="w-full h-[52px] rounded-full bg-form-input border-border-color-one py-3.5 pl-6 pr-12 text-base text-white-color transition-all focus:border-primary-color/50 focus:ring-primary-color/20 disabled:opacity-50 placeholder:text-text-secondary/50"
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                              <button

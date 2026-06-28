@@ -50,8 +50,43 @@
     container.style.cssText =
         'position: fixed; bottom: 20px; ' + sideStyles + ' z-index: 2147483000;';
 
+    var style = document.createElement('style');
+    style.innerHTML =
+        '@media (max-width: 768px) {' +
+        '  #' + container.id + '.ai-chat-widget-open {' +
+        '    width: 100% !important;' +
+        '    height: 100% !important;' +
+        '    bottom: 0 !important;' +
+        '    left: 0 !important;' +
+        '    right: 0 !important;' +
+        '  }' +
+        '  #' + container.id + '.ai-chat-widget-open .ai-chat-frame-wrapper {' +
+        '    width: 100% !important;' +
+        '    height: 100% !important;' +
+        '    max-width: 100% !important;' +
+        '    max-height: 100% !important;' +
+        '    bottom: 0 !important;' +
+        '    left: 0 !important;' +
+        '    right: 0 !important;' +
+        '    border-radius: 0 !important;' +
+        '  }' +
+        '  #' + container.id + '.ai-chat-widget-open .ai-chat-button {' +
+        '    bottom: auto !important;' +
+        '    top: 12px !important;' +
+        '    ' + sideStyles +
+        '    width: 44px !important;' +
+        '    height: 44px !important;' +
+        '    z-index: 2147483001 !important;' +
+        '    background: rgba(0, 0, 0, 0.2) !important;' +
+        '    backdrop-filter: blur(4px) !important;' +
+        '    border: 1px solid rgba(255, 255, 255, 0.1) !important;' +
+        '  }' +
+        '}';
+    document.head.appendChild(style);
+
     // Плавающая кнопка открытия/закрытия чата.
     var button = document.createElement('button');
+    button.className = 'ai-chat-button';
     button.type = 'button';
     button.setAttribute('aria-label', 'Открыть чат');
     button.style.cssText =
@@ -77,6 +112,7 @@
 
     // Окно чата с iframe на публичную страницу ассистента.
     var frameWrapper = document.createElement('div');
+    frameWrapper.className = 'ai-chat-frame-wrapper';
     frameWrapper.style.cssText =
         'position: absolute; bottom: 76px; ' + sideStyles.replace('20px', '0') +
         'width: 380px; max-width: calc(100vw - 40px); height: 560px;' +
@@ -94,6 +130,7 @@
     var toggle = function () {
         isOpen = !isOpen;
         if (isOpen) {
+            container.classList.add('ai-chat-widget-open');
             frameWrapper.style.display = 'block';
             // Запускаем анимацию появления на следующем кадре.
             requestAnimationFrame(function () {
@@ -103,6 +140,7 @@
             button.innerHTML = iconClose;
             button.setAttribute('aria-label', 'Закрыть чат');
         } else {
+            container.classList.remove('ai-chat-widget-open');
             frameWrapper.style.opacity = '0';
             frameWrapper.style.transform = 'translateY(10px)';
             button.innerHTML = iconChat;
