@@ -12,6 +12,7 @@ class GetPublicChatDataQuery
      *     assistant: array{
      *         id: int,
      *         name: string,
+     *         slug: string,
      *         brand_name: string|null,
      *         description: string|null,
      *         welcome_message: string|null,
@@ -30,6 +31,7 @@ class GetPublicChatDataQuery
             'assistant' => [
                 'id' => (int) $assistant->id,
                 'name' => (string) $assistant->name,
+                'slug' => (string) $assistant->slug,
                 'brand_name' => $assistant->brand_name,
                 'description' => $assistant->description,
                 'welcome_message' => $assistant->welcome_message,

@@ -46,16 +46,19 @@ Route::prefix('/dashboard')->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+});
 
-    /*
-     * Общедоступный чат-виджет.
-     */
-    Route::middleware('allow.iframe')->group(function () {
-        Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
-        Route::get('/share-chat/{assistant}/init', [PublicChatController::class, 'init'])->name('share-chat.init');
-        Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
-    });
+/*
+ * Общедоступный чат-виджет.
+ */
+Route::middleware('allow.iframe')->group(function () {
+    Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
+    Route::get('/bots/{assistant:slug}', [PublicChatController::class, 'show'])->name('bots.public-show');
+    Route::get('/share-chat/{assistant}/init', [PublicChatController::class, 'init'])->name('share-chat.init');
+    Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
+});
 
+Route::prefix('/dashboard')->group(function () {
     require __DIR__.'/auth.php';
 
     Route::get('/user-admin', function () {
