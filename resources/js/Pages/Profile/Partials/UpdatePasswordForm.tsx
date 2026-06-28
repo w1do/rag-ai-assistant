@@ -64,7 +64,8 @@ export default function UpdatePasswordForm({
                 <div>
                     <InputLabel
                         htmlFor="current_password"
-                        value="Current Password"
+                        value="Текущий пароль"
+                        className="text-xs text-text-secondary uppercase tracking-widest mb-2"
                     />
 
                     <TextInput
@@ -75,8 +76,9 @@ export default function UpdatePasswordForm({
                             setData('current_password', e.target.value)
                         }
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
                         autoComplete="current-password"
+                        placeholder="Введите ваш действующий пароль"
                     />
 
                     <InputError
@@ -86,7 +88,11 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="password" value="New Password" />
+                    <InputLabel 
+                        htmlFor="password" 
+                        value="Новый пароль" 
+                        className="text-xs text-text-secondary uppercase tracking-widest mb-2"
+                    />
 
                     <TextInput
                         id="password"
@@ -94,8 +100,9 @@ export default function UpdatePasswordForm({
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
                         autoComplete="new-password"
+                        placeholder="Минимум 8 символов, используйте буквы и цифры"
                     />
 
                     <InputError message={errors.password} className="mt-2" />
@@ -104,7 +111,8 @@ export default function UpdatePasswordForm({
                 <div>
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value="Подтверждение пароля"
+                        className="text-xs text-text-secondary uppercase tracking-widest mb-2"
                     />
 
                     <TextInput
@@ -114,8 +122,9 @@ export default function UpdatePasswordForm({
                             setData('password_confirmation', e.target.value)
                         }
                         type="password"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
                         autoComplete="new-password"
+                        placeholder="Повторите новый пароль еще раз"
                     />
 
                     <InputError

@@ -91,9 +91,9 @@ export default function DeleteUserForm({
                             onChange={(e) =>
                                 setData('password', e.target.value)
                             }
-                            className="mt-1 block w-full"
+                            className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
                             isFocused
-                            placeholder="Пароль"
+                            placeholder="Введите ваш пароль для подтверждения удаления"
                         />
 
                         <InputError

@@ -5,8 +5,34 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
 import Breadcrumbs from '@/Components/Breadcrumbs';
-import { Plus, Trash2, ArrowRight, LifeBuoy } from 'lucide-react';
-import { FormEventHandler, ReactNode } from 'react';
+import { Plus, Trash2, ArrowRight, LifeBuoy, Settings, Phone, Zap } from 'lucide-react';
+import { FormEventHandler, ReactNode, useState } from 'react';
+
+type TabKey = 'general' | 'contacts' | 'behavior';
+
+/**
+ * Описание вкладок формы создания.
+ */
+const TABS: { key: TabKey; label: string; hint: string; icon: ReactNode }[] = [
+    {
+        key: 'general',
+        label: 'Основное',
+        hint: 'Имя, описание и стиль',
+        icon: <Settings className="h-4 w-4" />,
+    },
+    {
+        key: 'contacts',
+        label: 'Контакты',
+        hint: 'Телефон и соцсети',
+        icon: <Phone className="h-4 w-4" />,
+    },
+    {
+        key: 'behavior',
+        label: 'Поведение',
+        hint: 'Fallback и промпт',
+        icon: <Zap className="h-4 w-4" />,
+    },
+];
 
 /**
  * Единые классы для текстовых полей, textarea и select формы.
@@ -55,6 +81,8 @@ function FormSection({
  * и боковую панель с инструкциями и блоком обращения в поддержку.
  */
 export default function Create() {
+    const [activeTab, setActiveTab] = useState<TabKey>('general');
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         description: '',
@@ -86,6 +114,15 @@ export default function Create() {
         });
     };
 
+    const errorsByTab: Record<TabKey, string[]> = {
+        general: ['name', 'description', 'style', 'brand_name'],
+        contacts: ['phone', 'social'],
+        behavior: ['fallback', 'welcome_message', 'system', 'actions'],
+    };
+
+    const tabHasError = (tab: TabKey) =>
+        errorsByTab[tab].some((field) => Boolean((errors as Record<string, string>)[field]));
+
     return (
         <AuthenticatedLayout
         >
@@ -110,222 +147,277 @@ export default function Create() {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        {/* Форма */}
-                        <form onSubmit={submit} className="space-y-6 lg:col-span-2">
-                            <FormSection
-                                title="Основная информация"
-                                description="Имя ассистента и описание компании, которое задаёт контекст для ответов."
-                            >
-                                <div>
-                                    <InputLabel htmlFor="name" value="Имя ассистента" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <TextInput
-                                        id="name"
-                                        type="text"
-                                        name="name"
-                                        value={data.name}
-                                        className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                        isFocused={true}
-                                        onChange={(e) => setData('name', e.target.value)}
-                                        required
-                                    />
-                                    <InputError message={errors.name} className="mt-2" />
-                                </div>
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+                        {/* Форма и Табы */}
+                        <div className="lg:col-span-3">
+                            <form onSubmit={submit} className="space-y-6">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+                                    {/* Вертикальные табы */}
+                                    <nav className="md:col-span-4 lg:col-span-3">
+                                        <div className="flex gap-2 overflow-x-auto rounded-three border border-border-color-one bg-background-one p-2 shadow-sm md:flex-col md:gap-2">
+                                            {TABS.map((tab) => {
+                                                const isActive = activeTab === tab.key;
+                                                return (
+                                                    <button
+                                                        key={tab.key}
+                                                        type="button"
+                                                        onClick={() => setActiveTab(tab.key)}
+                                                        className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all duration-300 ${
+                                                            isActive
+                                                                ? 'bg-primary-color text-black-color font-bold'
+                                                                : 'text-white-color hover:bg-extra-color'
+                                                        }`}
+                                                    >
+                                                        <span className={isActive ? 'text-black-color' : 'text-primary-color'}>
+                                                            {tab.icon}
+                                                        </span>
+                                                        <span className="min-w-0 flex-1">
+                                                            <span className="block whitespace-nowrap text-[13px] uppercase tracking-wider">
+                                                                {tab.label}
+                                                            </span>
+                                                            <span className={`hidden whitespace-nowrap text-[10px] uppercase opacity-60 md:block ${isActive ? 'text-black-color' : 'text-text-secondary'}`}>
+                                                                {tab.hint}
+                                                            </span>
+                                                        </span>
+                                                        {tabHasError(tab.key) && (
+                                                            <span className={`h-2 w-2 shrink-0 rounded-full ${isActive ? 'bg-black-color' : 'bg-red-500 animate-pulse'}`} />
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </nav>
 
-                                <div>
-                                    <InputLabel htmlFor="description" value="Описание / информация о компании" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <textarea
-                                        id="description"
-                                        name="description"
-                                        value={data.description}
-                                        className={`mt-1.5 ${fieldClass}`}
-                                        rows={4}
-                                        onChange={(e) => setData('description', e.target.value)}
-                                        placeholder="Краткое описание вашей компании для контекста ассистента"
-                                    />
-                                    <InputError message={errors.description} className="mt-2" />
-                                </div>
-                            </FormSection>
-
-                            <FormSection
-                                title="Стиль и бренд"
-                                description="Как ассистент общается и от чьего имени представляется пользователям."
-                            >
-                                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                    <div>
-                                        <InputLabel htmlFor="style" value="Стиль общения" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                        <Select
-                                            id="style"
-                                            name="style"
-                                            value={data.style}
-                                            onChange={(e) => setData('style', e.target.value)}
-                                        >
-                                            <option value="business" className="bg-background-one">Деловой</option>
-                                            <option value="commercial" className="bg-background-one">Коммерческий</option>
-                                            <option value="rude" className="bg-background-one">Грубый</option>
-                                            <option value="positive" className="bg-background-one">Позитивный</option>
-                                        </Select>
-                                        <InputError message={errors.style} className="mt-2" />
-                                    </div>
-
-                                    <div>
-                                        <InputLabel htmlFor="brand_name" value="Имя бренда" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                        <TextInput
-                                            id="brand_name"
-                                            type="text"
-                                            name="brand_name"
-                                            value={data.brand_name}
-                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                            onChange={(e) => setData('brand_name', e.target.value)}
-                                        />
-                                        <InputError message={errors.brand_name} className="mt-2" />
-                                    </div>
-                                </div>
-                            </FormSection>
-
-                            <FormSection
-                                title="Контакты"
-                                description="Контактные данные, которые ассистент сможет предложить клиентам."
-                            >
-                                <div>
-                                    <InputLabel htmlFor="phone" value="Номер телефона" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <TextInput
-                                        id="phone"
-                                        type="text"
-                                        name="phone"
-                                        value={data.phone}
-                                        className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                        onChange={(e) => setData('phone', e.target.value)}
-                                        placeholder="+7 (___) ___-__-__"
-                                    />
-                                    <InputError message={errors.phone} className="mt-2" />
-                                </div>
-
-                                <div>
-                                    <InputLabel value="Социальные сети" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <div className="mt-1.5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                        <TextInput
-                                            type="text"
-                                            value={data.social.telegram}
-                                            className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                            onChange={(e) => handleSocialChange('telegram', e.target.value)}
-                                            placeholder="Telegram: @username"
-                                        />
-                                        <TextInput
-                                            type="text"
-                                            value={data.social.vk}
-                                            className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                            onChange={(e) => handleSocialChange('vk', e.target.value)}
-                                            placeholder="VK: vk.com/id"
-                                        />
-                                    </div>
-                                    <InputError message={errors.social} className="mt-2" />
-                                </div>
-                            </FormSection>
-
-                            <FormSection
-                                title="Поведение ассистента"
-                                description="Тонкая настройка ответов: приветственное сообщение, запасной ответ и системная инструкция."
-                            >
-                                <div>
-                                    <InputLabel htmlFor="welcome_message" value="Приветственное сообщение" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <textarea
-                                        id="welcome_message"
-                                        name="welcome_message"
-                                        value={data.welcome_message}
-                                        className={`mt-1.5 ${fieldClass}`}
-                                        rows={3}
-                                        onChange={(e) => setData('welcome_message', e.target.value)}
-                                        placeholder="Это сообщение будет первым в каждом чате"
-                                    />
-                                    <InputError message={errors.welcome_message} className="mt-2" />
-                                </div>
-
-                                <div>
-                                    <InputLabel value="Кнопки быстрого ответа (Actions)" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <div className="mt-2 space-y-3">
-                                        {data.actions.map((action, index) => (
-                                            <div key={index} className="flex items-center gap-2">
-                                                <TextInput
-                                                    value={action}
-                                                    onChange={(e) => {
-                                                        const newActions = [...data.actions];
-                                                        newActions[index] = e.target.value;
-                                                        setData('actions', newActions);
-                                                    }}
-                                                    className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
-                                                    placeholder="Например: Какое гбо устанавливаете?"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const newActions = data.actions.filter((_, i) => i !== index);
-                                                        setData('actions', newActions);
-                                                    }}
-                                                    className="text-red-500 hover:text-red-400 transition-colors p-2"
+                                    {/* Контент таба */}
+                                    <div className="md:col-span-8 lg:col-span-9">
+                                        {activeTab === 'general' && (
+                                            <div className="space-y-6">
+                                                <FormSection
+                                                    title="Основная информация"
+                                                    description="Имя ассистента и описание компании, которое задаёт контекст для ответов."
                                                 >
-                                                    <Trash2 size={20} />
-                                                </button>
+                                                    <div>
+                                                        <InputLabel htmlFor="name" value="Имя ассистента" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <TextInput
+                                                            id="name"
+                                                            type="text"
+                                                            name="name"
+                                                            value={data.name}
+                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                            isFocused={true}
+                                                            onChange={(e) => setData('name', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={errors.name} className="mt-2" />
+                                                    </div>
+
+                                                    <div>
+                                                        <InputLabel htmlFor="description" value="Описание / информация о компании" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <textarea
+                                                            id="description"
+                                                            name="description"
+                                                            value={data.description}
+                                                            className={`mt-1.5 ${fieldClass}`}
+                                                            rows={4}
+                                                            onChange={(e) => setData('description', e.target.value)}
+                                                            placeholder="Краткое описание вашей компании для контекста ассистента"
+                                                        />
+                                                        <InputError message={errors.description} className="mt-2" />
+                                                    </div>
+                                                </FormSection>
+
+                                                <FormSection
+                                                    title="Стиль и бренд"
+                                                    description="Как ассистент общается и от чьего имени представляется пользователям."
+                                                >
+                                                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                                                        <div>
+                                                            <InputLabel htmlFor="style" value="Стиль общения" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                            <Select
+                                                                id="style"
+                                                                name="style"
+                                                                value={data.style}
+                                                                onChange={(e) => setData('style', e.target.value)}
+                                                            >
+                                                                <option value="business" className="bg-background-one">Деловой</option>
+                                                                <option value="commercial" className="bg-background-one">Коммерческий</option>
+                                                                <option value="rude" className="bg-background-one">Грубый</option>
+                                                                <option value="positive" className="bg-background-one">Позитивный</option>
+                                                            </Select>
+                                                            <InputError message={errors.style} className="mt-2" />
+                                                        </div>
+
+                                                        <div>
+                                                            <InputLabel htmlFor="brand_name" value="Имя бренда" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                            <TextInput
+                                                                id="brand_name"
+                                                                type="text"
+                                                                name="brand_name"
+                                                                value={data.brand_name}
+                                                                className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                onChange={(e) => setData('brand_name', e.target.value)}
+                                                            />
+                                                            <InputError message={errors.brand_name} className="mt-2" />
+                                                        </div>
+                                                    </div>
+                                                </FormSection>
                                             </div>
-                                        ))}
-                                        <button
-                                            type="button"
-                                            onClick={() => setData('actions', [...data.actions, ''])}
-                                            className="theme-button style-2 !h-[44px] w-full"
-                                        >
-                                            <Plus className="h-4 w-4 mr-2" />
-                                            <span data-text="Добавить кнопку">Добавить кнопку</span>
-                                        </button>
+                                        )}
+
+                                        {activeTab === 'contacts' && (
+                                            <div className="space-y-6">
+                                                <FormSection
+                                                    title="Контакты"
+                                                    description="Контактные данные, которые ассистент сможет предложить клиентам."
+                                                >
+                                                    <div>
+                                                        <InputLabel htmlFor="phone" value="Номер телефона" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <TextInput
+                                                            id="phone"
+                                                            type="text"
+                                                            name="phone"
+                                                            value={data.phone}
+                                                            className="mt-1.5 block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                            onChange={(e) => setData('phone', e.target.value)}
+                                                            placeholder="+7 (___) ___-__-__"
+                                                        />
+                                                        <InputError message={errors.phone} className="mt-2" />
+                                                    </div>
+
+                                                    <div>
+                                                        <InputLabel value="Социальные сети" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <div className="mt-1.5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                                            <TextInput
+                                                                type="text"
+                                                                value={data.social.telegram}
+                                                                className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                onChange={(e) => handleSocialChange('telegram', e.target.value)}
+                                                                placeholder="Telegram: @username"
+                                                            />
+                                                            <TextInput
+                                                                type="text"
+                                                                value={data.social.vk}
+                                                                className="block w-full bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                onChange={(e) => handleSocialChange('vk', e.target.value)}
+                                                                placeholder="VK: vk.com/id"
+                                                            />
+                                                        </div>
+                                                        <InputError message={errors.social} className="mt-2" />
+                                                    </div>
+                                                </FormSection>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'behavior' && (
+                                            <div className="space-y-6">
+                                                <FormSection
+                                                    title="Поведение ассистента"
+                                                    description="Тонкая настройка ответов: приветственное сообщение, запасной ответ и системная инструкция."
+                                                >
+                                                    <div>
+                                                        <InputLabel htmlFor="welcome_message" value="Приветственное сообщение" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <textarea
+                                                            id="welcome_message"
+                                                            name="welcome_message"
+                                                            value={data.welcome_message}
+                                                            className={`mt-1.5 ${fieldClass}`}
+                                                            rows={3}
+                                                            onChange={(e) => setData('welcome_message', e.target.value)}
+                                                            placeholder="Это сообщение будет первым в каждом чате"
+                                                        />
+                                                        <InputError message={errors.welcome_message} className="mt-2" />
+                                                    </div>
+
+                                                    <div>
+                                                        <InputLabel value="Кнопки быстрого ответа (Actions)" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <div className="mt-2 space-y-3">
+                                                            {data.actions.map((action, index) => (
+                                                                <div key={index} className="flex items-center gap-2">
+                                                                    <TextInput
+                                                                        value={action}
+                                                                        onChange={(e) => {
+                                                                            const newActions = [...data.actions];
+                                                                            newActions[index] = e.target.value;
+                                                                            setData('actions', newActions);
+                                                                        }}
+                                                                        className="flex-grow bg-extra-color border-border-color-one text-white-color rounded-2xl px-4 py-3"
+                                                                        placeholder="Например: Какое гбо устанавливаете?"
+                                                                    />
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            const newActions = data.actions.filter((_, i) => i !== index);
+                                                                            setData('actions', newActions);
+                                                                        }}
+                                                                        className="text-red-500 hover:text-red-400 transition-colors p-2"
+                                                                    >
+                                                                        <Trash2 size={20} />
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setData('actions', [...data.actions, ''])}
+                                                                className="theme-button style-2 !h-[44px] w-full"
+                                                            >
+                                                                <Plus className="h-4 w-4 mr-2" />
+                                                                <span data-text="Добавить кнопку">Добавить кнопку</span>
+                                                            </button>
+                                                        </div>
+                                                        <InputError message={errors.actions} className="mt-2" />
+                                                    </div>
+
+                                                    <div>
+                                                        <InputLabel htmlFor="fallback" value="Сообщение при отсутствии ответа (Fallback)" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <textarea
+                                                            id="fallback"
+                                                            name="fallback"
+                                                            value={data.fallback}
+                                                            className={`mt-1.5 ${fieldClass}`}
+                                                            rows={3}
+                                                            onChange={(e) => setData('fallback', e.target.value)}
+                                                            placeholder="Что ответить, если ассистент не знает ответа?"
+                                                        />
+                                                        <InputError message={errors.fallback} className="mt-2" />
+                                                    </div>
+
+                                                    <div>
+                                                        <InputLabel htmlFor="system" value="Системный промпт" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
+                                                        <textarea
+                                                            id="system"
+                                                            name="system"
+                                                            value={data.system}
+                                                            className={`mt-1.5 ${fieldClass}`}
+                                                            rows={5}
+                                                            onChange={(e) => setData('system', e.target.value)}
+                                                            placeholder="Системная инструкция для ассистента. Ассистент отвечает только по базе знаний."
+                                                        />
+                                                        <p className="mt-1.5 text-xs leading-relaxed text-text-secondary">
+                                                            Системный промпт задаёт поведение ассистента. Ассистент отвечает на вопросы строго по базе знаний (Qdrant), ничего лишнего.
+                                                        </p>
+                                                        <InputError message={errors.system} className="mt-2" />
+                                                    </div>
+                                                </FormSection>
+                                            </div>
+                                        )}
                                     </div>
-                                    <InputError message={errors.actions} className="mt-2" />
                                 </div>
 
-                                <div>
-                                    <InputLabel htmlFor="fallback" value="Сообщение при отсутствии ответа (Fallback)" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <textarea
-                                        id="fallback"
-                                        name="fallback"
-                                        value={data.fallback}
-                                        className={`mt-1.5 ${fieldClass}`}
-                                        rows={3}
-                                        onChange={(e) => setData('fallback', e.target.value)}
-                                        placeholder="Что ответить, если ассистент не знает ответа?"
-                                    />
-                                    <InputError message={errors.fallback} className="mt-2" />
+                                <div className="flex items-center justify-end gap-4">
+                                    <Link
+                                        href={route('assistants.index')}
+                                        className="text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors"
+                                    >
+                                        Отмена
+                                    </Link>
+                                    <button disabled={processing} className="theme-button style-1 !h-[52px] min-w-[200px]">
+                                        <span data-text={processing ? 'Создание...' : 'Создать ассистента'}>
+                                            {processing ? 'Создание...' : 'Создать ассистента'}
+                                        </span>
+                                    </button>
                                 </div>
-
-                                <div>
-                                    <InputLabel htmlFor="system" value="Системный промпт" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                    <textarea
-                                        id="system"
-                                        name="system"
-                                        value={data.system}
-                                        className={`mt-1.5 ${fieldClass}`}
-                                        rows={5}
-                                        onChange={(e) => setData('system', e.target.value)}
-                                        placeholder="Системная инструкция для ассистента. Ассистент отвечает только по базе знаний."
-                                    />
-                                    <p className="mt-1.5 text-xs leading-relaxed text-text-secondary">
-                                        Системный промпт задаёт поведение ассистента. Ассистент отвечает на вопросы строго по базе знаний (Qdrant), ничего лишнего.
-                                    </p>
-                                    <InputError message={errors.system} className="mt-2" />
-                                </div>
-                            </FormSection>
-
-                            <div className="flex items-center justify-end gap-4">
-                                <Link
-                                    href={route('assistants.index')}
-                                    className="text-sm font-bold uppercase tracking-widest text-text-secondary hover:text-white-color transition-colors"
-                                >
-                                    Отмена
-                                </Link>
-                                <button disabled={processing} className="theme-button style-1 !h-[52px] min-w-[200px]">
-                                    <span data-text={processing ? 'Создание...' : 'Создать ассистента'}>
-                                        {processing ? 'Создание...' : 'Создать ассистента'}
-                                    </span>
-                                </button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
 
                         {/* Сайдбар с инструкциями */}
                         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
