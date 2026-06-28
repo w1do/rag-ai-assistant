@@ -141,6 +141,131 @@
                 }
             }
         },
+        "/api/v1/assistants/search": {
+            "get": {
+                "tags": [
+                    "Assistant"
+                ],
+                "summary": "Поиск ассистентов",
+                "description": "Позволяет искать ассистентов по ID, имени, слагу и статусу с поддержкой сортировки и пагинации.",
+                "operationId": "searchAssistants",
+                "parameters": [
+                    {
+                        "name": "filter[id]",
+                        "in": "query",
+                        "description": "Фильтр по ID ассистента",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filter[name]",
+                        "in": "query",
+                        "description": "Фильтр по имени (частичное совпадение)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[slug]",
+                        "in": "query",
+                        "description": "Фильтр по слагу (точное совпадение)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[status]",
+                        "in": "query",
+                        "description": "Фильтр по статусу",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Сортировка (например, -created_at, name)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Номер страницы",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список ассистентов",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AssistantResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "to": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/dashboard": {
             "get": {
                 "tags": [
@@ -548,6 +673,9 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "status": {
+                        "type": "string"
+                    },
                     "brand_name": {
                         "type": "string",
                         "nullable": true
@@ -583,6 +711,10 @@
         {
             "name": "Обучение ассистента на JSON",
             "description": "Обучение ассистента на JSON"
+        },
+        {
+            "name": "Assistant",
+            "description": "Assistant"
         },
         {
             "name": "Dashboard",
