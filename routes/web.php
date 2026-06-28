@@ -14,7 +14,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::prefix('cabinet')->group(function () {
+Route::prefix('/')->group(function () {
     Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
     Route::middleware(['auth', 'verified'])->group(function () {
