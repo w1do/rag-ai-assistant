@@ -111,14 +111,17 @@ export default function Tariffs() {
                             return (
                                 <div
                                     key={tariff.name}
-                                    className={`relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md ${
+                                    className={`group relative flex flex-col rounded-[20px] border bg-white p-7 shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg overflow-hidden ${
                                         tariff.highlighted
                                             ? 'border-indigo-500 ring-1 ring-indigo-500'
                                             : 'border-gray-200 hover:border-gray-300'
                                     }`}
                                 >
+                                    {/* Hover Gradient Background (3 colors as per cards.md) */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />
+                                    <div className="relative z-10 flex flex-col h-full">
                                     {tariff.highlighted && (
-                                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white">
+                                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white z-20">
                                             Популярный
                                         </span>
                                     )}
@@ -149,7 +152,7 @@ export default function Tariffs() {
                                         </span>
                                     </div>
 
-                                    <ul className="mt-6 space-y-3">
+                                    <ul className="mt-6 space-y-3 flex-1">
                                         {tariff.features.map((feature) => (
                                             <li
                                                 key={feature}
@@ -174,6 +177,7 @@ export default function Tariffs() {
                                     >
                                         Выбрать тариф
                                     </button>
+                                    </div>
                                 </div>
                             );
                         })}

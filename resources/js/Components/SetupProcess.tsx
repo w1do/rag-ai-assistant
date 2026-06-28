@@ -39,14 +39,14 @@ export default function SetupProcess() {
     ];
 
     return (
-        <section id="setup-process" className="py-24 bg-white">
+        <section id="setup-process" className="py-24 bg-background-dark">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Как запустить своего ассистента
+                    <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                        Deployment <span className="text-secondary">Pipeline</span>
                     </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Всего 4 простых шага отделяют вас от умного чат-бота на вашем сайте
+                    <p className="mt-4 text-lg text-text-secondary-dark">
+                        Four industrial phases to initialize your custom RAG orchestration.
                     </p>
                 </div>
 
@@ -56,25 +56,23 @@ export default function SetupProcess() {
                         return (
                             <div
                                 key={index}
-                                className="group relative flex flex-col items-center text-center rounded-3xl bg-white p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-[#F5F5F5] hover:-translate-y-1 overflow-hidden"
+                                className="group relative flex flex-col items-center text-center rounded-2xl glass p-7 border-white/5 transition-all duration-300 hover:scale-[1.02] overflow-hidden"
                             >
-                                {/* Hover Gradient Background (3 colors as per cards.md) */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 gold-gradient" />
                                 
-                                <div className="relative z-10 flex flex-col items-center">
+                                <div className="relative z-10 flex flex-col items-center w-full">
                                     <div className="relative mb-6">
-                                        {/* Number Badge */}
-                                        <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-md">
+                                        <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full gold-gradient text-[10px] font-bold text-background-dark shadow-md">
                                             {index + 1}
                                         </div>
                                         
-                                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl glass text-secondary border-white/10 group-hover:gold-gradient group-hover:text-background-dark transition-all">
                                             <Icon className="h-8 w-8" />
                                         </div>
                                     </div>
 
-                                    <h3 className="text-lg font-bold text-gray-900 mb-3">{step.title}</h3>
-                                    <p className="text-gray-500 text-sm leading-relaxed">
+                                    <h3 className="text-lg font-bold text-text-primary-dark mb-3">{step.title}</h3>
+                                    <p className="text-text-secondary-dark text-sm leading-relaxed">
                                         {step.description}
                                     </p>
                                 </div>

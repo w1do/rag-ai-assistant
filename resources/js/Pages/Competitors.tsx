@@ -21,7 +21,7 @@ export default function Competitors() {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
+                    <div className="flex flex-col items-center justify-center rounded-[20px] border border-gray-200 bg-white px-7 py-16 text-center shadow-md">
                         <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-inset ring-indigo-100">
                             <Users className="h-8 w-8" strokeWidth={2} />
                         </span>

@@ -63,14 +63,14 @@ export default function FAQ() {
     };
 
     return (
-        <section id="faq" className="py-24 bg-white">
+        <section id="faq" className="py-24 bg-background-dark">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Часто задаваемые вопросы
+                    <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                        Operational <span className="text-secondary">Intelligence</span> FAQ
                     </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Узнайте больше о возможностях нашей платформы и о том, как она поможет вашему бизнесу
+                    <p className="mt-4 text-lg text-text-secondary-dark">
+                        Deep dive into the neural orchestration and industrial protocols.
                     </p>
                 </div>
                 
@@ -78,28 +78,28 @@ export default function FAQ() {
                     {faqs.map((faq, index) => (
                         <div 
                             key={index}
-                            className="border border-gray-100 rounded-2xl overflow-hidden transition-all duration-200"
+                            className="glass rounded-2xl overflow-hidden transition-all duration-200 border-white/5 hover:border-white/10"
                         >
                             <button
                                 onClick={() => toggle(index)}
-                                className="w-full flex items-center justify-between p-6 text-left bg-white hover:bg-gray-50 transition-colors focus:outline-none"
+                                className="w-full flex items-center justify-between p-7 text-left bg-transparent hover:bg-white/5 transition-colors focus:outline-none"
                             >
-                                <span className="text-lg font-semibold text-gray-900 pr-8">
+                                <span className="text-lg font-bold text-text-primary-dark pr-8">
                                     {faq.question}
                                 </span>
                                 {openIndex === index ? (
-                                    <ChevronUp className="h-5 w-5 text-blue-600 shrink-0" />
+                                    <ChevronUp className="h-5 w-5 text-secondary shrink-0" />
                                 ) : (
-                                    <ChevronDown className="h-5 w-5 text-gray-400 shrink-0" />
+                                    <ChevronDown className="h-5 w-5 text-text-secondary-dark shrink-0" />
                                 )}
                             </button>
                             
                             <div 
-                                className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${
-                                    openIndex === index ? 'max-h-96 pb-6' : 'max-h-0'
+                                className={`px-7 overflow-hidden transition-all duration-300 ease-in-out ${
+                                    openIndex === index ? 'max-h-96 pb-7' : 'max-h-0'
                                 }`}
                             >
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-text-secondary-dark leading-relaxed">
                                     {faq.answer}
                                 </p>
                             </div>

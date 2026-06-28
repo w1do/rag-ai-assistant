@@ -11,9 +11,18 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use OpenApi\Attributes as OA;
 
 class ConnectorController extends Controller
 {
+    #[OA\Get(
+        path: '/connectors',
+        summary: 'Список доступных коннекторов',
+        tags: ['Connectors'],
+        responses: [
+            new OA\Response(response: 200, description: 'Успешный ответ'),
+        ]
+    )]
     public function index(
         GetConnectorsListQuery $connectorsQuery,
         GetUserAssistantsQuery $assistantsQuery
@@ -24,6 +33,23 @@ class ConnectorController extends Controller
         ]);
     }
 
+    #[OA\Post(
+        path: '/connectors/attach-assistant',
+        summary: 'Подключение ассистента к коннектору',
+        tags: ['Connectors'],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                required: ['connector_id', 'assistant_id'],
+                properties: [
+                    new OA\Property(property: 'connector_id', type: 'integer'),
+                    new OA\Property(property: 'assistant_id', type: 'integer'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 302, description: 'Перенаправление обратно'),
+        ]
+    )]
     public function attachAssistant(
         Request $request,
         AttachAssistantHandler $handler

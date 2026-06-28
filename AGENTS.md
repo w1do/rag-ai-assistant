@@ -39,7 +39,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - use documenation for all files, use markdown use skill
 
 ## Design System UI/UX
-- strict design system use folder `design_system/`
+- strict design system use folder `design_system/` and `design_system/DESIGN.md` and Layouts 
 
 ## API Services integrations
 - **polza-ai**: use folder and reference `polza-ai/` read examples

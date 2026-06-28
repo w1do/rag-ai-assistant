@@ -130,9 +130,11 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                             return (
                                 <div
                                     key={card.label}
-                                    className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                    className="group relative overflow-hidden rounded-[20px] border border-gray-200 bg-white p-7 shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
                                 >
-                                    <div className="flex items-start justify-between">
+                                    {/* Hover Gradient Background (3 colors as per cards.md) */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />
+                                    <div className="relative z-10 flex items-start justify-between">
                                         <div>
                                             <p className="text-sm font-medium text-gray-500">
                                                 {card.label}
@@ -153,7 +155,7 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                     </div>
 
                     {/* Последние ассистенты */}
-                    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                    <div className="overflow-hidden rounded-[20px] border border-gray-200 bg-white shadow-md">
                         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
                             <div className="flex items-center gap-2">
                                 <Sparkles className="h-5 w-5 text-indigo-500" strokeWidth={2} />

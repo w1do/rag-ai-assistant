@@ -35,47 +35,47 @@ export default function DataSync() {
     ];
 
     return (
-        <section id="data-sync" className="py-24 bg-white relative overflow-hidden">
+        <section id="data-sync" className="py-24 bg-background-dark relative overflow-hidden">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50" />
-            <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-50" />
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-secondary/5 rounded-full blur-[120px] opacity-50 animate-pulse" />
+            <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full blur-[120px] opacity-50 animate-float" />
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-6">
-                            Интеграция и синхронизация ваших данных
+                        <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl mb-6">
+                            Neural <span className="text-secondary">Orchestration</span> & Sync
                         </h2>
-                        <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                            Не тратьте время на ручное копирование информации. BotSync подключается напрямую к вашим рабочим инструментам и автоматически поддерживает базу знаний в актуальном состоянии.
+                        <p className="text-lg text-text-secondary-dark mb-8 leading-relaxed">
+                            Seamlessly integrate your industrial data stream. NeuralFlow connects directly to your ecosystem, maintaining a real-time, high-precision knowledge vault.
                         </p>
                         
                         <div className="space-y-6 mb-10">
                             <div className="flex items-start gap-4">
-                                <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+                                <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full glass text-success border-white/10 shadow-lg shadow-success/10">
                                     <ShieldCheck className="h-4 w-4" />
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-gray-900">Безопасность корпоративного уровня</h4>
-                                    <p className="text-sm text-gray-500">Данные передаются по зашифрованным каналам и хранятся в изолированных векторах.</p>
+                                    <h4 className="font-bold text-text-primary-dark">Enterprise-Grade Security</h4>
+                                    <p className="text-sm text-text-secondary-dark">Data is processed through encrypted industrial tunnels and stored in isolated vectors.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                                <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full glass text-secondary border-white/10 shadow-lg shadow-secondary/10">
                                     <Database className="h-4 w-4" />
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-gray-900">Поддержка On-premise</h4>
-                                    <p className="text-sm text-gray-500">Возможность подключения к системам внутри вашего контура (VPN/White-label).</p>
+                                    <h4 className="font-bold text-text-primary-dark">On-premise Protocols</h4>
+                                    <p className="text-sm text-text-secondary-dark">Full support for internal network deployments (VPN/White-label connectivity).</p>
                                 </div>
                             </div>
                         </div>
 
                         <Link
                             href={route('register')}
-                            className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 transition-all active:scale-95"
+                            className="inline-flex items-center gap-2 rounded-xl gold-gradient px-8 py-4 text-sm font-bold text-background-dark shadow-xl shadow-secondary/10 hover:scale-105 transition-all active:scale-95"
                         >
-                            Настроить синхронизацию <ArrowRight className="h-4 w-4" />
+                            Initialise Synchronization <ArrowRight className="h-4 w-4" />
                         </Link>
                     </div>
 
@@ -85,15 +85,18 @@ export default function DataSync() {
                             return (
                                 <div 
                                     key={idx}
-                                    className="p-6 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-200 hover:bg-white hover:shadow-xl hover:shadow-blue-50 transition-all group"
+                                    className="relative p-7 rounded-2xl glass border-white/5 hover:border-white/10 hover:scale-[1.02] transition-all duration-300 group overflow-hidden"
                                 >
-                                    <div className={`h-12 w-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 transition-colors group-hover:bg-blue-600 group-hover:text-white`}>
-                                        <Icon className="h-6 w-6" />
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 gold-gradient" />
+                                    <div className="relative z-10">
+                                        <div className={`h-12 w-12 rounded-xl glass border-white/10 flex items-center justify-center mb-4 transition-all group-hover:gold-gradient group-hover:text-background-dark`}>
+                                            <Icon className="h-6 w-6" />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-text-primary-dark mb-2">{feature.title}</h3>
+                                        <p className="text-sm text-text-secondary-dark leading-relaxed">
+                                            {feature.description}
+                                        </p>
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
-                                    <p className="text-sm text-gray-500 leading-relaxed">
-                                        {feature.description}
-                                    </p>
                                 </div>
                             );
                         })}

@@ -1,6 +1,6 @@
 import { PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import * as Lucide from 'lucide-react';
+import { Bot, Briefcase, MessageSquare, Users, Zap, Search, ArrowRight, Filter } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 
 interface Assistant {
@@ -33,11 +33,11 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
 
     const getCategoryIcon = (category: string) => {
         switch (category) {
-            case 'ИИ чаты': return Lucide.Bot;
-            case 'Общение': return Lucide.Users;
-            case 'Бизнес': return Lucide.Briefcase;
-            case 'RAG': return Lucide.Zap;
-            default: return Lucide.MessageSquare;
+            case 'ИИ чаты': return Bot;
+            case 'Общение': return Users;
+            case 'Бизнес': return Briefcase;
+            case 'RAG': return Zap;
+            default: return MessageSquare;
         }
     };
 
@@ -55,7 +55,7 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
                     <div className="flex items-center gap-2">
                         <Link href="/" className="flex items-center gap-2">
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
-                                <Lucide.MessageSquare className="h-6 w-6" />
+                                <MessageSquare className="h-6 w-6" />
                             </div>
                             <span className="text-xl font-bold tracking-tight text-gray-900">BotSync</span>
                         </Link>
@@ -120,7 +120,7 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
                     </div>
 
                     <div className="relative max-w-md w-full">
-                        <Lucide.Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
                             placeholder="Поиск ассистентов..."
@@ -139,28 +139,32 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
                             return (
                                 <div
                                     key={assistant.id}
-                                    className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-sm border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-1"
+                                    className="group relative flex flex-col rounded-[20px] bg-white p-7 shadow-md border border-gray-100 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg overflow-hidden"
                                 >
-                                    <div className="mb-6 flex items-center justify-between">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                            <IconComponent className="h-6 w-6" />
+                                    {/* Hover Gradient Background (3 colors as per cards.md) */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />
+                                    <div className="relative z-10 flex flex-col h-full">
+                                        <div className="mb-6 flex items-center justify-between">
+                                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                                <IconComponent className="h-6 w-6" />
+                                            </div>
+                                            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
+                                                {assistant.category}
+                                            </span>
                                         </div>
-                                        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
-                                            {assistant.category}
-                                        </span>
-                                    </div>
-                                    <h3 className="mb-2 text-xl font-bold text-gray-900">{assistant.name}</h3>
-                                    <p className="mb-8 text-sm text-gray-600 line-clamp-3 flex-1">
-                                        {assistant.description || 'Интеллектуальный помощник, готовый ответить на ваши вопросы и помочь в решении повседневных задач.'}
-                                    </p>
-                                    <div className="mt-auto">
-                                        <Link
-                                            href={route('share-chat.show', assistant.id)}
-                                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gray-50 py-3 text-sm font-bold text-gray-900 transition-all group-hover:bg-blue-600 group-hover:text-white"
-                                        >
-                                            Открыть чат
-                                            <Lucide.ArrowRight className="h-4 w-4" />
-                                        </Link>
+                                        <h3 className="mb-2 text-xl font-bold text-gray-900">{assistant.name}</h3>
+                                        <p className="mb-8 text-sm text-gray-600 line-clamp-3 flex-1">
+                                            {assistant.description || 'Интеллектуальный помощник, готовый ответить на ваши вопросы и помочь в решении повседневных задач.'}
+                                        </p>
+                                        <div className="mt-auto">
+                                            <Link
+                                                href={route('share-chat.show', assistant.id)}
+                                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gray-50 py-3 text-sm font-bold text-gray-900 transition-all group-hover:bg-blue-600 group-hover:text-white"
+                                            >
+                                                Открыть чат
+                                                <ArrowRight className="h-4 w-4" />
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -169,7 +173,7 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
                 ) : (
                     <div className="py-24 text-center">
                         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                            <Lucide.Filter className="h-8 w-8" />
+                            <Filter className="h-8 w-8" />
                         </div>
                         <h3 className="text-lg font-bold text-gray-900">Ничего не найдено</h3>
                         <p className="text-gray-500">Попробуйте изменить параметры фильтрации или поисковый запрос.</p>

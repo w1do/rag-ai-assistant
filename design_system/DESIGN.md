@@ -1,76 +1,49 @@
-# ИНСТРУКЦИЯ ДЛЯ АГЕНТА ПО НАСТРОЙКЕ ИНТЕРФЕЙСА
-- [Инструкция по интерфейсу](./interface.md)
-- 
-### Принципы:
-- Соблюдать единообразие всех элементов
-- Использовать компонентный подход
-- Обеспечивать адаптивность под все устройства
-- Поддерживать доступность (accessibility)
+# Design DNA: ManuFlex — Design System
 
-### Принципы:
-- Соблюдать единообразие всех элементов
-- Использовать компонентный подход
-- Обеспечивать адаптивность под все устройства
-- Поддерживать доступность (accessibility)
+## Overview
+ManuFlex is a bold, industrial-grade design system built for advanced manufacturing and automotive sectors. It combines a cinematic aesthetic with sharp typographic contrast, projecting authority, precision, and technological sophistication.
 
-## Основные цвета
-- [Инструкция по цветам](./colors.md)
+## Design Philosophy
+- **Dark & Cinematic:** Predominantly dark aesthetic using deep navy-charcoal (#0C1019) instead of pure black.
+- **Editorial Contrast:** Pairing the authoritative `DM Serif Display` for headings with the clean `DM Sans` for body text.
+- **Industrial Precision:** Generous spacing, large rounded corners (up to 20px), and subtle glassmorphic overlays.
 
-## Основные шрифты
-- [Инструкции по шрифтам](./fonts.md)
+## Documentation Modules
+- 🎨 **[Color System](./colors.md):** Light & Dark mode palettes.
+- 🔡 **[Typography](./fonts.md):** DM Serif Display & DM Sans scales.
+- 📐 **[Spacing & Sizes](./sizes.md):** Spacing, border radius, and shadows.
+- 🔘 **[Buttons](./buttons.md):** Primary, secondary, and ghost styles.
+- 🗂️ **[Cards](./cards.md):** Card patterns, padding, and layout behavior.
+- ⌨️ **[Inputs](./inputs.md):** Rounded text fields and form elements.
+- 🏷️ **[Badges & Tags](./badges.md):** Pill-shaped indicators and overlays.
+- 🧱 **[Components](./components.md):** General principles, architecture, and shared assets (avatars, icons).
+- ✨ **[Animations](./animations.md):** Pulsation effects, entry animations, and global timing.
+- 🌈 **[Gradients & Overlays](./gradients.md):** Brand gradients, glassmorphism, and cinematic overlays.
+- 🖱️ **[Hover Effects](./hover_effects.md):** Card interactions, link states, and interactive feedback.
+- ⚡ **[Animated Buttons](./buttons_animated.md):** Specific Tailwind motion patterns for buttons.
+- 🧭 **[Navigation](./navigation.md):** Header, footer, and menu behavior.
+- 📱 **[Responsive](./responsive.md):** Breakpoints and scaling strategy.
+- 🏗️ **[Interface & Layout](./interface.md):** Grid, margins, and composition.
+- 🏗️ **[Layouts Admin](./layouts/admin.md):** Admin Layouts
+- 🏗️ **[Layouts Frontend](./layouts/frontent.md):** Frontend Layouts
+- 🏗️ **[Components Blocks](./layouts/components/frontend_blocks.md):** Frontend components blocks
 
-## Карточки
-- [Инструкции по карточкам](./cards.md)
+## Core Principles
+1. **Consistency:** All elements must follow the specified tokens and patterns.
+2. **Authority:** Use bold serif headings to project precision and reliability.
+3. **Accessibility:** Ensure high contrast in both light and dark modes.
+4. **Responsive Integrity:** Maintain the premium feel across all device scales.
 
-## Основные размеры
-- [Инструкция по размерам](./sizes.md)
-
-## Кнопки
-- [Инструкция по кнопкам](./buttons.md)
-
-## 📋 КОНТРОЛЬНЫЙ СПИСОК ДЛЯ АГЕНТА
-
-При создании/проверке интерфейса проверять:
-
-- [ ] Все цвета соответствуют `colors.md`
-- [ ] Все шрифты и размеры из `fonts.md` и `sizes.md`
-- [ ] Карточки имеют правильные тени, обводку и hover-эффекты
-- [ ] Кнопки одного из 4 допустимых типов
-- [ ] Нет перегруженности контентом
-- [ ] Использованы бейджи для важной информации
-- [ ] Bento-карточки: изображение по центру, текст сероватый
-
----
-
-## 🚫 ЗАПРЕЩЕНО
-
-- Использовать цвета вне палитры
-- Менять размеры шрифтов/отступов произвольно
-- Создавать новые типы кнопок
-- Перегружать карточки контентом
-- Игнорировать hover/active состояния
+## Agent Checklist
+- [ ] Colors match `colors.md` for the current theme (Light/Dark).
+- [ ] Typography follows `fonts.md` (correct font family and scale).
+- [ ] Spacing and border radii match `sizes.md`.
+- [ ] Buttons use the correct variants from `buttons.md`.
+- [ ] Layout follows the 12-column grid and asymmetric patterns in `interface.md`.
+- [ ] Icons are stroke-style from the Lucide library.
 
 ---
-
-## 🔄 ПРОЦЕСС РАБОТЫ
-
-1. Получить макет/требования
-2. Проверить соответствие элементам из инструкций
-3. Реализовать с использованием компонентов
-4. Проверить по контрольному списку
-5. Передать на ревью
-
-### Для новых компонентов:
-1. Проверить, нет ли уже похожего компонента
-2. Создать папку компонента по структуре
-3. Написать компонент с типами и стилями
-4. Добавить JSDoc документацию
-5. Зарегистрировать в общем экспорте
-
----
-
-**Примечание:** Все инструкции являются обязательными к исполнению. При сомнениях — обращаться к папке (`./design_system/DESIGN.md`, и внутренним правилам).
-**UI/KITS:** вести страничку со всеми UI-компонентами и их инструкциями страница /ui-kits
+*Note: This design system is based on the ManuFlex UI Kit by dpopstudio.*
 
 
 

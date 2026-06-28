@@ -54,14 +54,14 @@ export default function UseCases() {
     ];
 
     return (
-        <section id="use-cases" className="py-24 bg-gray-50/50">
+        <section id="use-cases" className="py-24 bg-surface-dark/20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Кто использует умных ботов
+                    <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                        Industry <span className="text-secondary">Nodes</span>
                     </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Наше решение подходит для любой ниши, где важна скорость ответов и точность информации
+                    <p className="mt-4 text-lg text-text-secondary-dark">
+                        Precision-engineered AI solutions for diverse manufacturing and service sectors.
                     </p>
                 </div>
 
@@ -71,20 +71,19 @@ export default function UseCases() {
                         return (
                             <div
                                 key={index}
-                                className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-[#F5F5F5] hover:-translate-y-1 overflow-hidden"
+                                className="group relative flex flex-col rounded-2xl glass p-7 border-white/5 transition-all duration-300 hover:scale-[1.02] overflow-hidden"
                             >
-                                {/* Hover Gradient Background (3 colors as per cards.md) */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 gold-gradient" />
                                 
                                 <div className="relative z-10">
                                     <div className="flex items-center gap-4 mb-6">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-xl glass text-secondary border-white/10 group-hover:gold-gradient group-hover:text-background-dark transition-all">
                                             <Icon className="h-6 w-6" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-gray-900">{useCase.title}</h3>
+                                        <h3 className="text-xl font-bold text-text-primary-dark">{useCase.title}</h3>
                                     </div>
 
-                                    <p className="text-gray-600 text-sm leading-relaxed mb-8">
+                                    <p className="text-text-secondary-dark text-sm leading-relaxed mb-8">
                                         {useCase.description}
                                     </p>
 
@@ -92,7 +91,7 @@ export default function UseCases() {
                                         {useCase.badges.map((badge) => (
                                             <span
                                                 key={badge}
-                                                className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 border border-blue-100"
+                                                className="inline-flex items-center rounded-full glass px-2.5 py-0.5 text-[10px] font-bold text-text-secondary-dark border-white/10 uppercase tracking-widest"
                                             >
                                                 {badge}
                                             </span>

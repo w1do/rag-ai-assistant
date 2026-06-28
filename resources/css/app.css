@@ -1,1 +1,76 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+  --color-background: #FAFAFA;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #111111;
+  --color-text-secondary: #5C5C5C;
+  --color-primary: #FFFFFF;
+  --color-secondary: #C8A645;
+  --color-accent: #C8A645;
+  --color-success: #34A853;
+  --color-warning: #FBBC04;
+  --color-error: #D93025;
+
+  --color-background-dark: #0C1019;
+  --color-surface-dark: #151B27;
+  --color-text-primary-dark: #F0F0F0;
+  --color-text-secondary-dark: #8A8FA0;
+
+  --radius-xl: 20px;
+
+  --animate-soft-pulse: soft-pulse 2s infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes soft-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary dark:bg-background-dark dark:text-text-primary-dark;
+  }
+}
+
+.glass {
+  background: rgba(21, 27, 39, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #F0F0F0 0%, #8A8FA0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #C8A645 0%, #E5C167 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 166, 69, 0.3);
+}

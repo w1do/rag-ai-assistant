@@ -37,66 +37,71 @@ function ConnectorCard({ connector, onConnect }: { connector: Connector; onConne
     const isSoon = connector.status === 'soon';
 
     return (
-        <div className={`flex flex-col overflow-hidden rounded-xl border p-6 shadow-sm transition-all duration-300 group ${
+        <div className={`relative flex flex-col overflow-hidden rounded-[20px] border p-7 shadow-md transition-all duration-300 group ${
             isSoon 
                 ? 'bg-gray-50 border-gray-200' 
-                : 'bg-white border-gray-200 hover:shadow-lg hover:border-transparent hover:bg-gradient-to-br hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500'
+                : 'bg-white border-gray-200 hover:scale-[1.02] hover:shadow-lg'
         }`}>
-            <div className="flex items-center gap-4">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-lg transition-colors duration-300 ${
-                    isSoon ? 'bg-gray-200 text-gray-400' : 'bg-indigo-50 text-indigo-600 group-hover:bg-white/20 group-hover:text-white'
-                }`}>
-                    <Icon className="h-6 w-6" />
-                </div>
-                <div>
-                    <h3 className={`text-lg font-semibold transition-colors duration-300 ${
-                        isSoon ? 'text-gray-400' : 'text-gray-900 group-hover:text-white'
+            {!isSoon && (
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />
+            )}
+            <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-4">
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-lg transition-colors duration-300 ${
+                        isSoon ? 'bg-gray-200 text-gray-400' : 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white'
                     }`}>
-                        {connector.name}
-                    </h3>
-                    {isSoon ? (
-                        <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-semibold text-gray-500">
-                            В разработке
-                        </span>
-                    ) : (
-                        <span className="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-semibold text-indigo-700 transition-colors duration-300 group-hover:bg-white/20 group-hover:text-white">
-                            Новое
-                        </span>
-                    )}
-                </div>
-            </div>
-            
-            <p className={`mt-4 text-sm line-clamp-2 min-h-[40px] transition-colors duration-300 ${
-                isSoon ? 'text-gray-400' : 'text-gray-500 group-hover:text-indigo-50'
-            }`}>
-                {connector.description}
-            </p>
-
-            {!isSoon && connector.assistants.length > 0 && (
-                <div className="mt-4">
-                    <p className="text-xs font-medium text-gray-400 uppercase tracking-wider transition-colors duration-300 group-hover:text-white/70">Подключенные ассистенты:</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                        {connector.assistants.map(assistant => (
-                            <span key={assistant.id} className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 transition-colors duration-300 group-hover:bg-white/20 group-hover:text-white">
-                                {assistant.name}
+                        <Icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                        <h3 className={`text-lg font-semibold transition-colors duration-300 ${
+                            isSoon ? 'text-gray-400' : 'text-gray-900'
+                        }`}>
+                            {connector.name}
+                        </h3>
+                        {isSoon ? (
+                            <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-semibold text-gray-500">
+                                В разработке
                             </span>
-                        ))}
+                        ) : (
+                            <span className="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-semibold text-indigo-700">
+                                Новое
+                            </span>
+                        )}
                     </div>
                 </div>
-            )}
+                
+                <p className={`mt-4 text-sm line-clamp-2 min-h-[40px] transition-colors duration-300 ${
+                    isSoon ? 'text-gray-400' : 'text-gray-500'
+                }`}>
+                    {connector.description}
+                </p>
 
-            <div className="mt-auto pt-6">
-                <PrimaryButton 
-                    className={`w-full justify-center transition-all duration-300 ${
-                        isSoon 
-                            ? 'bg-gray-100 text-gray-400 border-transparent shadow-none hover:bg-gray-100 cursor-not-allowed' 
-                            : 'group-hover:bg-white group-hover:text-indigo-600 group-hover:border-transparent'
-                    }`} 
-                    onClick={() => !isSoon && onConnect(connector)}
-                    disabled={isSoon}
-                >
-                    {isSoon ? 'Скоро' : 'Подключить ассистента'}
-                </PrimaryButton>
+                {!isSoon && connector.assistants.length > 0 && (
+                    <div className="mt-4">
+                        <p className="text-xs font-medium text-gray-400 uppercase tracking-wider transition-colors duration-300">Подключенные ассистенты:</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                            {connector.assistants.map(assistant => (
+                                <span key={assistant.id} className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 transition-colors duration-300">
+                                    {assistant.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="mt-auto pt-6">
+                    <PrimaryButton 
+                        className={`w-full justify-center transition-all duration-300 ${
+                            isSoon 
+                                ? 'bg-gray-100 text-gray-400 border-transparent shadow-none hover:bg-gray-100 cursor-not-allowed' 
+                                : ''
+                        }`} 
+                        onClick={() => !isSoon && onConnect(connector)}
+                        disabled={isSoon}
+                    >
+                        {isSoon ? 'Скоро' : 'Подключить ассистента'}
+                    </PrimaryButton>
+                </div>
             </div>
         </div>
     );

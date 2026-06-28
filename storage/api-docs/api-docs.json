@@ -141,10 +141,24 @@
                 }
             }
         },
+        "/dashboard": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Главная страница панели управления",
+                "operationId": "c93acf112f72d6540ff37a56d4de1919",
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ"
+                    }
+                }
+            }
+        },
         "/share-chat/{id}": {
             "get": {
                 "tags": [
-                    "Публичный чат"
+                    "Public Chat"
                 ],
                 "summary": "Публичный чат ассистента",
                 "operationId": "32f2e5abfdfd7d88a2f65d98eb482c66",
@@ -161,6 +175,66 @@
                 "responses": {
                     "200": {
                         "description": "Успешный ответ"
+                    }
+                }
+            }
+        },
+        "/share-chat/{id}/init": {
+            "get": {
+                "tags": [
+                    "Public Chat"
+                ],
+                "summary": "Инициализация публичного чата",
+                "operationId": "41c31e71fa07f22fc962ab2fa23b1b45",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Данные инициализации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "welcome_message": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "actions": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "nullable": true
+                                        },
+                                        "company_name": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "social_networks": {
+                                            "type": "object",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -212,10 +286,209 @@
                     }
                 }
             }
+        },
+        "/connectors": {
+            "get": {
+                "tags": [
+                    "Connectors"
+                ],
+                "summary": "Список доступных коннекторов",
+                "operationId": "918574df35f19f9656bfd3f1ee91bf5e",
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ"
+                    }
+                }
+            }
+        },
+        "/connectors/attach-assistant": {
+            "post": {
+                "tags": [
+                    "Connectors"
+                ],
+                "summary": "Подключение ассистента к коннектору",
+                "operationId": "d63be6ac6b0e0c2103908b308ec3c8bb",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "connector_id",
+                                    "assistant_id"
+                                ],
+                                "properties": {
+                                    "connector_id": {
+                                        "type": "integer"
+                                    },
+                                    "assistant_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Перенаправление обратно"
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "AssistantMarketplaceData": {
+                "title": "Assistant Marketplace Data",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "social": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "welcome_message": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "StoreAssistantRequest": {
+                "title": "Store Assistant Request",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "style": {
+                        "type": "string",
+                        "nullable": true,
+                        "enum": [
+                            "commercial",
+                            "business",
+                            "rude",
+                            "positive"
+                        ]
+                    },
+                    "brand_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 255
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 20
+                    },
+                    "social": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "fallback": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "welcome_message": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "actions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "system": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateAssistantRequest": {
+                "title": "Update Assistant Request",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "style": {
+                        "type": "string",
+                        "nullable": true,
+                        "enum": [
+                            "commercial",
+                            "business",
+                            "rude",
+                            "positive"
+                        ]
+                    },
+                    "brand_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 255
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "maxLength": 20
+                    },
+                    "social": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "fallback": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "welcome_message": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "actions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "nullable": true
+                    },
+                    "system": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "PublicMessageRequest": {
                 "title": "Public Message Request",
                 "required": [
@@ -238,12 +511,16 @@
             "description": "Обучение ассистента на JSON"
         },
         {
-            "name": "Публичный чат",
-            "description": "Публичный чат"
+            "name": "Dashboard",
+            "description": "Dashboard"
         },
         {
             "name": "Public Chat",
             "description": "Public Chat"
+        },
+        {
+            "name": "Connectors",
+            "description": "Connectors"
         }
     ]
 }

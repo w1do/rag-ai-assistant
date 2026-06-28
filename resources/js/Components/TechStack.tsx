@@ -67,14 +67,14 @@ export default function TechStack() {
     ];
 
     return (
-        <section id="tech-stack" className="py-24 bg-white overflow-hidden">
+        <section id="tech-stack" className="py-24 bg-background-dark overflow-hidden">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Технологии и нейросети
+                    <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                        Neural <span className="text-secondary">Core</span> Stack
                     </h2>
-                    <p className="mt-4 text-lg text-gray-600">
-                        Мы используем передовые разработки в области ИИ для создания вашего ассистента
+                    <p className="mt-4 text-lg text-text-secondary-dark">
+                        Engineered with industry-leading AI models and vector orchestration protocols.
                     </p>
                 </div>
 
@@ -107,18 +107,17 @@ export default function TechStack() {
                             const Icon = tech.icon;
                             return (
                                 <SwiperSlide key={index}>
-                                    <div className="group relative flex flex-col rounded-3xl bg-white p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-[#F5F5F5] hover:-translate-y-1 h-full overflow-hidden">
-                                        {/* Hover Gradient Background (3 colors as per cards.md) */}
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-blue-400 via-indigo-400 to-purple-400" />
+                                    <div className="group relative flex flex-col rounded-2xl glass p-7 border-white/5 transition-all duration-300 hover:scale-[1.02] h-full overflow-hidden">
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 gold-gradient" />
                                         
                                         <div className="relative z-10">
                                             <div className="flex items-center gap-4 mb-4">
-                                                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 transition-colors group-hover:bg-white group-hover:shadow-md ${tech.color}`}>
+                                                <div className={`flex h-12 w-12 items-center justify-center rounded-xl glass border-white/10 transition-all group-hover:gold-gradient group-hover:text-background-dark ${tech.color}`}>
                                                     <Icon className="h-6 w-6" />
                                                 </div>
-                                                <h3 className="text-xl font-bold text-gray-900">{tech.name}</h3>
+                                                <h3 className="text-xl font-bold text-text-primary-dark">{tech.name}</h3>
                                             </div>
-                                            <p className="text-gray-500 text-sm leading-relaxed">
+                                            <p className="text-text-secondary-dark text-sm leading-relaxed">
                                                 {tech.description}
                                             </p>
                                         </div>

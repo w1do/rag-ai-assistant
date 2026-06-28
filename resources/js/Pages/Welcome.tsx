@@ -1,14 +1,32 @@
 import { PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
-import Markdown from 'react-markdown';
-import { Check, Rocket, Calendar, Crown, MessageSquare, Mic, FileText, Globe, ArrowRight, Loader2 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import {
+    Check,
+    Rocket,
+    Calendar,
+    Crown,
+    MessageSquare,
+    Mic,
+    FileText,
+    Globe,
+    ArrowRight,
+    Loader2,
+    Menu,
+    X,
+    Zap,
+    User,
+    Bot
+} from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import FAQ from '@/Components/FAQ';
 import UseCases from '@/Components/UseCases';
 import SetupProcess from '@/Components/SetupProcess';
 import TechStack from '@/Components/TechStack';
 import DataSync from '@/Components/DataSync';
+import Header from '@/Components/Header';
+import Hero from '@/Components/Hero';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -27,7 +45,7 @@ interface Tariff {
 
 /**
  * Страница приветствия (Landing Page).
- * 
+ *
  * Содержит Hero-секцию, демо-чат, информацию о способах обучения бота,
  * тарифные планы, CTA и подвал.
  *
@@ -40,13 +58,23 @@ export default function Welcome({
 }: PageProps<{ demoWelcomeMessage?: string | null; demoActions?: string[] | null }>) {
     const [chatInput, setChatInput] = useState('');
     const [messages, setMessages] = useState<Message[]>([
-        { 
-            role: 'assistant', 
-            content: demoWelcomeMessage || 'Привет! Я ваш AI-ассистент, обученный на базе знаний этого проекта. Спросите меня о чем угодно!' 
+        {
+            role: 'assistant',
+            content: demoWelcomeMessage || 'Привет! Я ваш AI-ассистент, обученный на базе знаний этого проекта. Спросите меня о чем угодно!'
         }
     ]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const chatContainerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const scrollToBottom = (smooth = true) => {
         if (chatContainerRef.current) {
@@ -142,7 +170,7 @@ export default function Welcome({
         },
     ];
 
-    const hints = demoActions && demoActions.length > 0 
+    const hints = demoActions && demoActions.length > 0
         ? demoActions.filter(a => a.trim() !== '')
         : [
             "Как обучить бота?",
@@ -151,156 +179,103 @@ export default function Welcome({
         ];
 
     return (
-        <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-blue-100 selection:text-blue-900">
+        <div className="min-h-screen bg-background-dark text-text-primary-dark font-sans selection:bg-secondary/30 selection:text-text-primary-dark">
             <Head>
-                <title>BotSync — ИИ чат-боты для бизнеса и общения онлайн</title>
-                <meta name="description" content="Обучите своего AI-ассистента за 5 минут. Чат с ИИ, нейросеть для бизнеса, RAG-системы и умные боты для общения онлайн бесплатно на русском." />
-                <meta name="keywords" content="ии онлайн, чат ии, бот чат, искусственный интеллект онлайн, общение с ии, нейросеть чат, ии для бизнеса, rag системы, чат бот ии бесплатно" />
+                <title>NeuralFlow — Industrial RAG & AI Orchestration</title>
+                <meta name="description" content="Deploy advanced RAG pipelines and autonomous agents with industrial precision." />
             </Head>
 
-            {/* Header */}
-            <header className="fixed top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
-                <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
-                            <MessageSquare className="h-6 w-6" />
-                        </div>
-                        <span className="text-xl font-bold tracking-tight text-gray-900">BotSync</span>
-                    </div>
-                    <nav className="flex items-center gap-6">
-                        <Link
-                            href={route('chats.index')}
-                            className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
-                        >
-                            Маркетплейс чатов
-                        </Link>
-                        {auth.user ? (
-                            <Link
-                                href={route('dashboard')}
-                                className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
-                            >
-                                Панель управления
-                            </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href={route('login')}
-                                    className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
-                                >
-                                    Войти
-                                </Link>
-                                <Link
-                                    href={route('register')}
-                                    className="inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-blue-200 transition-all hover:bg-blue-700 hover:shadow-lg active:scale-95"
-                                >
-                                    Начать бесплатно
-                                </Link>
-                            </>
-                        )}
-                    </nav>
-                </div>
-            </header>
+            <Header auth={auth} />
 
-            <main className="pt-16">
-                {/* Hero Section */}
-                <section className="relative overflow-hidden py-24 sm:py-32">
-                    <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.blue.50),white)]" />
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-                        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-                            ИИ чат-боты для бизнеса: обучите своего ассистента за 5 минут
-                        </h1>
-                        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-                            Загружайте документы, отправляйте ссылки или записывайте голосовые сообщения. Ваш персональный бот с искусственным интеллектом будет знать всё о вашем бизнесе. Лучший ИИ чат для общения и решения задач.
-                        </p>
-                        <div className="mt-10 flex items-center justify-center gap-x-6">
-                            <Link
-                                href={route('register')}
-                                className="rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-xl shadow-blue-200 transition-all hover:bg-blue-700 hover:scale-105 active:scale-95"
-                            >
-                                Создать ассистента
-                            </Link>
-                            <a href="#demo" className="text-lg font-semibold leading-6 text-gray-900 hover:text-blue-600 transition-colors">
-                                Попробовать демо <span aria-hidden="true">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </section>
+            <main>
+                <Hero />
 
                 {/* Test Chat Section */}
-                <section id="demo" className="py-24 bg-gray-50">
+                <section id="demo" className="py-24 bg-surface-dark/50">
                     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-12">
-                            Попробуйте наш чат с ИИ онлайн бесплатно
+                        <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl mb-12">
+                            Interactive Core <span className="text-secondary">Preview</span>
                         </h2>
-                        <div className="relative rounded-2xl bg-white p-6 shadow-2xl shadow-blue-100 border border-gray-100 min-h-[400px] flex flex-col">
-                            <div 
+                        <div className="relative rounded-2xl glass p-7 min-h-[400px] flex flex-col shadow-2xl border-white/5">
+                            <div
                                 ref={chatContainerRef}
                                 className="flex flex-col gap-4 flex-1 overflow-y-auto mb-4 max-h-[500px] pr-2 custom-scrollbar"
                             >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-2 shrink-0">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl gold-gradient text-background-dark mb-6 shrink-0 shadow-lg shadow-secondary/20 mx-auto">
                                     <MessageSquare className="h-6 w-6" />
                                 </div>
-                                
+
                                 {messages.map((msg, idx) => (
-                                    <div 
-                                        key={idx} 
-                                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                    <div
+                                        key={idx}
+                                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
                                     >
-                                        <div className={`p-4 rounded-2xl text-sm sm:text-base max-w-[85%] text-left border ${
-                                            msg.role === 'user' 
-                                                ? 'bg-blue-600 text-white border-blue-500 rounded-tr-none' 
-                                                : 'bg-gray-50 text-gray-700 border-gray-100 rounded-tl-none'
-                                        }`}>
-                                            {msg.role === 'user' ? (
-                                                msg.content
-                                            ) : (
-                                                <div className="prose prose-sm max-w-none prose-blue">
-                                                    <Markdown
-                                                        components={{
-                                                            h3: ({...props}) => <h3 className="mb-2 mt-3 text-base font-bold text-gray-900" {...props} />,
-                                                            p: ({...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
-                                                            ul: ({...props}) => <ul className="mb-2 list-disc pl-5 space-y-1" {...props} />,
-                                                            ol: ({...props}) => <ol className="mb-2 list-decimal pl-5 space-y-1" {...props} />,
-                                                            li: ({...props}) => <li className="leading-relaxed" {...props} />,
-                                                            strong: ({...props}) => <strong className="font-bold text-blue-700" {...props} />,
-                                                            blockquote: ({...props}) => <blockquote className="border-l-4 border-blue-200 pl-4 italic text-gray-600" {...props} />,
-                                                        }}
-                                                    >
-                                                        {msg.content}
-                                                    </Markdown>
-                                                </div>
-                                            )}
+                                        <div className={`flex max-w-[85%] gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                            <div className={`mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
+                                                msg.role === 'user'
+                                                    ? 'bg-white/10 text-text-secondary-dark border-white/5'
+                                                    : 'bg-secondary/10 text-secondary border-secondary/20'
+                                            }`}>
+                                                {msg.role === 'user' ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
+                                            </div>
+                                            <div className={`p-4 rounded-2xl text-sm sm:text-base text-left border shadow-xl ${
+                                                msg.role === 'user'
+                                                    ? 'bg-secondary text-background-dark border-secondary rounded-tr-none font-medium'
+                                                    : 'glass text-text-primary-dark border-white/10 rounded-tl-none'
+                                            }`}>
+                                                {msg.role === 'user' ? (
+                                                    msg.content
+                                                ) : (
+                                                    <div className="prose prose-sm max-w-none prose-invert">
+                                                        <ReactMarkdown
+                                                            components={{
+                                                                h3: ({ node, ...props }) => <h3 className="mb-2 mt-3 text-base font-bold text-text-primary-dark" {...props} />,
+                                                                p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed text-text-primary-dark/90" {...props} />,
+                                                                ul: ({ node, ...props }) => <ul className="mb-2 list-disc pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
+                                                                ol: ({ node, ...props }) => <ol className="mb-2 list-decimal pl-5 space-y-1 text-text-primary-dark/80" {...props} />,
+                                                                li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
+                                                                strong: ({ node, ...props }) => <strong className="font-bold text-secondary" {...props} />,
+                                                                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-secondary/30 pl-4 italic text-text-secondary-dark" {...props} />,
+                                                            }}
+                                                        >
+                                                            {msg.content}
+                                                        </ReactMarkdown>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
 
                                 {isLoading && (
                                     <div className="flex justify-start">
-                                        <div className="bg-gray-50 text-gray-400 p-4 rounded-2xl rounded-tl-none border border-gray-100 flex items-center gap-2">
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                            <span className="text-sm">Бот печатает...</span>
+                                        <div className="glass text-text-secondary-dark p-4 rounded-2xl rounded-tl-none border-white/5 flex items-center gap-2">
+                                            <Loader2 className="h-4 w-4 animate-spin text-secondary" />
+                                            <span className="text-sm">Neural Engine processing...</span>
                                         </div>
                                     </div>
                                 )}
                             </div>
 
-                            <div className="mt-auto pt-4 border-t border-gray-50">
-                                <form onSubmit={handleSendMessage} className="relative group">
-                                    <input
-                                        id="2"
-                                        type="text"
-                                        value={chatInput}
-                                        onChange={(e) => setChatInput(e.target.value)}
-                                        placeholder="Введите ваш вопрос..."
-                                        className="w-full rounded-xl border-gray-200 py-4 pl-4 pr-12 text-gray-900 focus:border-blue-500 focus:ring-blue-500 shadow-sm transition-all"
-                                        disabled={isLoading}
-                                    />
-                                    <button 
+                            <div className="mt-auto pt-4 border-t border-white/5">
+                                <form onSubmit={handleSendMessage} className="relative group flex gap-3">
+                                    <div className="relative flex-grow">
+                                        <input
+                                            id="2"
+                                            type="text"
+                                            value={chatInput}
+                                            onChange={(e) => setChatInput(e.target.value)}
+                                            placeholder="Введите ваш запрос..."
+                                            className="w-full rounded-xl bg-background-dark/50 border-white/10 py-4 pl-4 pr-12 text-text-primary-dark focus:border-secondary focus:ring-secondary shadow-sm transition-all placeholder:text-text-secondary-dark/50"
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <button
                                         type="submit"
                                         disabled={isLoading || !chatInput.trim()}
-                                        className="absolute right-2 top-2 bottom-2 px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="h-14 w-14 shrink-0 flex items-center justify-center rounded-xl gold-gradient text-background-dark hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-secondary/20"
                                     >
-                                        <ArrowRight className="h-5 w-5" />
+                                        <ArrowRight className="h-6 w-6" />
                                     </button>
                                 </form>
                                 <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -308,7 +283,7 @@ export default function Welcome({
                                         <button
                                             key={hint}
                                             onClick={() => handleSendMessage(undefined, hint)}
-                                            className="rounded-full bg-white px-4 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 hover:border-blue-400 hover:text-blue-600 transition-all shadow-sm"
+                                            className="rounded-full glass px-4 py-1.5 text-xs font-medium text-text-secondary-dark border-white/5 hover:border-secondary hover:text-text-primary-dark transition-all shadow-sm"
                                             disabled={isLoading}
                                         >
                                             {hint}
@@ -321,70 +296,70 @@ export default function Welcome({
                 </section>
 
                 {/* Features Section */}
-                <section className="py-24 bg-white overflow-hidden">
+                <section className="py-24 bg-background-dark overflow-hidden">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
                             <div>
-                                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                                    Обучайте своих чат-ботов на базе знаний RAG
+                                <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                                    Industrial Knowledge <span className="text-secondary">Synthesis</span>
                                 </h2>
-                                <p className="mt-6 text-lg leading-8 text-gray-600">
-                                    Наш сервис использует современные RAG системы (Retrieval-Augmented Generation), позволяя быстро собрать базу знаний для вашего ИИ из любых источников. Идеально для бизнеса и автоматизации общения.
+                                <p className="mt-6 text-lg leading-8 text-text-secondary-dark">
+                                    Our Neural Engine orchestrates data from diverse industrial sources, creating a unified knowledge graph for precise RAG operations.
                                 </p>
                                 <dl className="mt-10 space-y-8">
                                     <div className="relative pl-16">
-                                        <dt className="text-base font-semibold leading-7 text-gray-900">
-                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-100">
+                                        <dt className="text-base font-bold leading-7 text-text-primary-dark">
+                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl gold-gradient text-background-dark shadow-lg shadow-secondary/20">
                                                 <Globe className="h-6 w-6" />
                                             </div>
-                                            Сайты конкурентов
+                                            Network Scanning
                                         </dt>
-                                        <dd className="mt-2 text-base leading-7 text-gray-600">
-                                            Просто укажите URL, и наш бот проанализирует контент для ответов на вопросы.
+                                        <dd className="mt-2 text-base leading-7 text-text-secondary-dark">
+                                            Autonomous discovery and indexing of technical documentation and internal networks.
                                         </dd>
                                     </div>
                                     <div className="relative pl-16">
-                                        <dt className="text-base font-semibold leading-7 text-gray-900">
-                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-100">
+                                        <dt className="text-base font-bold leading-7 text-text-primary-dark">
+                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl glass text-secondary border-white/10">
                                                 <Mic className="h-6 w-6" />
                                             </div>
-                                            Голосовые сообщения
+                                            Voice Protocols
                                         </dt>
-                                        <dd className="mt-2 text-base leading-7 text-gray-600">
-                                            Наговорите инструкции голосом — система автоматически транскрибирует и запомнит информацию.
+                                        <dd className="mt-2 text-base leading-7 text-text-secondary-dark">
+                                            Real-time transcription and semantic analysis of industrial voice logs.
                                         </dd>
                                     </div>
                                     <div className="relative pl-16">
-                                        <dt className="text-base font-semibold leading-7 text-gray-900">
-                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-100">
+                                        <dt className="text-base font-bold leading-7 text-text-primary-dark">
+                                            <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-xl glass text-secondary border-white/10">
                                                 <FileText className="h-6 w-6" />
                                             </div>
-                                            Загрузка документов
+                                            Vault Indexing
                                         </dt>
-                                        <dd className="mt-2 text-base leading-7 text-gray-600">
-                                            PDF, Word, Excel — любые форматы документов станут частью интеллекта вашего ассистента.
+                                        <dd className="mt-2 text-base leading-7 text-text-secondary-dark">
+                                            Secure ingestion of complex technical formats (PDF, CAD metadata, Schematics).
                                         </dd>
                                     </div>
                                 </dl>
                             </div>
                             <div className="relative">
-                                <div className="aspect-square rounded-3xl bg-blue-50 flex items-center justify-center p-8">
+                                <div className="aspect-square rounded-2xl glass flex items-center justify-center p-8 border-white/5">
                                      <div className="grid grid-cols-2 gap-4 w-full">
-                                         <div className="h-32 bg-white rounded-2xl shadow-sm border border-blue-100 p-4 flex flex-col justify-between">
-                                             <FileText className="text-blue-600 h-8 w-8" />
-                                             <span className="text-xs font-bold text-gray-400">DOCUMENTS</span>
+                                         <div className="h-32 glass rounded-2xl shadow-sm border-white/5 p-4 flex flex-col justify-between group hover:border-secondary/30 transition-colors">
+                                             <FileText className="text-secondary h-8 w-8" />
+                                             <span className="text-[10px] font-bold text-text-secondary-dark uppercase tracking-widest">Vault</span>
                                          </div>
-                                         <div className="h-32 bg-blue-600 rounded-2xl shadow-lg p-4 flex flex-col justify-between text-white translate-y-8">
+                                         <div className="h-32 gold-gradient rounded-2xl shadow-lg p-4 flex flex-col justify-between text-background-dark translate-y-8">
                                              <Globe className="h-8 w-8" />
-                                             <span className="text-xs font-bold opacity-80">URL SCANNER</span>
+                                             <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Network</span>
                                          </div>
-                                         <div className="h-32 bg-white rounded-2xl shadow-sm border border-blue-100 p-4 flex flex-col justify-between -translate-y-4">
-                                             <Mic className="text-blue-600 h-8 w-8" />
-                                             <span className="text-xs font-bold text-gray-400">VOICE AI</span>
+                                         <div className="h-32 glass rounded-2xl shadow-sm border-white/5 p-4 flex flex-col justify-between -translate-y-4 group hover:border-secondary/30 transition-colors">
+                                             <Mic className="text-secondary h-8 w-8" />
+                                             <span className="text-[10px] font-bold text-text-secondary-dark uppercase tracking-widest">Voice</span>
                                          </div>
-                                         <div className="h-32 bg-white rounded-2xl shadow-sm border border-blue-100 p-4 flex flex-col justify-between translate-y-4">
-                                             <MessageSquare className="text-blue-600 h-8 w-8" />
-                                             <span className="text-xs font-bold text-gray-400">OMNICHANNEL</span>
+                                         <div className="h-32 glass rounded-2xl shadow-sm border-white/5 p-4 flex flex-col justify-between translate-y-4 group hover:border-secondary/30 transition-colors">
+                                             <MessageSquare className="text-secondary h-8 w-8" />
+                                             <span className="text-[10px] font-bold text-text-secondary-dark uppercase tracking-widest">Sync</span>
                                          </div>
                                      </div>
                                 </div>
@@ -402,11 +377,11 @@ export default function Welcome({
                 <UseCases />
 
                 {/* Tariffs Section */}
-                <section className="py-24 bg-gray-50">
+                <section id="pricing" className="py-24 bg-surface-dark/30">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Готовые тарифные планы</h2>
-                            <p className="mt-4 text-lg text-gray-600">Выберите оптимальный вариант для вашего бизнеса</p>
+                            <h2 className="text-3xl font-serif text-text-primary-dark sm:text-5xl">Neural <span className="text-secondary">Subscription</span> Nodes</h2>
+                            <p className="mt-4 text-lg text-text-secondary-dark">Scale your intelligence with industrial-grade protocols.</p>
                         </div>
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                             {tariffs.map((tariff) => {
@@ -414,32 +389,34 @@ export default function Welcome({
                                 return (
                                     <div
                                         key={tariff.name}
-                                        className={`relative flex flex-col rounded-3xl bg-white p-8 shadow-xl transition-all hover:-translate-y-2 ${
+                                        className={`relative flex flex-col rounded-2xl glass p-7 transition-all duration-300 hover:scale-[1.02] group overflow-hidden ${
                                             tariff.highlighted
-                                                ? 'ring-2 ring-blue-600 border-transparent scale-105 z-10'
-                                                : 'border border-gray-100'
+                                                ? 'ring-2 ring-secondary border-transparent scale-105 z-10'
+                                                : 'border-white/5'
                                         }`}
                                     >
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 gold-gradient" />
+                                        <div className="relative z-10 flex flex-col h-full">
                                         {tariff.highlighted && (
-                                            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-1 text-xs font-bold text-white uppercase tracking-widest">
-                                                Популярный
+                                            <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full gold-gradient px-4 py-1 text-[10px] font-bold text-background-dark uppercase tracking-widest z-20">
+                                                Optimized
                                             </span>
                                         )}
                                         <div className="flex items-center gap-4 mb-6">
-                                            <div className={`p-3 rounded-2xl ${tariff.highlighted ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600'}`}>
+                                            <div className={`p-3 rounded-xl ${tariff.highlighted ? 'gold-gradient text-background-dark' : 'glass text-secondary border-white/10'}`}>
                                                 <Icon className="h-6 w-6" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-gray-900">{tariff.name}</h3>
+                                            <h3 className="text-xl font-bold text-text-primary-dark">{tariff.name}</h3>
                                         </div>
                                         <div className="mb-6">
-                                            <span className="text-4xl font-extrabold text-gray-900">{tariff.price} ₽</span>
-                                            <span className="text-gray-500 ml-2">{tariff.period}</span>
+                                            <span className="text-4xl font-serif text-text-primary-dark">{tariff.price} ₽</span>
+                                            <span className="text-text-secondary-dark ml-2">/{tariff.period.includes('день') ? 'day' : tariff.period.includes('месяц') ? 'month' : 'year'}</span>
                                         </div>
-                                        <p className="text-sm text-gray-600 mb-8">{tariff.description}</p>
+                                        <p className="text-sm text-text-secondary-dark mb-8">{tariff.description}</p>
                                         <ul className="space-y-4 mb-10 flex-1">
                                             {tariff.features.map((feature) => (
-                                                <li key={feature} className="flex items-start gap-3 text-sm text-gray-600">
-                                                    <Check className="h-5 w-5 text-green-500 shrink-0" />
+                                                <li key={feature} className="flex items-start gap-3 text-sm text-text-secondary-dark">
+                                                    <Check className="h-5 w-5 text-secondary shrink-0" />
                                                     <span>{feature}</span>
                                                 </li>
                                             ))}
@@ -447,15 +424,16 @@ export default function Welcome({
                                         <button
                                             className={`w-full py-4 rounded-xl font-bold transition-all active:scale-95 ${
                                                 tariff.highlighted
-                                                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
-                                                    : 'bg-gray-50 text-gray-900 hover:bg-gray-100 border border-gray-200'
+                                                    ? 'gold-gradient text-background-dark shadow-lg shadow-secondary/20'
+                                                    : 'glass text-text-primary-dark hover:bg-white/5 border-white/10'
                                             }`}
                                         >
-                                            Выбрать тариф
+                                            Initialize Node
                                         </button>
                                     </div>
-                                );
-                            })}
+                                </div>
+                            );
+                        })}
                         </div>
                     </div>
                 </section>
@@ -465,57 +443,47 @@ export default function Welcome({
                 {/* CTA Section */}
                 <section className="py-24">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="relative isolate overflow-hidden bg-blue-600 px-6 py-24 shadow-2xl rounded-3xl sm:px-24 xl:py-32">
-                            <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                                Создайте своего ассистент-бота уже через 5 минут
+                        <div className="relative isolate overflow-hidden bg-surface-dark px-6 py-24 shadow-2xl rounded-2xl sm:px-24 xl:py-32 border border-white/5">
+                            <h2 className="mx-auto max-w-2xl text-center text-3xl font-serif text-text-primary-dark sm:text-5xl">
+                                Ready to Orchestrate <br /> <span className="text-secondary">Intelligence?</span>
                             </h2>
-                            <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-blue-100">
-                                Он уже готов отвечать на ваши вопросы и помогать вашим клиентам. Начните прямо сейчас.
+                            <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-text-secondary-dark">
+                                Deploy your first Neural Agent in less than 5 minutes. No complex configuration required.
                             </p>
-                            <div className="mt-10 flex justify-center gap-x-6">
+                            <div className="mt-10 flex justify-center gap-x-6 relative z-10">
                                 <Link
                                     href={route('register')}
-                                    className="rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-600 shadow-xl transition-all hover:bg-blue-50 hover:scale-105 active:scale-95"
+                                    className="rounded-xl gold-gradient px-8 py-4 text-lg font-bold text-background-dark shadow-xl transition-all hover:scale-105 active:scale-95"
                                 >
-                                    Попробовать бесплатно
+                                    Initialise System
                                 </Link>
                             </div>
-                            <svg
-                                viewBox="0 0 1024 1024"
-                                className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)]"
-                                aria-hidden="true"
-                            >
-                                <circle cx="512" cy="512" r="512" fill="url(#827591b1-ce8c-4110-b064-7cb85a0b1217)" fillOpacity="0.7" />
-                                <defs>
-                                    <radialGradient id="827591b1-ce8c-4110-b064-7cb85a0b1217">
-                                        <stop stopColor="#7775D6" />
-                                        <stop offset={1} stopColor="#E935C1" />
-                                    </radialGradient>
-                                </defs>
-                            </svg>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full -z-10">
+                                <div className="absolute top-0 left-0 w-full h-full bg-secondary/5 blur-[120px] rounded-full" />
+                            </div>
                         </div>
                     </div>
                 </section>
             </main>
 
             {/* Footer */}
-            <footer className="bg-white border-t border-gray-100 py-12">
+            <footer className="bg-background-dark border-t border-white/5 py-12">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
                         <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-md">
-                                <MessageSquare className="h-5 w-5" />
+                            <div className="w-8 h-8 gold-gradient rounded-lg flex items-center justify-center shadow-md">
+                                <Zap className="text-background-dark w-5 h-5 fill-background-dark" />
                             </div>
-                            <span className="text-lg font-bold tracking-tight text-gray-900">BotSync</span>
+                            <span className="text-lg font-serif tracking-tight text-text-primary-dark">NeuralFlow</span>
                         </div>
-                        <p className="text-sm text-gray-500">
-                            &copy; {new Date().getFullYear()} BotSync. Все права защищены.
+                        <p className="text-sm text-text-secondary-dark">
+                            &copy; {new Date().getFullYear()} NeuralFlow Engine. Industrial Grade Intelligence.
                         </p>
                         <div className="flex gap-6">
-                            <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
+                            <a href="#" className="text-text-secondary-dark hover:text-secondary transition-colors">
                                 <Globe className="h-5 w-5" />
                             </a>
-                            <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
+                            <a href="#" className="text-text-secondary-dark hover:text-secondary transition-colors">
                                 <MessageSquare className="h-5 w-5" />
                             </a>
                         </div>

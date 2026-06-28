@@ -1,26 +1,22 @@
-### A. Обычные карточки:
-| Свойство | Значение |
-|----------|----------|
-| Цвет фона | Белый (`white`) |
-| Обводка | 1px, слабозаметная |
-| Тени | Легкие, цвет `#F5F5F5` |
-| Иконка | 16px |
-| Бейджи | Использовать для важной информации |
+# Cards — ManuFlex
 
-#### Hover/Active состояния:
-- Применять **градиент из 3 цветов**
-- Плавный переход (transition: 0.3s)
+## Card Patterns
 
-#### Принципы:
-- Не перегружать контентом
-- Лишнюю информацию выносить в:
-    - Модальные окна
-    - Tooltips
-    - Подсказки
+| Feature | Light Mode | Dark Mode |
+|---------|------------|-----------|
+| **Background** | `#FFFFFF` (Surface) | `#151B27` (Dark Surface) |
+| **Border** | 1px subtle neutral border | None or extremely subtle |
+| **Shadow** | `--shadow-md` (minimal) | None |
+| **Radius** | 16-20px (`--radius-lg` to `--radius-xl`) | 16-20px |
+| **Padding** | 28px (`Card padding`) | 28px |
 
-### B. Bento-карточки (сетка):
-| Элемент | Требование |
-|---------|------------|
-| Изображение | По центру карточки |
-| Текст | Сероватый, мелкий размер |
-| Остальное | Как в обычных карточках |
+## Design Characteristics
+- **Full-bleed Imagery:** Often feature full-bleed photography at the top.
+- **Floating Badges:** Pill-shaped category badges positioned as floating overlays on card photography.
+- **Glassmorphic Overlays:** Floating glassmorphic stat overlays on imagery with circular progress indicators.
+- **Editorial Composition:** Generous whitespace and sharp typography create a layered editorial look.
+
+## Layout Behavior
+- **Grid:** Card grids are typically 3-4 columns on desktop.
+- **Mobile:** Reflow from multi-column grid to **single-column stacked layout** with full viewport width.
+- **Asymmetry:** Common use of asymmetric split layouts (e.g., large image on one side, text/cards on the other).

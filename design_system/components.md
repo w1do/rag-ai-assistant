@@ -1,60 +1,43 @@
-### A. Базовые принципы
+# Components — ManuFlex
 
-| Принцип | Описание |
-|---------|----------|
-| **Single Responsibility** | Один компонент — одна задача |
-| **Reusability** | Компоненты должны быть переиспользуемыми |
-| **Composability** | Сложные компоненты собираются из простых |
-| **Consistency** | Одинаковые компоненты выглядят одинаково везде |
+## Basic Principles
+- **Editorial Fidelity:** Components must maintain high typographic contrast and generous spacing.
+- **Glassmorphism:** Use subtle glassmorphic effects (blur + transparency) for overlays.
+- **Industrial Precision:** Sharp corners are avoided in favor of precise radii (10px-20px).
 
----
+## Shared Assets
 
-### B. Структура компонента
+### 1. Avatars
+- **Shape:** Circular.
+- **Size:** ~32px.
+- **Usage:** Team members, authors in blog cards.
 
-#### Обязательная структура папки:
+### 2. Icons
+- **Style:** Stroke (not filled).
+- **Library:** Lucide.
+- **Context:** Right arrow icons are preferred for buttons and links.
+- **Scaling:** Default size 16px-20px depending on context.
 
-ComponentName/
-├── index.tsx # основной экспорт
-├── ComponentName.tsx # логика компонента
-├── types.ts # TypeScript интерфейсы
+## Specific Components
+For detailed specifications of key components, refer to:
+- ⌨️ **[Inputs](./inputs.md)**
+- 🏷️ **[Badges & Tags](./badges.md)**
+- 🔘 **[Buttons](./buttons.md)**
+- 🗂️ **[Cards](./cards.md)**
 
----
+## Component Architecture (React/Inertia)
+Each component should be self-contained in its own directory:
+`ComponentName/`
+├── `index.tsx` (Main export)
+├── `ComponentName.tsx` (Logic & UI)
+├── `types.ts` (TypeScript interfaces)
 
+### Example TypeScript Props
 ```typescript
-interface ButtonProps {
-    /** Основной текст кнопки */
-    label: string;
-    /** Вариант стиля */
-    variant?: 'primary' | 'secondary' | 'outline';
-    /** Состояние загрузки */
-    isLoading?: boolean;
-    /** Отключена ли кнопка */
-    isDisabled?: boolean;
-    /** Обработчик клика */
-    onClick?: () => void;
-    /** Размер кнопки */
-    size?: 'small' | 'medium' | 'large';
+interface ComponentProps {
+    variant?: 'primary' | 'secondary' | 'ghost';
+    size?: 'sm' | 'md' | 'lg';
+    className?: string;
+    children?: React.ReactNode;
 }
-```
----
-```tsx
-/**
- * Кнопка с поддержкой различных вариантов и состояний
- * 
- * @example
- * <Button variant="primary" isLoading={false}>
- *   Нажми меня
- * </Button>
- */
-export const Button: React.FC<ButtonProps> = ({ ... }) => {
-  // ...
-};
-```
-
-```tsx
-// index.ts (главный файл библиотеки)
-export { Button } from './Button';
-export { Card } from './Card';
-export { Input } from './Input';
-// ... и так далее
 ```
