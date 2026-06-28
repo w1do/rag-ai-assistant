@@ -4,7 +4,13 @@ import MegaMenu from '@/Components/MegaMenu';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import Tooltip from '@/Components/Tooltip';
-import { Link, usePage } from '@inertiajs/react';
+import Modal from '@/Components/Modal';
+import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
+import InputLabel from '@/Components/InputLabel';
+import InputError from '@/Components/InputError';
+import { Link, usePage, useForm } from '@inertiajs/react';
 import {
     Activity,
     Bot,
@@ -15,11 +21,12 @@ import {
     LogOut,
     Menu,
     MessagesSquare,
+    Plus,
     User,
     Users,
     X,
 } from 'lucide-react';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { FormEvent, PropsWithChildren, ReactNode, useState } from 'react';
 
 export default function Authenticated({
     header,
@@ -29,6 +36,22 @@ export default function Authenticated({
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    
+    const [showingTopUpModal, setShowingTopUpModal] = useState(false);
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        amount: '',
+    });
+
+    const submitTopUp = (e: FormEvent) => {
+        e.preventDefault();
+        post(route('billing.top-up'), {
+            onSuccess: () => {
+                setShowingTopUpModal(false);
+                reset();
+            },
+        });
+    };
 
     return (
         <div className="min-h-screen bg-body-color">
@@ -82,6 +105,21 @@ export default function Authenticated({
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
+                            {/* Balance Section */}
+                            <div className="flex items-center gap-3 mr-4 px-3 py-1.5 rounded-lg bg-extra-color border border-border-color-one">
+                                <div className="text-sm font-semibold text-white-color whitespace-nowrap">
+                                    {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(user.balance || 0)}
+                                </div>
+                                <div className="w-px h-4 bg-border-color-one" />
+                                <button 
+                                    onClick={() => setShowingTopUpModal(true)}
+                                    className="flex items-center gap-1.5 text-xs font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-wider"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                    Пополнить
+                                </button>
+                            </div>
+
                             <div className="relative ms-3">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -220,6 +258,41 @@ export default function Authenticated({
             )}
 
             <main className="text-white-color">{children}</main>
+
+            <Modal show={showingTopUpModal} onClose={() => setShowingTopUpModal(false)} maxWidth="md">
+                <form onSubmit={submitTopUp} className="p-6">
+                    <h2 className="text-lg font-title text-white-color mb-4">
+                        Пополнение баланса
+                    </h2>
+
+                    <div className="mb-4">
+                        <InputLabel htmlFor="amount" value="Сумма пополнения (₽)" className="text-white-color" />
+                        <TextInput
+                            id="amount"
+                            type="number"
+                            name="amount"
+                            value={data.amount}
+                            className="mt-1 block w-full bg-extra-color border-border-color-one text-white-color"
+                            placeholder="Например, 100"
+                            onChange={(e) => setData('amount', e.target.value)}
+                            required
+                        />
+                        <InputError message={errors.amount} className="mt-2" />
+                    </div>
+
+                    <div className="mt-6 flex justify-end gap-3">
+                        <SecondaryButton 
+                            onClick={() => setShowingTopUpModal(false)}
+                            className="bg-extra-color border-border-color-one text-white-color"
+                        >
+                            Отмена
+                        </SecondaryButton>
+                        <PrimaryButton disabled={processing} className="bg-primary-color text-black-color hover:bg-white-color">
+                            Пополнить
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </Modal>
         </div>
     );
 }

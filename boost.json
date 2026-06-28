@@ -29,6 +29,8 @@
         "laravel-deploy",
         "refactoring-ddd",
         "polza-ai",
-        "design-prototype"
+        "design-prototype",
+        "moffhub-billing",
+        "laravel-plans"
     ]
 }

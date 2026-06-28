@@ -1,22 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import FAQ from '@/Components/FAQ';
-
-/**
- * Описание одного тарифа.
- */
-interface Tariff {
-    name: string;
-    price: number;
-    period: string;
-    description: string;
-    features: string[];
-    icon: LucideIcon;
-    highlighted: boolean;
-}
 
 /**
  * Форматирует число как стоимость в рублях с разделением разрядов.
@@ -25,51 +12,12 @@ function formatPrice(value: number): string {
     return `${value.toLocaleString('ru-RU')} ₽`;
 }
 
-export default function Tariffs() {
-    const tariffs: Tariff[] = [
-        {
-            name: 'Пробный',
-            price: 50,
-            period: 'за 1 день',
-            description: 'Попробуйте бота на один день.',
-            features: [
-                'Доступ к боту на 1 день',
-                'Подключение к базе знаний',
-                'Базовая поддержка',
-            ],
-            icon: Rocket,
-            highlighted: false,
-        },
-        {
-            name: 'Ежемесячный',
-            price: 1950,
-            period: 'в месяц',
-            description: 'Оптимальный выбор для постоянной работы.',
-            features: [
-                'Безлимитная работа бота',
-                'Подключение к базе знаний',
-                'Приоритетная поддержка',
-                'Регулярные обновления',
-            ],
-            icon: Calendar,
-            highlighted: true,
-        },
-        {
-            name: 'Годовой',
-            price: 22000,
-            period: 'в год',
-            description: 'Максимальная выгода при оплате на год.',
-            features: [
-                'Безлимитная работа бота',
-                'Подключение к базе знаний',
-                'Премиум поддержка',
-                'Экономия по сравнению с помесячной оплатой',
-            ],
-            icon: Crown,
-            highlighted: false,
-        },
-    ];
+interface Props {
+    plans: any[];
+    features: any[];
+}
 
+export default function Tariffs({ plans, features }: Props) {
     const tariffTips = [
         'Выбирайте годовой тариф, чтобы сэкономить до 30% стоимости.',
         'Пробный тариф идеально подходит для тестирования базовых функций.',
@@ -95,6 +43,31 @@ export default function Tariffs() {
         }
     ];
 
+    const getIcon = (slug: string) => {
+        switch (slug) {
+            case 'start': return Rocket;
+            case 'business': return Calendar;
+            case 'pro': return Crown;
+            default: return Rocket;
+        }
+    };
+
+    const getFeatureName = (slug: string) => {
+        const feature = features.find(f => f.slug === slug);
+        return feature ? feature.name : slug;
+    };
+
+    const formatLimit = (slug: string, limit: any) => {
+        const name = getFeatureName(slug);
+        if (limit === -1) return `${name}: Безлимитно`;
+        if (typeof limit === 'boolean') return limit ? name : `Нет ${name}`;
+        return `${name}: ${limit}`;
+    };
+
+    const handleSubscribe = (planSlug: string) => {
+        router.post(route('billing.subscribe', planSlug));
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Тарифы" />
@@ -117,10 +90,11 @@ export default function Tariffs() {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {tariffs.map((tariff) => {
-                                    const Icon = tariff.icon;
+                                {plans.map((plan) => {
+                                    const Icon = getIcon(plan.slug);
+                                    const highlighted = plan.slug === 'business';
                                     return (
-                                        <div key={tariff.name} className="pricing-item group flex flex-col">
+                                        <div key={plan.id} className="pricing-item group flex flex-col">
                                             <div className="pricing-top">
                                                 <div className="flex justify-center mb-6">
                                                     <div className="w-[100px] h-[100px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
@@ -128,36 +102,41 @@ export default function Tariffs() {
                                                     </div>
                                                 </div>
                                                 <div className="pricing-top-content">
-                                                    <h2 className="text-[38px] font-title text-white-color">{formatPrice(tariff.price)}</h2>
-                                                    <p className="text-text-secondary-dark">{tariff.period}</p>
+                                                    <h2 className="text-[38px] font-title text-white-color">{formatPrice(plan.base_price / 100)}</h2>
+                                                    <p className="text-text-secondary-dark">
+                                                        {plan.billing_cycle === 'monthly' ? 'в месяц' : plan.billing_cycle}
+                                                    </p>
                                                 </div>
                                             </div>
 
                                             <div className="p-5 flex flex-col flex-1">
                                                 <div className="mb-4">
-                                                    {tariff.highlighted && (
+                                                    {highlighted && (
                                                         <div className="mb-4">
                                                             <span className="bg-primary-color text-black-color text-[12px] font-title px-4 py-1 rounded-full uppercase">
                                                                 Популярный
                                                             </span>
                                                         </div>
                                                     )}
-                                                    <h4 className="text-xl font-title text-white-color mb-2">{tariff.name}</h4>
+                                                    <h4 className="text-xl font-title text-white-color mb-2">{plan.name}</h4>
                                                     <p className="text-sm text-text-secondary-dark leading-relaxed">
-                                                        {tariff.description}
+                                                        {plan.trial_days > 0 ? `Пробный период: ${plan.trial_days} дней` : 'Мгновенный доступ'}
                                                     </p>
                                                 </div>
 
                                                 <ul className="space-y-3 mb-8 flex-1">
-                                                    {tariff.features.map((feature) => (
-                                                        <li key={feature} className="flex items-start gap-3 text-sm text-text-secondary-dark">
+                                                    {Object.entries(plan.limits || {}).map(([slug, limit]) => (
+                                                        <li key={slug} className="flex items-start gap-3 text-sm text-text-secondary-dark">
                                                             <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-color" strokeWidth={3} />
-                                                            {feature}
+                                                            {formatLimit(slug, limit)}
                                                         </li>
                                                     ))}
                                                 </ul>
 
-                                                <button className={`theme-button w-full ${tariff.highlighted ? 'style-1' : 'style-2'}`}>
+                                                <button 
+                                                    onClick={() => handleSubscribe(plan.slug)}
+                                                    className={`theme-button w-full ${highlighted ? 'style-1' : 'style-2'}`}
+                                                >
                                                     <span data-text="Выбрать тариф">Выбрать тариф</span>
                                                     <ArrowRight className="w-5 h-5" />
                                                 </button>

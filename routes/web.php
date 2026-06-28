@@ -8,9 +8,10 @@ use App\Http\Controllers\Assistant\MarketplaceController;
 use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Chat\PublicChatController;
 use App\Http\Controllers\Connector\ConnectorController;
+use App\Http\Controllers\User\BillingController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\TariffController;
 use App\Models\User;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use LLPhant\Embeddings\Document;
@@ -42,7 +43,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/monitoring', fn () => Inertia::render('Monitoring'))->name('monitoring');
     Route::get('/competitors', fn () => Inertia::render('Competitors'))->name('competitors');
     Route::get('/bots', fn () => Inertia::render('Bots'))->name('bots');
-    Route::get('/tariffs', fn () => Inertia::render('Tariffs'))->name('tariffs');
+    Route::get('/tariffs', [TariffController::class, 'index'])->name('tariffs');
+
+    Route::post('/billing/top-up', [BillingController::class, 'topUp'])->name('billing.top-up');
+    Route::post('/billing/subscribe/{plan:slug}', [BillingController::class, 'subscribe'])->name('billing.subscribe');
 });
 
 Route::middleware('auth')->group(function () {
