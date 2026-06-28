@@ -37,7 +37,7 @@ export default function Authenticated({
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
-    
+
     const [showingTopUpModal, setShowingTopUpModal] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -62,7 +62,7 @@ export default function Authenticated({
                         <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-500">
                             Ваш баланс 0. Пожалуйста, пополните счет для продолжения работы.
                         </p>
-                        <button 
+                        <button
                             onClick={() => setShowingTopUpModal(true)}
                             className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-white-color bg-red-500 px-3 py-1 rounded-[1px] hover:bg-red-600 transition-colors shrink-0 ml-4"
                         >
@@ -94,7 +94,6 @@ export default function Authenticated({
                                     active={route().current('dashboard')}
                                 >
                                     <LayoutDashboard className="mr-2 h-4 w-4" />
-                                    Панель управления
                                 </NavLink>
                                 <NavLink
                                     href={route('assistants.index')}
@@ -134,7 +133,7 @@ export default function Authenticated({
                                     {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(user.balance || 0)}
                                 </div>
                                 <div className="w-px h-4 bg-border-color-one" />
-                                <button 
+                                <button
                                     onClick={() => setShowingTopUpModal(true)}
                                     className="flex items-center gap-1.5 text-xs font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-wider"
                                 >
@@ -319,7 +318,7 @@ export default function Authenticated({
                     </div>
 
                     <div className="mt-6 flex justify-end gap-3">
-                        <SecondaryButton 
+                        <SecondaryButton
                             onClick={() => setShowingTopUpModal(false)}
                             className="bg-extra-color border-border-color-one text-white-color"
                         >
