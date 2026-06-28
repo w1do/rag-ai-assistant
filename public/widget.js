@@ -130,6 +130,7 @@
     iframe.style.cssText = 'width: 100%; height: 100%; border: none;';
     frameWrapper.appendChild(iframe);
 
+    var isOpen = false;
     var originalOverflow = '';
     var toggle = function () {
         isOpen = !isOpen;
