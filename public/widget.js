@@ -12,9 +12,14 @@
  * окно с публичным чатом ассистента (страница /share-chat/{id}, загружаемая
  * в iframe). Базовый URL вычисляется из адреса самого скрипта, поэтому виджет
  * корректно работает при кросс-доменном встраивании.
+ *
+ * Version: 1.0.2
  */
 (function () {
     'use strict';
+
+    var isOpen = false;
+    var originalOverflow = '';
 
     var currentScript =
         document.currentScript ||
@@ -130,8 +135,6 @@
     iframe.style.cssText = 'width: 100%; height: 100%; border: none;';
     frameWrapper.appendChild(iframe);
 
-    var isOpen = false;
-    var originalOverflow = '';
     var toggle = function () {
         isOpen = !isOpen;
         if (isOpen) {
