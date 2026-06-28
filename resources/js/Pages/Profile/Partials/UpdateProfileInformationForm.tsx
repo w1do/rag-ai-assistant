@@ -32,12 +32,12 @@ export default function UpdateProfileInformation({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
+                <h2 className="text-lg font-title uppercase tracking-tight text-white-color">
+                    Информация профиля
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                <p className="mt-1 text-sm text-text-secondary">
+                    Обновите информацию профиля вашей учетной записи и адрес электронной почты.
                 </p>
             </header>
 
@@ -98,7 +98,7 @@ export default function UpdateProfileInformation({
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Сохранить</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -107,8 +107,8 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
-                            Saved.
+                        <p className="text-sm text-text-secondary">
+                            Сохранено.
                         </p>
                     </Transition>
                 </div>

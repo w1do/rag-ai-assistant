@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import Breadcrumbs from '@/Components/Breadcrumbs';
 import {
     Bot,
     MessagesSquare,
@@ -86,21 +87,22 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
 
     return (
         <AuthenticatedLayout
-            header={
-                <div className="section-title !mb-0">
-                    <span className="sub-title before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
-                        BotSync Dashboard
-                    </span>
-                    <h2 className="text-3xl font-title uppercase">
-                        Панель <span>управления</span>
-                    </h2>
-                </div>
-            }
         >
             <Head title="Панель управления" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+                    <Breadcrumbs items={[]} />
+                    
+                    <div className="section-title">
+                        <span className="sub-title before:w-[30px] before:h-[30px] before:bg-primary-color before:rounded-full before:inline-block before:mr-2 flex items-center">
+                            BotSync Dashboard
+                        </span>
+                        <h2 className="text-3xl font-title uppercase">
+                            Панель <span>управления</span>
+                        </h2>
+                    </div>
+
                     {/* Карточки статистики */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         {cards.map((card) => {

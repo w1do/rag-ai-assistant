@@ -3,6 +3,7 @@ import { Head, useForm } from '@inertiajs/react';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import Modal from '@/Components/Modal';
+import Select from '@/Components/Select';
 import { useState } from 'react';
 import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
@@ -290,10 +291,9 @@ export default function Index({ connectors, assistants }: Props) {
                         <label htmlFor="assistant_id" className="block text-xs font-title text-white-color uppercase mb-2">
                             Ассистент
                         </label>
-                        <select
+                        <Select
                             id="assistant_id"
                             name="assistant_id"
-                            className="w-full bg-extra-color border-border-color-one text-white-color rounded-xl focus:border-primary-color focus:ring-primary-color text-sm py-3 px-4 transition-all"
                             value={data.assistant_id}
                             onChange={(e) => setData('assistant_id', e.target.value)}
                             required
@@ -304,7 +304,7 @@ export default function Index({ connectors, assistants }: Props) {
                                     {assistant.name}
                                 </option>
                             ))}
-                        </select>
+                        </Select>
                     </div>
 
                     <div className="mt-8 flex flex-col sm:flex-row gap-3">

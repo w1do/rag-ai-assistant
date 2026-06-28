@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, router } from '@inertiajs/react';
+import Breadcrumbs from '@/Components/Breadcrumbs';
 import { ChangeEvent, useEffect, useState, FormEvent } from 'react';
 import { Bot, MessageSquare, Pencil, Trash2, FileText, Mic, Globe, Code, Plus, ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -111,55 +112,59 @@ export default function Show({ assistant }: Props) {
 
     return (
         <AuthenticatedLayout
-            header={
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
-                            <Bot size={28} />
-                        </div>
-                        <div>
-                            <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
-                                {assistant.name}
-                            </h2>
-                            <div className="flex items-center gap-2 mt-0.5">
-                                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                                    assistant.status === 'ready' ? 'bg-primary-color/10 text-primary-color' : 'bg-amber-400/10 text-amber-400'
-                                }`}>
-                                    <span className={`h-1.5 w-1.5 rounded-full ${
-                                        assistant.status === 'ready' ? 'bg-primary-color' : 'bg-amber-400'
-                                    } ${assistant.status !== 'ready' ? 'animate-pulse' : ''}`} />
-                                    {assistant.status}
-                                </span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
-                                    ID: {assistant.id}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link href={route('assistants.edit', assistant.id)} className="theme-button style-2 !h-[48px]">
-                            <span data-text="Правка">Правка</span>
-                            <i><Pencil size={14} /></i>
-                        </Link>
-                        <Link href={route('share-chat.show', assistant.id)} className="theme-button style-1 !h-[48px]">
-                            <span data-text="Чат">Чат</span>
-                            <i><MessageSquare size={14} /></i>
-                        </Link>
-                        <button 
-                            onClick={deleteAssistant}
-                            className="p-3 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
-                            title="Удалить ассистента"
-                        >
-                            <Trash2 size={20} />
-                        </button>
-                    </div>
-                </div>
-            }
         >
             <Head title={`Ассистент: ${assistant.name}`} />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="py-12 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <Breadcrumbs items={[
+                        { label: 'Ассистенты', href: route('assistants.index') },
+                        { label: assistant.name }
+                    ]} />
+
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
+                                <Bot size={32} />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                                    {assistant.name}
+                                </h2>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                                        assistant.status === 'ready' ? 'bg-primary-color/10 text-primary-color border border-primary-color/20' : 'bg-amber-400/10 text-amber-400 border border-amber-400/20'
+                                    }`}>
+                                        <span className={`h-1.5 w-1.5 rounded-full ${
+                                            assistant.status === 'ready' ? 'bg-primary-color' : 'bg-amber-400'
+                                        } ${assistant.status !== 'ready' ? 'animate-pulse' : ''}`} />
+                                        {assistant.status}
+                                    </span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-secondary">
+                                        ID: {assistant.id}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Link href={route('assistants.edit', assistant.id)} className="theme-button style-2 !h-[48px]">
+                                <span data-text="Правка">Правка</span>
+                                <i><Pencil size={14} /></i>
+                            </Link>
+                            <Link href={route('share-chat.show', assistant.id)} className="theme-button style-1 !h-[48px]">
+                                <span data-text="Чат">Чат</span>
+                                <i><MessageSquare size={14} /></i>
+                            </Link>
+                            <button 
+                                onClick={deleteAssistant}
+                                className="p-3 text-text-secondary hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all"
+                                title="Удалить ассистента"
+                            >
+                                <Trash2 size={20} />
+                            </button>
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                         <div className="md:col-span-8 space-y-8">
                             <div className="bg-background-one border border-border-color-one rounded-three p-6 shadow-sm">

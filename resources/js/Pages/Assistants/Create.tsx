@@ -3,6 +3,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
+import Select from '@/Components/Select';
+import Breadcrumbs from '@/Components/Breadcrumbs';
 import { Plus, Trash2, ArrowRight, LifeBuoy } from 'lucide-react';
 import { FormEventHandler, ReactNode } from 'react';
 
@@ -86,24 +88,28 @@ export default function Create() {
 
     return (
         <AuthenticatedLayout
-            header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
-                        Создать ассистента
-                    </h2>
-                    <Link
-                        href={route('assistants.index')}
-                        className="theme-button style-2 !h-[44px]"
-                    >
-                        <span data-text="← К списку">← К списку</span>
-                    </Link>
-                </div>
-            }
         >
             <Head title="Создать ассистента" />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="py-12 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <Breadcrumbs items={[
+                        { label: 'Ассистенты', href: route('assistants.index') },
+                        { label: 'Создать' }
+                    ]} />
+
+                    <div className="flex items-center justify-between mb-10">
+                        <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
+                            Создать ассистента
+                        </h2>
+                        <Link
+                            href={route('assistants.index')}
+                            className="theme-button style-2 !h-[44px]"
+                        >
+                            <span data-text="← К списку">← К списку</span>
+                        </Link>
+                    </div>
+
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                         {/* Форма */}
                         <form onSubmit={submit} className="space-y-6 lg:col-span-2">
@@ -148,18 +154,17 @@ export default function Create() {
                                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                                     <div>
                                         <InputLabel htmlFor="style" value="Стиль общения" className="text-xs text-text-secondary uppercase tracking-widest mb-2" />
-                                        <select
+                                        <Select
                                             id="style"
                                             name="style"
                                             value={data.style}
-                                            className={`mt-1.5 ${fieldClass}`}
                                             onChange={(e) => setData('style', e.target.value)}
                                         >
                                             <option value="business" className="bg-background-one">Деловой</option>
                                             <option value="commercial" className="bg-background-one">Коммерческий</option>
                                             <option value="rude" className="bg-background-one">Грубый</option>
                                             <option value="positive" className="bg-background-one">Позитивный</option>
-                                        </select>
+                                        </Select>
                                         <InputError message={errors.style} className="mt-2" />
                                     </div>
 
