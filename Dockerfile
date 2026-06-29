@@ -24,8 +24,10 @@ WORKDIR /var/www/html
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Invalidate cache on every deploy — pass CACHEBUST=$(git rev-parse HEAD) in Dokploy build args
-ARG CACHEBUST=1
+# Copy source files — COPY . . invalidates cache when any tracked file changes.
+# If Dokploy caches layers between deploys, enable "No cache" / "Force rebuild" option,
+# or pass --build-arg CACHEBUST=$(git rev-parse HEAD) as a build argument.
+ARG CACHEBUST
 COPY . .
 # Copy vendor from composer_stage to ensure Ziggy is available for SSR build
 COPY --from=composer_stage /var/www/html/vendor ./vendor
