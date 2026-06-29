@@ -21,6 +21,8 @@ interface Assistant {
     description: string;
     status: string;
     created_at: string;
+    avatar?: string;
+    background_image?: string;
 }
 
 interface Props {
@@ -175,8 +177,35 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
     };
 
     return (
-        <div className="pricing-item group flex h-full flex-col">
-            <div className="pricing-top relative">
+        <div className="pricing-item group relative flex h-full flex-col overflow-hidden">
+            {/* Background Image Overlay */}
+            {assistant.background_image && (
+                <div 
+                    className="absolute inset-0 z-0 opacity-10 transition-opacity duration-500 group-hover:opacity-15"
+                    style={{ 
+                        backgroundImage: `url(${assistant.background_image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
+                />
+            )}
+
+            {/* Avatar Watermark Background */}
+            <div className="absolute -right-6 -bottom-6 z-0 pointer-events-none opacity-[0.03] transition-opacity duration-500 group-hover:opacity-[0.06]">
+                {assistant.avatar ? (
+                    <img 
+                        src={assistant.avatar} 
+                        alt="" 
+                        className="w-32 h-32 sm:w-48 sm:h-48 object-cover grayscale"
+                    />
+                ) : (
+                    <div className="text-[120px] sm:text-[180px] font-bold text-white select-none">
+                        {(assistant.name || 'A').charAt(0).toUpperCase()}
+                    </div>
+                )}
+            </div>
+
+            <div className="pricing-top relative z-10">
                 <div className="mb-4 flex items-center justify-between">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[9px] sm:text-[11px] font-bold uppercase tracking-wider ${meta.badge}`}>
                         <span className={`h-1.5 w-1.5 rounded-full ${meta.dot} animate-pulse`} />
@@ -187,8 +216,12 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                     </span>
                 </div>
                 
-                <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-[2px] bg-primary-color text-lg sm:text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20">
-                    {(assistant.name || 'A').charAt(0).toUpperCase()}
+                <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-[2px] bg-primary-color text-lg sm:text-2xl font-bold text-black-color shadow-lg shadow-primary-color/20 overflow-hidden">
+                    {assistant.avatar ? (
+                        <img src={assistant.avatar} alt={assistant.name} className="h-full w-full object-cover" />
+                    ) : (
+                        (assistant.name || 'A').charAt(0).toUpperCase()
+                    )}
                 </div>
                 
                 <h3 className="mb-2 truncate text-sm sm:text-xl font-bold text-white-color group-hover:text-primary-color transition-colors">
@@ -200,7 +233,7 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                 </p>
             </div>
 
-            <div className="flex flex-grow flex-col p-4 sm:p-6">
+            <div className="relative z-10 flex flex-grow flex-col p-4 sm:p-6">
                 <div className="mb-6 grid grid-cols-4 gap-1.5 sm:gap-2">
                     <button
                         type="button"

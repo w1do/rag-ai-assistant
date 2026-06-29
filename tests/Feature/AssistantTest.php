@@ -2,6 +2,7 @@
 
 use App\Domain\Assistant\Models\Assistant;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 test('authenticated user can view assistants index', function () {
     $this->withoutVite();
@@ -55,4 +56,18 @@ test('user cannot view others assistant', function () {
         ->get(route('assistants.show', $assistant));
 
     $response->assertForbidden();
+});
+
+test('assistant avatar and background image accessors return full urls', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+    $assistant = Assistant::factory()->create([
+        'user_id' => $user->id,
+        'avatar' => 'assistants/avatars/test.jpg',
+        'background_image' => 'assistants/backgrounds/bg.jpg',
+    ]);
+
+    expect($assistant->avatar)->toContain('/storage/assistants/avatars/test.jpg');
+    expect($assistant->background_image)->toContain('/storage/assistants/backgrounds/bg.jpg');
 });

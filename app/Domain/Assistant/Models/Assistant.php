@@ -7,11 +7,13 @@ use App\Domain\Chat\Models\ChatHistory;
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Models\User;
 use Database\Factories\Domain\Assistant\Models\AssistantFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -97,6 +99,20 @@ class Assistant extends Model
     public function getKnowledgeCountAttribute(): int
     {
         return $this->knowledge_count ?? $this->knowledge()->count();
+    }
+
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => $value ? Storage::disk('public')->url($value) : null,
+        );
+    }
+
+    protected function backgroundImage(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => $value ? Storage::disk('public')->url($value) : null,
+        );
     }
 
     public function user(): BelongsTo

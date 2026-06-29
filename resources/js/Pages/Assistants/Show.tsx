@@ -38,6 +38,8 @@ interface Assistant {
     fallback: string | null;
     chunks: Chunk[];
     knowledge: Knowledge[];
+    avatar?: string;
+    background_image?: string;
 }
 
 interface Props {
@@ -156,10 +158,41 @@ export default function Show({ assistant }: Props) {
 
                     <Tips tips={assistantTips} />
 
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
-                                <Bot size={32} />
+                    <div className="group relative flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10 p-6 sm:p-8 bg-background-one border border-border-color-one rounded-three overflow-hidden">
+                        {/* Background Image Overlay */}
+                        {assistant.background_image && (
+                            <div 
+                                className="absolute inset-0 z-0 opacity-10 transition-opacity duration-500 group-hover:opacity-15"
+                                style={{ 
+                                    backgroundImage: `url(${assistant.background_image})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            />
+                        )}
+
+                        {/* Avatar Watermark Background */}
+                        <div className="absolute -right-8 -bottom-8 z-0 pointer-events-none opacity-[0.03] transition-opacity duration-500 group-hover:opacity-[0.06]">
+                            {assistant.avatar ? (
+                                <img 
+                                    src={assistant.avatar} 
+                                    alt="" 
+                                    className="w-48 h-48 sm:w-64 sm:h-64 object-cover grayscale"
+                                />
+                            ) : (
+                                <div className="text-[150px] sm:text-[200px] font-bold text-white select-none">
+                                    {(assistant.name || 'A').charAt(0).toUpperCase()}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="relative z-10 flex items-center gap-4">
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color shadow-lg shadow-primary-color/20 overflow-hidden">
+                                {assistant.avatar ? (
+                                    <img src={assistant.avatar} alt={assistant.name} className="h-full w-full object-cover" />
+                                ) : (
+                                    <Bot size={32} />
+                                )}
                             </div>
                             <div>
                                 <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
@@ -180,14 +213,18 @@ export default function Show({ assistant }: Props) {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="relative z-10 flex items-center gap-3">
+                            <Link href={route('assistants.dialogues', assistant.id)} className="theme-button style-1 !h-[48px]">
+                                <span data-text="Диалоги">Диалоги</span>
+                                <i><MessageSquare size={14} /></i>
+                            </Link>
+                            <Link href={route('share-chat.show', assistant.id)} className="theme-button style-2 !h-[48px]">
+                                <span data-text="Чат">Чат</span>
+                                <i><ExternalLink size={14} /></i>
+                            </Link>
                             <Link href={route('assistants.edit', assistant.id)} className="theme-button style-2 !h-[48px]">
                                 <span data-text="Правка">Правка</span>
                                 <i><Pencil size={14} /></i>
-                            </Link>
-                            <Link href={route('share-chat.show', assistant.id)} className="theme-button style-1 !h-[48px]">
-                                <span data-text="Чат">Чат</span>
-                                <i><MessageSquare size={14} /></i>
                             </Link>
                             <button 
                                 onClick={deleteAssistant}

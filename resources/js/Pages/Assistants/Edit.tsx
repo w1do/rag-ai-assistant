@@ -188,7 +188,7 @@ export default function Edit({ assistant }: Props) {
                                     {(data.background_image || assistant.background_image) && (
                                         <div className="absolute inset-0 opacity-10 pointer-events-none">
                                             <img 
-                                                src={data.background_image ? URL.createObjectURL(data.background_image) : `/storage/${assistant.background_image}`} 
+                                                src={data.background_image ? URL.createObjectURL(data.background_image) : assistant.background_image} 
                                                 alt="" 
                                                 className="w-full h-full object-cover"
                                             />
@@ -199,7 +199,7 @@ export default function Edit({ assistant }: Props) {
                                             {data.avatar ? (
                                                 <img src={URL.createObjectURL(data.avatar)} alt="" className="w-full h-full object-cover" />
                                             ) : assistant.avatar ? (
-                                                <img src={`/storage/${assistant.avatar}`} alt="" className="w-full h-full object-cover" />
+                                                <img src={assistant.avatar} alt="" className="w-full h-full object-cover" />
                                             ) : (
                                                 (data.name || 'A').charAt(0)
                                             )}
@@ -350,7 +350,7 @@ export default function Edit({ assistant }: Props) {
                                                                         {data.avatar ? (
                                                                             <img src={URL.createObjectURL(data.avatar)} alt="Preview" className="w-full h-full object-cover" />
                                                                         ) : assistant.avatar ? (
-                                                                            <img src={`/storage/${assistant.avatar}`} alt="Current" className="w-full h-full object-cover" />
+                                                                            <img src={assistant.avatar} alt="Current" className="w-full h-full object-cover" />
                                                                         ) : (
                                                                             <ImageIcon className="w-12 h-12 text-text-secondary" />
                                                                         )}
@@ -382,7 +382,7 @@ export default function Edit({ assistant }: Props) {
                                                                         {data.background_image ? (
                                                                             <img src={URL.createObjectURL(data.background_image)} alt="Preview" className="w-full h-full object-cover" />
                                                                         ) : assistant.background_image ? (
-                                                                            <img src={`/storage/${assistant.background_image}`} alt="Current" className="w-full h-full object-cover" />
+                                                                            <img src={assistant.background_image} alt="Current" className="w-full h-full object-cover" />
                                                                         ) : (
                                                                             <ImageIcon className="w-12 h-12 text-text-secondary" />
                                                                         )}

@@ -21,6 +21,7 @@ interface Assistant {
     id: number;
     name: string;
     description: string | null;
+    avatar?: string;
 }
 
 interface Props {
@@ -102,8 +103,12 @@ export default function AssistantChat({ assistant, history }: Props) {
 
                                             {/* Ответ ассистента */}
                                             <div className="flex items-start gap-4 pl-8 sm:pl-12">
-                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color shadow-lg shadow-primary-color/20">
-                                                    <Bot size={20} />
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[2px] bg-primary-color text-black-color shadow-lg shadow-primary-color/20 overflow-hidden">
+                                                    {assistant.avatar ? (
+                                                        <img src={assistant.avatar} alt={assistant.name} className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        <Bot size={20} />
+                                                    )}
                                                 </div>
                                                 <div className="flex-1 space-y-1">
                                                     <div className="flex items-center gap-2">
