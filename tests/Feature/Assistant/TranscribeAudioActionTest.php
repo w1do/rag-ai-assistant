@@ -52,6 +52,8 @@ test('transcribe audio action uses compatible audio transcriber and handles Open
 test('AIClientFactory selects correct transcriber based on URL', function () {
     $factory = new AIClientFactory;
 
+    Config::set('llphant.openai.api_key', 'test-key');
+
     // Test Polza AI
     Config::set('llphant.openai.base_url', 'https://polza.ai/api/v1');
     $transcriber = $factory->createAudioTranscriber();
