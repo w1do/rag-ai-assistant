@@ -92,12 +92,12 @@ import Breadcrumbs from '@/Components/Breadcrumbs';
 Все закругления в системе ограничены значением **2px** для создания строгого премиального вида. Исключение составляют только полностью круглые элементы.
 
 ### Сетка (Grid Background)
-Во всех макетах используется фоновая сетка с шагом 2px, реализованная через `linear-gradient` в `body`.
+Во всех макетах используется фоновая сетка с шагом 30px, реализованная через `linear-gradient` в `body`.
 ```css
 background-image: 
   linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
   linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-background-size: 2px 2px;
+background-size: 30px 30px;
 ```
 
 ### Цвета (Colors)
