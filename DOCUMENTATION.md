@@ -68,6 +68,7 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 - [Тарифные планы и ограничения](docs/starter-plan.md): Лимиты для тарифа "Старт", логика проверок.
 - [Система биллинга](docs/billing_system.md): Архитектура домена Billing, пополнение баланса, смена тарифов.
 - [Загрузка документов и расшифровка](docs/document_decoding.md): Описание процесса извлечения текста из документов.
+- [Обработка исключений](docs/exception_handling.md): JSON-ответы на ошибки для share-chat маршрутов, маппинг ModelNotFoundException на доменные исключения.
 
 ## Переменные окружения (.env)
 Все чувствительные данные вынесены в `.env`:
