@@ -1,10 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import SectionHeader from '@/Components/UI/SectionHeader';
-import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles, HelpCircle, CreditCard, RefreshCw, ShieldCheck, Wallet, Users, Lock, Zap, LifeBuoy, MessageCircle, ExternalLink } from 'lucide-react';
+import { Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles, HelpCircle, CreditCard, RefreshCw, ShieldCheck, Wallet, Users, Lock, Zap, LifeBuoy, MessageCircle, ExternalLink } from 'lucide-react';
+// LucideIcon used for getIcon return type
 import Faq from '@/Components/Faq';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
+import PricingCard from '@/Components/Tariffs/PricingCard';
 
 /**
  * Форматирует число как стоимость в рублях с разделением разрядов.
@@ -121,70 +123,18 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                        {plans.map((plan) => {
-                            const Icon = getIcon(plan.slug);
-                            const highlighted = plan.slug === 'business';
-                            return (
-                                <div key={plan.id} className="pricing-item group flex flex-col">
-                                    <div className="pricing-top">
-                                        <div className="flex justify-center mb-6">
-                                            <div className="w-[100px] h-[100px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
-                                                <Icon className="h-8 w-8 text-primary-color" />
-                                            </div>
-                                        </div>
-                                        <div className="pricing-top-content">
-                                            <h2 className="text-[38px] font-title text-white-color">{formatPrice(plan.base_price / 100)}</h2>
-                                            <p className="text-text-secondary-dark">
-                                                {plan.billing_cycle === 'monthly' ? 'в месяц' : plan.billing_cycle}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-5 flex flex-col flex-1">
-                                        <div className="mb-4">
-                                            {highlighted && (
-                                                <div className="mb-4">
-                                                    <span className="bg-primary-color text-black-color text-[12px] font-title px-4 py-1 rounded-full uppercase">
-                                                        Популярный
-                                                    </span>
-                                                </div>
-                                            )}
-                                            <h4 className="text-xl font-title text-white-color mb-2">{plan.name}</h4>
-                                            <p className="text-sm text-text-secondary-dark leading-relaxed">
-                                                {plan.trial_days > 0 ? `Пробный период: ${plan.trial_days} дней` : 'Мгновенный доступ'}
-                                            </p>
-                                        </div>
-
-                                        <ul className="space-y-3 mb-8 flex-1">
-                                            {Object.entries(plan.limits || {}).map(([slug, limit]) => (
-                                                <li key={slug} className="flex items-start gap-3 text-sm text-text-secondary-dark">
-                                                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-color" strokeWidth={3} />
-                                                    {formatLimit(slug, limit)}
-                                                </li>
-                                            ))}
-                                        </ul>
-
-                                        <button
-                                            onClick={() => handleSubscribe(plan.slug)}
-                                            disabled={plan.slug === currentPlanSlug}
-                                            className={`theme-button w-full ${plan.slug === currentPlanSlug ? 'opacity-50 cursor-not-allowed' : (highlighted ? 'style-1' : 'style-2')}`}
-                                        >
-                                            {plan.slug === currentPlanSlug ? (
-                                                <>
-                                                    <span data-text="Уже выбрано">Уже выбрано</span>
-                                                    <Check className="w-5 h-5" />
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span data-text="Выбрать тариф">Выбрать тариф</span>
-                                                    <ArrowRight className="w-5 h-5" />
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                        {plans.map((plan, index) => (
+                            <PricingCard
+                                key={plan.id}
+                                plan={plan}
+                                isHighlighted={plan.slug === currentPlanSlug}
+                                isCurrentPlan={plan.slug === currentPlanSlug}
+                                icon={getIcon(plan.slug)}
+                                onSubscribe={handleSubscribe}
+                                formatPrice={formatPrice}
+                                formatLimit={formatLimit}
+                            />
+                        ))}
                     </div>
 
                     <div className="mb-12">

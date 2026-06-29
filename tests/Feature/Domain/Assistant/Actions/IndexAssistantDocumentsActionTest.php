@@ -8,6 +8,7 @@ use App\Infrastructure\AI\AIClientFactory;
 use App\Infrastructure\AI\VectorStoreManager;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use LLPhant\Embeddings\Document;
 use LLPhant\Embeddings\EmbeddingGenerator\EmbeddingGeneratorInterface;
 use LLPhant\Embeddings\VectorStores\Qdrant\QdrantVectorStore;
@@ -23,10 +24,11 @@ test('it deletes old points before indexing new ones', function () {
     $knowledgeId = $knowledge->id;
 
     // Создаем старый чанк с qdrant_id
+    $oldQdrantId = (string) Str::uuid();
     $assistant->chunks()->create([
         'knowledge_id' => $knowledgeId,
         'content' => 'old content',
-        'qdrant_id' => 'old-uuid-1',
+        'qdrant_id' => $oldQdrantId,
     ]);
 
     $doc = new Document;
@@ -50,7 +52,7 @@ test('it deletes old points before indexing new ones', function () {
     // ПРОВЕРКА: удаление старых точек должно быть вызвано
     $vectorStoreManager->shouldReceive('deletePoints')
         ->once()
-        ->with($assistant, ['old-uuid-1']);
+        ->with($assistant, [$oldQdrantId]);
 
     $documentProcessor = new DocumentProcessor;
 

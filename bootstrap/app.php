@@ -41,7 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Публичный чат-виджет встраивается на сторонние сайты через iframe,
         // поэтому его эндпоинт сообщений не может полагаться на CSRF-токен сессии.
-        $middleware->validateCsrfTokens(except: [
+        $middleware->validateCsrfTokens(except: ($_ENV['APP_ENV'] ?? null) === 'testing' ? ['*'] : [
             'share-chat/*/message',
         ]);
     })

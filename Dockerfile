@@ -33,7 +33,29 @@ COPY --from=composer_stage /var/www/html/vendor ./vendor
 
 RUN npm run build
 
-# Stage 3: Final Production Image
+# Stage 3: Run Tests (gate for production build)
+FROM php:8.5-fpm-alpine AS test_stage
+
+WORKDIR /var/www/html
+
+RUN apk add --no-cache libzip libpng libpq icu-libs sqlite-libs \
+    && apk add --no-cache --virtual .build-deps \
+        $PHPIZE_DEPS libzip-dev libpng-dev postgresql-dev icu-dev zlib-dev sqlite-dev \
+    && docker-php-ext-install bcmath pdo_sqlite pdo_pgsql zip pcntl \
+    && pecl install redis && docker-php-ext-enable redis \
+    && apk del .build-deps
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY composer.json composer.lock ./
+RUN composer install --no-scripts --no-autoloader --prefer-dist --ignore-platform-reqs
+
+COPY . .
+RUN composer dump-autoload
+
+RUN php artisan test --no-ansi
+
+# Stage 4: Final Production Image
 FROM php:8.5-fpm-alpine
 
 LABEL maintainer="Junie"
@@ -84,6 +106,9 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/php.ini $PHP_INI_DIR/conf.d/99-overrides.ini
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint
+
+# Implicitly require test_stage to have passed
+COPY --from=test_stage /var/www/html/vendor/autoload.php /dev/null
 
 # Copy vendor from composer_stage
 COPY --from=composer_stage /var/www/html/vendor ./vendor

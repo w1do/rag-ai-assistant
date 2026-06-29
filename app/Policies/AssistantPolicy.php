@@ -28,9 +28,13 @@ class AssistantPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->balance <= 0) {
+            return false;
+        }
+
         $subscription = $user->subscriptions()->active()->first();
         if (! $subscription) {
-            return $user->balance > 0;
+            return true;
         }
 
         $limits = $subscription->plan->limits;

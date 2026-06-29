@@ -1,13 +1,10 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Moffhub\Billing\Models\Plan;
 
 beforeEach(function () {
-    DB::table('billing_plans')->truncate();
-
     Plan::create([
         'ulid' => (string) Str::ulid(),
         'name' => 'Start',
@@ -40,5 +37,16 @@ test('tariffs page passes plans and features props', function () {
         ->component('Tariffs')
         ->has('plans')
         ->has('features')
+    );
+});
+
+test('current plan slug is passed to the page props', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get(route('tariffs'));
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('Tariffs')
+        ->has('currentPlanSlug')
     );
 });

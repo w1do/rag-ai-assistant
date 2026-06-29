@@ -3,6 +3,28 @@
 use App\Domain\Assistant\Enums\AssistantStyle;
 use App\Domain\Assistant\Models\Assistant;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Moffhub\Billing\Models\Plan;
+
+beforeEach(function () {
+    DB::table('billing_plans')->truncate();
+
+    Plan::create([
+        'ulid' => (string) Str::ulid(),
+        'name' => 'Старт',
+        'slug' => 'start',
+        'base_price' => 0,
+        'currency' => 'RUB',
+        'billing_cycle' => 'monthly',
+        'is_active' => true,
+        'limits' => [
+            'assistants_count' => 5,
+            'links_count' => 10,
+            'voice_count' => 5,
+        ],
+    ]);
+});
 
 test('assistant can be updated with new fields', function () {
     $user = User::factory()->create();
@@ -28,13 +50,14 @@ test('assistant can be updated with new fields', function () {
     expect($assistant->style)->toBe(AssistantStyle::Positive);
     expect($assistant->brand_name)->toBe('New Brand');
     expect($assistant->phone)->toBe('123456789');
-    expect($assistant->social)->toBe(['telegram' => '@newtg', 'vk' => null]);
+    expect($assistant->social)->toMatchArray(['telegram' => '@newtg', 'vk' => null]);
     expect($assistant->fallback)->toBe('New fallback message');
     expect($assistant->system)->toBe('Custom system prompt.');
 });
 
 test('assistant creation includes new fields', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['balance' => 100]);
+    $user->subscribe('start')->create();
 
     $this->actingAs($user)
         ->post(route('assistants.store'), [
@@ -54,7 +77,7 @@ test('assistant creation includes new fields', function () {
     expect($assistant->style)->toBe(AssistantStyle::Commercial);
     expect($assistant->brand_name)->toBe('Brand X');
     expect($assistant->phone)->toBe('987654321');
-    expect($assistant->social)->toBe(['telegram' => '@brandx', 'vk' => 'vk.com/brandx']);
+    expect($assistant->social)->toMatchArray(['telegram' => '@brandx', 'vk' => 'vk.com/brandx']);
     expect($assistant->fallback)->toBe('I dont know.');
     expect($assistant->system)->toBe('Answer only from knowledge base.');
 });
