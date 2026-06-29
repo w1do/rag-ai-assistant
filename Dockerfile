@@ -20,17 +20,11 @@ FROM node:22-alpine AS node_stage
 
 WORKDIR /var/www/html
 
-# Copy node files
+# Install npm dependencies (cached layer — only invalidated when package files change)
 COPY package.json package-lock.json ./
-
-# Install npm dependencies
 RUN npm ci
 
-# Bust cache to ensure fresh assets on every build
-# Pass --build-arg CACHEBUST=$(date +%s) to invalidate this layer
-ARG CACHEBUST=1
-
-# Copy application files (including vendor for Ziggy in SSR)
+# Copy application files (invalidates cache on any source change)
 COPY . .
 # Copy vendor from composer_stage to ensure Ziggy is available for SSR build
 COPY --from=composer_stage /var/www/html/vendor ./vendor
