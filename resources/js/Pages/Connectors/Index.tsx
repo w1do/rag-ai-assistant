@@ -10,7 +10,6 @@ import SectionHeader from '@/Components/UI/SectionHeader';
 import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
-import FAQ from '@/Components/FAQ';
 
 interface Assistant {
     id: number;
@@ -85,7 +84,7 @@ function ConnectorCard({ connector, onConnect }: { connector: Connector; onConne
                 )}
 
                 <div className="mt-auto">
-                    <button 
+                    <button
                         className={`theme-button w-full ${isSoon ? 'style-2 opacity-50 cursor-not-allowed' : 'style-1'}`}
                         onClick={() => !isSoon && onConnect(connector)}
                         disabled={isSoon}
@@ -156,8 +155,8 @@ function ConnectorSidebar({ connectors }: { connectors: Connector[] }) {
                     <span className="text-primary-color font-title text-sm">{progress}%</span>
                 </div>
                 <div className="w-full bg-extra-color-three rounded-[2px] h-2 mb-4">
-                    <div 
-                        className="bg-primary-color h-2 rounded-[2px] shadow-[0_0_10px_rgba(223,255,0,0.5)] transition-all duration-1000" 
+                    <div
+                        className="bg-primary-color h-2 rounded-[2px] shadow-[0_0_10px_rgba(223,255,0,0.5)] transition-all duration-1000"
                         style={{ width: `${progress}%` }}
                     />
                 </div>
@@ -244,8 +243,8 @@ export default function Index({ connectors, assistants }: Props) {
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
                         <div className="lg:col-span-3">
-                            <SectionHeader 
-                                title="Коннекторы" 
+                            <SectionHeader
+                                title="Коннекторы"
                                 icon={Share2}
                             />
                             <p className="text-text-secondary-dark max-w-2xl mb-12 -mt-8">
@@ -254,9 +253,9 @@ export default function Index({ connectors, assistants }: Props) {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {connectors.map((connector) => (
-                                    <ConnectorCard 
-                                        key={connector.id} 
-                                        connector={connector} 
+                                    <ConnectorCard
+                                        key={connector.id}
+                                        connector={connector}
                                         onConnect={openModal}
                                     />
                                 ))}
@@ -267,12 +266,6 @@ export default function Index({ connectors, assistants }: Props) {
                             <ConnectorSidebar connectors={connectors} />
                         </div>
                     </div>
-
-                    <FAQ 
-                        items={connectorFaqs} 
-                        title={<>Помощь по <span className="text-primary-color">коннекторам</span></>}
-                        subtitle="Ответы на частые вопросы по работе с внешними платформами."
-                    />
                 </div>
             </div>
 

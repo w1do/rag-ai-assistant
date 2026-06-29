@@ -4,7 +4,6 @@ import SectionHeader from '@/Components/UI/SectionHeader';
 import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
-import FAQ from '@/Components/FAQ';
 
 /**
  * Форматирует число как стоимость в рублях с разделением разрядов.
@@ -89,8 +88,8 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                         <div className="lg:col-span-2">
                             <div className="mb-12">
-                                <SectionHeader 
-                                    title="Тарифные планы" 
+                                <SectionHeader
+                                    title="Тарифные планы"
                                     icon={Crown}
                                 />
                                 <p className="text-text-secondary-dark max-w-2xl -mt-8">
@@ -142,7 +141,7 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
                                                     ))}
                                                 </ul>
 
-                                                <button 
+                                                <button
                                                     onClick={() => handleSubscribe(plan.slug)}
                                                     disabled={plan.slug === currentPlanSlug}
                                                     className={`theme-button w-full ${plan.slug === currentPlanSlug ? 'opacity-50 cursor-not-allowed' : (highlighted ? 'style-1' : 'style-2')}`}
@@ -181,12 +180,6 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
                             </div>
                         </div>
                     </div>
-
-                    <FAQ 
-                        items={tariffFaqs} 
-                        title={<>Вопросы по <span className="text-primary-color">тарифам</span></>}
-                        subtitle="Все, что нужно знать об оплате и использовании сервиса."
-                    />
                 </div>
             </div>
         </AuthenticatedLayout>
