@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Fix storage permissions (volumes may be mounted as root)
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Run migrations
 php artisan migrate --force
 
