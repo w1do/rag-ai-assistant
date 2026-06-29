@@ -18,10 +18,10 @@
   --color-form-input: #343434;
   --color-border-color-one: rgba(255, 255, 255, 0.10);
 
-  --radius-one: 5px;
-  --radius-two: 15px;
+  --radius-one: 2px;
+  --radius-two: 2px;
   --radius-three: 2px;
-  --radius-four: 24px;
+  --radius-four: 2px;
   --radius-full: 9999px;
 
   /* Маппинг стандартных радиусов Tailwind на наши переменные для глобального контроля */
@@ -97,7 +97,7 @@
 
 @layer components {
   .theme-button {
-    @apply h-[52px] px-[25px] rounded-full inline-flex items-center justify-center gap-[10px] font-semibold text-[16px] transition-all duration-500 overflow-hidden relative;
+    @apply h-[52px] px-[25px] rounded-one inline-flex items-center justify-center gap-[10px] font-semibold text-[16px] transition-all duration-500 overflow-hidden relative;
     perspective: 1000px;
     cursor: pointer;
     text-transform: capitalize;
@@ -173,11 +173,18 @@
 
   .pricing-item:hover {
     border-color: transparent;
-    background-image: linear-gradient(var(--color-background-one), var(--color-background-one)), 
+    background-image: linear-gradient(var(--color-background-one), var(--color-background-one)),
                       linear-gradient(135deg, var(--color-primary-color) 0%, #FFFFFF 100%);
     background-origin: border-box;
     background-clip: padding-box, border-box;
   }
+}
+
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 2px 2px;
 }
 
 .glass {

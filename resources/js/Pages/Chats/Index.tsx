@@ -139,7 +139,7 @@ export default function Index({ auth, assistants = [] }: PageProps<{ assistants:
                             return (
                                 <div
                                     key={assistant.id}
-                                    className="group relative flex flex-col rounded-[20px] bg-white p-7 shadow-md border border-gray-100 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg overflow-hidden"
+                                    className="group relative flex flex-col rounded-one bg-white p-7 shadow-md border border-gray-100 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg overflow-hidden"
                                 >
                                     {/* Hover Gradient Background (3 colors as per cards.md) */}
                                     <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br from-[#151B27] via-[#C8A645] to-[#0C1019]" />

@@ -53,7 +53,6 @@ export default function UpdateProfileInformation({
                         onChange={(e) => setData('name', e.target.value)}
                         required
                         isFocused
-                        autoComplete="name"
                         placeholder="Введите ваше полное имя (например: Александр)"
                     />
 
@@ -72,7 +71,6 @@ export default function UpdateProfileInformation({
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
-                        autoComplete="username"
                         placeholder="укажите актуальный email: example@mail.ru"
                     />
 

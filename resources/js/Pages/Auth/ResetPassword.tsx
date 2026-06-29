@@ -30,57 +30,65 @@ export default function ResetPassword({
 
     return (
         <GuestLayout>
-            <Head title="Reset Password" />
+            <Head title="Сброс пароля" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+            <div className="mb-8 text-center">
+                <h1 className="text-2xl font-title text-white-color sm:text-3xl">Новый пароль</h1>
+                <p className="mt-2 text-text-secondary-dark">Установите новый надежный пароль</p>
+            </div>
+
+            <form onSubmit={submit} className="space-y-5">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-75">
+                    <InputLabel htmlFor="email" value="Email" className="mb-2 ml-1" />
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
+                        className="block w-full"
                         onChange={(e) => setData('email', e.target.value)}
+                        required
                     />
 
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
+                    <InputLabel htmlFor="password" value="Новый пароль" className="mb-2 ml-1" />
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        className="block w-full"
                         isFocused={true}
+                        placeholder="••••••••"
                         onChange={(e) => setData('password', e.target.value)}
+                        required
                     />
 
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-300">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
+                        value="Подтвердите пароль"
+                        className="mb-2 ml-1"
                     />
 
                     <TextInput
                         type="password"
                         name="password_confirmation"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        className="block w-full"
+                        placeholder="••••••••"
                         onChange={(e) =>
                             setData('password_confirmation', e.target.value)
                         }
+                        required
                     />
 
                     <InputError
@@ -89,9 +97,9 @@ export default function ResetPassword({
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Reset Password
+                <div className="pt-2 animate-in fade-in zoom-in duration-500 delay-500">
+                    <PrimaryButton className="w-full" disabled={processing}>
+                        Сбросить пароль
                     </PrimaryButton>
                 </div>
             </form>

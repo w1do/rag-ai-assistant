@@ -2,7 +2,8 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
+import Alert from '@/Components/Alert';
+import { Head, useForm, Link } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
 export default function ForgotPassword({ status }: { status?: string }) {
@@ -18,37 +19,51 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
     return (
         <GuestLayout>
-            <Head title="Forgot Password" />
+            <Head title="Восстановление пароля" />
 
-            <div className="mb-4 text-sm text-gray-600">
-                Forgot your password? No problem. Just let us know your email
-                address and we will email you a password reset link that will
-                allow you to choose a new one.
+            <div className="mb-8 text-center">
+                <h1 className="text-2xl font-title text-white-color sm:text-3xl">Забыли пароль?</h1>
+                <p className="mt-2 text-text-secondary-dark leading-relaxed">
+                    Введите ваш Email, и мы отправим ссылку для сброса пароля.
+                </p>
             </div>
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <Alert type="success" className="mb-6">
                     {status}
-                </div>
+                </Alert>
             )}
 
-            <form onSubmit={submit}>
-                <TextInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
-                    onChange={(e) => setData('email', e.target.value)}
-                />
+            <form onSubmit={submit} className="space-y-6">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
+                    <TextInput
+                        id="email"
+                        type="email"
+                        name="email"
+                        value={data.email}
+                        className="block w-full"
+                        isFocused={true}
+                        placeholder="example@mail.com"
+                        onChange={(e) => setData('email', e.target.value)}
+                        required
+                    />
 
-                <InputError message={errors.email} className="mt-2" />
+                    <InputError message={errors.email} className="mt-2" />
+                </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Email Password Reset Link
+                <div className="pt-2 animate-in fade-in zoom-in duration-500 delay-300">
+                    <PrimaryButton className="w-full" disabled={processing}>
+                        Отправить ссылку
                     </PrimaryButton>
+                </div>
+
+                <div className="mt-8 text-center text-sm text-text-secondary-dark animate-in fade-in duration-700 delay-500">
+                    <Link
+                        href={route('login')}
+                        className="font-medium text-primary-color hover:underline"
+                    >
+                        Вернуться ко входу
+                    </Link>
                 </div>
             </form>
         </GuestLayout>

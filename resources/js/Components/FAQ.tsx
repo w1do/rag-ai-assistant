@@ -84,32 +84,36 @@ export default function FAQ({ items, title, subtitle }: FAQProps) {
                     )}
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {faqs.map((faq, index) => (
                         <div 
                             key={index}
-                            className="bg-background-one rounded-three overflow-hidden transition-all duration-500 border border-border-color-one hover:border-primary-color/50"
+                            className="pricing-item overflow-hidden transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
+                            style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
                         >
                             <button
                                 onClick={() => toggle(index)}
                                 className="w-full flex items-center justify-between p-7 text-left bg-transparent hover:bg-white/5 transition-colors focus:outline-none"
                             >
-                                <span className="text-lg font-bold text-white-color pr-8">
+                                <span className="text-lg font-title text-white-color pr-8 font-normal">
                                     {faq.question}
                                 </span>
-                                {openIndex === index ? (
-                                    <ChevronUp className="h-5 w-5 text-primary-color shrink-0" />
-                                ) : (
-                                    <ChevronDown className="h-5 w-5 text-text-secondary-dark shrink-0" />
-                                )}
+                                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-color-one transition-all duration-300 ${openIndex === index ? 'bg-primary-color text-black-color border-primary-color' : 'text-text-secondary-dark'}`}>
+                                    {openIndex === index ? (
+                                        <ChevronUp className="h-5 w-5" />
+                                    ) : (
+                                        <ChevronDown className="h-5 w-5" />
+                                    )}
+                                </div>
                             </button>
                             
                             <div 
-                                className={`px-7 overflow-hidden transition-all duration-300 ease-in-out ${
-                                    openIndex === index ? 'max-h-96 pb-7' : 'max-h-0'
+                                className={`px-7 overflow-hidden transition-all duration-500 ease-in-out ${
+                                    openIndex === index ? 'max-h-[500px] pb-7 opacity-100' : 'max-h-0 opacity-0'
                                 }`}
                             >
-                                <p className="text-text-secondary-dark leading-relaxed">
+                                <div className="h-px w-full bg-border-color-one mb-6"></div>
+                                <p className="text-text-secondary-dark leading-relaxed text-lg">
                                     {faq.answer}
                                 </p>
                             </div>

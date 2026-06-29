@@ -5,11 +5,11 @@
 ## Радиусы (Border Radius)
 | Токен | Значение | Применение |
 |-------|----------|------------|
-| `--border-radius-one` | `5px` | Мелкие элементы, алерты (`ajax-response`) |
-| `--border-radius-two` | `15px` | Средние блоки |
-| `--border-radius-three` | `24px` | Карточки, бейджи, `.sub-title`, textarea |
-| (литерал) `100px` | pill | Кнопки `.theme-button`, инпуты, круглые иконки |
-| (адаптив) `20px` | — | Карточки/textarea на `≤1199px` |
+| `--border-radius-one` | `2px`    | Мелкие элементы, алерты (`ajax-response`) |
+| `--border-radius-two` | `4px`    | Средние блоки |
+| `--border-radius-three` | `6px`    | Карточки, бейджи, `.sub-title`, textarea |
+| (литерал) `100px` | pill     | Кнопки `.theme-button`, инпуты, круглые иконки |
+| (адаптив) `20px` | —        | Карточки/textarea на `≤1199px` |
 
 ## Высоты контролов
 | Элемент | Высота | Паддинги |

@@ -26,17 +26,22 @@ export default function Register() {
         <GuestLayout>
             <Head title="Регистрация" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Имя" />
+            <div className="mb-8 text-center">
+                <h1 className="text-2xl font-title text-white-color sm:text-3xl">Создать аккаунт</h1>
+                <p className="mt-2 text-text-secondary-dark">Начните работу с BotSync прямо сейчас</p>
+            </div>
+
+            <form onSubmit={submit} className="space-y-5">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-75">
+                    <InputLabel htmlFor="name" value="Имя" className="mb-2 ml-1" />
 
                     <TextInput
                         id="name"
                         name="name"
                         value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
+                        className="block w-full"
                         isFocused={true}
+                        placeholder="Иван Иванов"
                         onChange={(e) => setData('name', e.target.value)}
                         required
                     />
@@ -44,16 +49,16 @@ export default function Register() {
                     <InputError message={errors.name} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
+                    <InputLabel htmlFor="email" value="Email" className="mb-2 ml-1" />
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
+                        className="block w-full"
+                        placeholder="example@mail.com"
                         onChange={(e) => setData('email', e.target.value)}
                         required
                     />
@@ -61,16 +66,16 @@ export default function Register() {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Пароль" />
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-300">
+                    <InputLabel htmlFor="password" value="Пароль" className="mb-2 ml-1" />
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        className="block w-full"
+                        placeholder="••••••••"
                         onChange={(e) => setData('password', e.target.value)}
                         required
                     />
@@ -78,10 +83,11 @@ export default function Register() {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-500">
                     <InputLabel
                         htmlFor="password_confirmation"
                         value="Подтвердите пароль"
+                        className="mb-2 ml-1"
                     />
 
                     <TextInput
@@ -89,8 +95,8 @@ export default function Register() {
                         type="password"
                         name="password_confirmation"
                         value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
+                        className="block w-full"
+                        placeholder="••••••••"
                         onChange={(e) =>
                             setData('password_confirmation', e.target.value)
                         }
@@ -103,17 +109,20 @@ export default function Register() {
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Уже зарегистрированы?
-                    </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                <div className="pt-2 animate-in fade-in zoom-in duration-500 delay-700">
+                    <PrimaryButton className="w-full" disabled={processing}>
                         Зарегистрироваться
                     </PrimaryButton>
+                </div>
+
+                <div className="mt-8 text-center text-sm text-text-secondary-dark animate-in fade-in duration-700 delay-1000">
+                    Уже есть аккаунт?{' '}
+                    <Link
+                        href={route('login')}
+                        className="font-medium text-primary-color hover:underline"
+                    >
+                        Войти
+                    </Link>
                 </div>
             </form>
         </GuestLayout>

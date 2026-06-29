@@ -78,7 +78,6 @@ export default function UpdatePasswordForm({
                         }
                         type="password"
                         className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
-                        autoComplete="current-password"
                         placeholder="Введите ваш действующий пароль"
                     />
 
@@ -104,7 +103,6 @@ export default function UpdatePasswordForm({
                         onChange={(e) => setData('password', e.target.value)}
                         type="password"
                         className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
-                        autoComplete="new-password"
                         placeholder="Минимум 8 символов, используйте буквы и цифры"
                     />
 
@@ -128,7 +126,6 @@ export default function UpdatePasswordForm({
                         }
                         type="password"
                         className="mt-1 block w-full text-primary-color border-primary-color/20 focus:border-primary-color"
-                        autoComplete="new-password"
                         placeholder="Повторите новый пароль еще раз"
                     />
 

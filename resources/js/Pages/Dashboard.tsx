@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import StatCardComponent from '@/Components/Dashboard/StatCard';
 import SectionHeader from '@/Components/UI/SectionHeader';
+import GradientAlert from '@/Components/GradientAlert';
 import {
     Bot,
     MessagesSquare,
@@ -102,6 +103,8 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
             <div className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl space-y-8">
                     <Breadcrumbs items={[]} />
+
+                    <GradientAlert />
 
                     <SectionHeader 
                         title="Статистика" 

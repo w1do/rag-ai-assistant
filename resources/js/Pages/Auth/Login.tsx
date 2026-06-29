@@ -4,6 +4,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
+import Alert from '@/Components/Alert';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 
@@ -32,48 +33,63 @@ export default function Login({
         <GuestLayout>
             <Head title="Вход" />
 
+            <div className="mb-8 text-center">
+                <h1 className="text-2xl font-title text-white-color sm:text-3xl">С возвращением!</h1>
+                <p className="mt-2 text-text-secondary-dark">Войдите в свой аккаунт, чтобы продолжить</p>
+            </div>
+
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <Alert type="success" className="mb-6">
                     {status}
-                </div>
+                </Alert>
             )}
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+            <form onSubmit={submit} className="space-y-6">
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
+                    <InputLabel htmlFor="email" value="Email" className="mb-2 ml-1" />
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
+                        className="block w-full"
                         isFocused={true}
+                        placeholder="example@mail.com"
                         onChange={(e) => setData('email', e.target.value)}
                     />
 
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Пароль" />
+                <div className="animate-in fade-in slide-in-from-left-4 duration-500 delay-300">
+                    <div className="flex items-center justify-between mb-2 ml-1">
+                        <InputLabel htmlFor="password" value="Пароль" />
+                        {canResetPassword && (
+                            <Link
+                                href={route('password.request')}
+                                className="text-xs text-primary-color hover:text-white-color transition-colors"
+                            >
+                                Забыли пароль?
+                            </Link>
+                        )}
+                    </div>
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
+                        className="block w-full"
+                        placeholder="••••••••"
                         onChange={(e) => setData('password', e.target.value)}
                     />
 
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4 block">
-                    <label className="flex items-center">
+                <div className="flex items-center justify-between animate-in fade-in duration-500 delay-500">
+                    <label className="flex items-center cursor-pointer group">
                         <Checkbox
                             name="remember"
                             checked={data.remember}
@@ -84,25 +100,26 @@ export default function Login({
                                 )
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-text-secondary-dark group-hover:text-white-color transition-colors">
                             Запомнить меня
                         </span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Забыли пароль?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Войти
+                <div className="pt-2 animate-in fade-in zoom-in duration-500 delay-700">
+                    <PrimaryButton className="w-full" disabled={processing}>
+                        Войти в систему
                     </PrimaryButton>
+                </div>
+
+                <div className="mt-8 text-center text-sm text-text-secondary-dark animate-in fade-in duration-700 delay-1000">
+                    Нет аккаунта?{' '}
+                    <Link
+                        href={route('register')}
+                        className="font-medium text-primary-color hover:underline"
+                    >
+                        Зарегистрироваться
+                    </Link>
                 </div>
             </form>
         </GuestLayout>

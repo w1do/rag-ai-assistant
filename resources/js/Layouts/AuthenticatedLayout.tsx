@@ -55,7 +55,7 @@ export default function Authenticated({
     };
 
     return (
-        <div className="min-h-screen bg-body-color">
+        <div className="min-h-screen bg-body-color grid-bg">
             {user.balance <= 0 && (
                 <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-2">
                     <div className="mx-auto max-w-7xl flex items-center justify-between">

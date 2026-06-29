@@ -24,7 +24,7 @@ export default function Tips({ title = 'Полезные советы', tips }: 
             >
                 {tips.map((tip, index) => (
                     <SwiperSlide key={index}>
-                        <blockquote className="bg-background-one border-r-2 border-primary-color rounded-[5px] p-8 relative overflow-hidden flex flex-col min-h-[160px] justify-center shadow-[inset_0_0_20px_rgba(223,255,0,0.03)] group-hover:shadow-[inset_0_0_30px_rgba(223,255,0,0.05)] transition-all duration-500">
+                        <blockquote className="bg-background-one border-r-2 border-primary-color rounded-one p-8 relative overflow-hidden flex flex-col min-h-[160px] justify-center shadow-[inset_0_0_20px_rgba(223,255,0,0.03)] group-hover:shadow-[inset_0_0_30px_rgba(223,255,0,0.05)] transition-all duration-500">
                             {/* Decorative background element */}
                             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary-color/5 rounded-full blur-3xl pointer-events-none" />
                             
@@ -64,7 +64,7 @@ export default function Tips({ title = 'Полезные советы', tips }: 
                     background: var(--color-primary-color) !important;
                     opacity: 1;
                     width: 20px;
-                    border-radius: 4px;
+                    border-radius: 2px;
                     transition: all 0.3s ease;
                     box-shadow: 0 0 10px var(--color-primary-color);
                 }
