@@ -38,3 +38,5 @@ volumes:
         driver: local
     app-logs:
         driver: local
+    uploads:
+         driver: local
