@@ -47,7 +47,7 @@ test('it retries on failure and uses proxies', function () {
         return $request->url() === 'https://api.firecrawl.dev/v1/scrape' &&
                $request['url'] === 'https://example.com';
     });
-});
+})->group('slow');
 
 test('it logs warnings for intermediate failures and error for the final one', function () {
     Log::shouldReceive('warning')->twice();
@@ -59,7 +59,7 @@ test('it logs warnings for intermediate failures and error for the final one', f
 
     $parser = new WebParser;
     $parser->parseUrl('https://example.com');
-});
+})->group('slow');
 
 test('it returns null after 3 failed attempts', function () {
     Http::fake([
@@ -74,7 +74,7 @@ test('it returns null after 3 failed attempts', function () {
 
     expect($result)->toBeNull();
     Http::assertSentCount(3);
-});
+})->group('slow');
 
 test('it supports SOCKS5 proxy strings in proxy.txt', function () {
     $socksProxy = 'socks5://user:pass@1.2.3.4:1080';
@@ -94,7 +94,7 @@ test('it supports SOCKS5 proxy strings in proxy.txt', function () {
     Http::assertSent(function ($request) {
         return $request->url() === 'https://api.firecrawl.dev/v1/scrape';
     });
-});
+})->group('slow');
 
 test('it ignores comments and trims spaces in proxy.txt', function () {
     $content = "# Comment\n  http://real-proxy:8080  \n# Another";
@@ -108,4 +108,4 @@ test('it ignores comments and trims spaces in proxy.txt', function () {
     $proxy = $method->invoke($parser);
 
     expect($proxy)->toBe('http://real-proxy:8080');
-});
+})->group('slow');

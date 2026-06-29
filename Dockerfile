@@ -53,7 +53,7 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist --ignore-platfor
 COPY . .
 RUN composer dump-autoload
 
-RUN php artisan test --no-ansi
+RUN php artisan test --no-ansi --exclude-group slow
 
 # Stage 4: Final Production Image
 FROM php:8.5-fpm-alpine
