@@ -15,17 +15,11 @@ services:
             - 'traefik.http.routers.botsync.entrypoints=websecure'
             - 'traefik.http.routers.botsync.tls.certresolver=letsencrypt'
             - 'traefik.http.services.botsync.loadbalancer.server.port=80'
+        env_file:
+            - .env
         environment:
             APP_ENV: production
             APP_DEBUG: false
-            APP_KEY: '${APP_KEY:-base64:WHNuXOYAxHa/dwRj5rDIdC96kV7i444d0hrDAzwaIMo=}'
-            REDIS_CLIENT: '${REDIS_CLIENT:-phpredis}'
-            REDIS_HOST: '${REDIS_HOST}'
-            REDIS_PASSWORD: '${REDIS_PASSWORD:-}'
-            REDIS_PORT: '${REDIS_PORT:-6379}'
-            QUEUE_CONNECTION: '${QUEUE_CONNECTION:-redis}'
-            CACHE_STORE: '${CACHE_STORE:-redis}'
-            SESSION_DRIVER: '${SESSION_DRIVER:-redis}'
         volumes:
             - 'app-storage:/var/www/html/storage/app'
             - 'app-logs:/var/www/html/storage/logs'
