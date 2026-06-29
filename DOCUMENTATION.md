@@ -102,12 +102,14 @@ public function store(Request $request, StoreAssistantAction $action): RedirectR
 
 ### Сборка и запуск
 ```bash
-# Сборка образа
-docker build -t rag-system-prod .
+# Сборка образа (с инвалидацией кеша фронтенда для получения свежих ассетов)
+docker build --build-arg CACHEBUST=$(date +%s) -t rag-system-prod .
 
 # Запуск контейнера
 docker run -d -p 8080:80 --env-file .env rag-system-prod
 ```
+
+> **Важно**: флаг `--build-arg CACHEBUST=$(date +%s)` гарантирует, что `npm run build` всегда выполняется заново со свежими исходниками, даже если `package.json` не изменился. Без него Docker может использовать закешированный слой со старыми ассетами.
 
 ### Структура Docker-папки
 - `Dockerfile`: Инструкции по сборке.

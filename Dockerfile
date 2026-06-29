@@ -26,6 +26,10 @@ COPY package.json package-lock.json ./
 # Install npm dependencies
 RUN npm ci
 
+# Bust cache to ensure fresh assets on every build
+# Pass --build-arg CACHEBUST=$(date +%s) to invalidate this layer
+ARG CACHEBUST=1
+
 # Copy application files (including vendor for Ziggy in SSR)
 COPY . .
 # Copy vendor from composer_stage to ensure Ziggy is available for SSR build
