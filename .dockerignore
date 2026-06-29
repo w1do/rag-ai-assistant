@@ -12,6 +12,7 @@ storage/framework/views/*.php
 storage/logs/*.log
 public/build
 public/storage
+/public/uploads
 compose.yaml
 compose.override.yaml
 README.md
