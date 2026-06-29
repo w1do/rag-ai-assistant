@@ -52,6 +52,9 @@ class BillingSeeder extends Seeder
                 'assistants_count' => 1,
                 'messages_count' => 1000,
                 'knowledge_base_size' => 5,
+                'voice_count' => 5,
+                'links_count' => 10,
+                'document_count' => 0,
             ],
         ]);
 
@@ -68,6 +71,9 @@ class BillingSeeder extends Seeder
                 'messages_count' => 10000,
                 'knowledge_base_size' => 50,
                 'connectors_access' => true,
+                'voice_count' => 50,
+                'links_count' => 100,
+                'document_count' => 50,
             ],
         ]);
 
@@ -84,6 +90,9 @@ class BillingSeeder extends Seeder
                 'messages_count' => 100000,
                 'knowledge_base_size' => 500,
                 'connectors_access' => true,
+                'voice_count' => -1,
+                'links_count' => -1,
+                'document_count' => -1,
             ],
         ]);
     }

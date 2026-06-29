@@ -28,13 +28,9 @@ class AssistantPolicy
      */
     public function create(User $user): bool
     {
-        if ($user->balance <= 0) {
-            return false;
-        }
-
         $subscription = $user->subscriptions()->active()->first();
         if (! $subscription) {
-            return false;
+            return $user->balance > 0;
         }
 
         $limits = $subscription->plan->limits;
@@ -52,13 +48,13 @@ class AssistantPolicy
      */
     public function addUrl(User $user, Assistant $assistant): bool
     {
-        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+        if ($user->id !== $assistant->user_id) {
             return false;
         }
 
         $subscription = $user->subscriptions()->active()->first();
         if (! $subscription) {
-            return false;
+            return $user->balance > 0;
         }
 
         $limits = $subscription->plan->limits;
@@ -76,17 +72,17 @@ class AssistantPolicy
      */
     public function uploadAudio(User $user, Assistant $assistant): bool
     {
-        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+        if ($user->id !== $assistant->user_id) {
             return false;
         }
 
         $subscription = $user->subscriptions()->active()->first();
         if (! $subscription) {
-            return false;
+            return $user->balance > 0;
         }
 
         $limits = $subscription->plan->limits;
-        $audioLimit = $limits['voice_count'] ?? 0;
+        $audioLimit = $limits['voice_count'] ?? -1;
 
         if ($audioLimit === -1) {
             return true;
@@ -100,13 +96,13 @@ class AssistantPolicy
      */
     public function uploadDocument(User $user, Assistant $assistant): bool
     {
-        if ($user->id !== $assistant->user_id || $user->balance <= 0) {
+        if ($user->id !== $assistant->user_id) {
             return false;
         }
 
         $subscription = $user->subscriptions()->active()->first();
         if (! $subscription) {
-            return false;
+            return $user->balance > 0;
         }
 
         $limits = $subscription->plan->limits;

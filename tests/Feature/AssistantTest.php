@@ -16,7 +16,7 @@ test('authenticated user can view assistants index', function () {
 
 test('authenticated user can create assistant', function () {
     $this->withoutVite();
-    $user = User::factory()->create();
+    $user = User::factory()->create(['balance' => 100]);
 
     $response = $this
         ->actingAs($user)
