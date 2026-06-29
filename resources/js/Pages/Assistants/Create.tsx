@@ -6,7 +6,8 @@ import TextInput from '@/Components/TextInput';
 import Select from '@/Components/Select';
 import InputHint from '@/Components/InputHint';
 import Breadcrumbs from '@/Components/Breadcrumbs';
-import { Plus, Trash2, ArrowRight, LifeBuoy, Settings, Phone, Zap, Image as ImageIcon } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { Plus, Trash2, ArrowRight, LifeBuoy, Settings, Phone, Zap, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { FormEventHandler, ReactNode, useState } from 'react';
 
 type TabKey = 'general' | 'contacts' | 'behavior' | 'appearance';
@@ -145,17 +146,14 @@ export default function Create() {
                         { label: 'Создать' }
                     ]} />
 
-                    <div className="flex items-center justify-between mb-6 sm:mb-10">
-                        <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
-                            Создать ассистента
-                        </h2>
-                        <Link
-                            href={route('assistants.index')}
-                            className="theme-button style-2 !h-[44px]"
-                        >
-                            <span data-text="← К списку">← К списку</span>
-                        </Link>
-                    </div>
+                    <SectionHeader 
+                        title="Создать ассистента" 
+                        icon={Sparkles}
+                        href={route('assistants.index')}
+                        linkText="К списку"
+                        linkIcon={ArrowRight}
+                        className="!mb-10"
+                    />
 
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
                         {/* Форма и Табы */}

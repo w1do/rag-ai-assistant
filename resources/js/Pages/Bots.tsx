@@ -1,6 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { Bot, Wrench } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import Breadcrumbs from '@/Components/Breadcrumbs';
 
 /**
  * Страница управления ботами.
@@ -10,28 +12,33 @@ import { Bot, Wrench } from 'lucide-react';
  */
 export default function Bots() {
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Боты
-                </h2>
-            }
-        >
+        <AuthenticatedLayout>
             <Head title="Боты" />
 
             <div className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-7xl">
-                    <div className="flex flex-col items-center justify-center rounded-[20px] border border-gray-200 bg-white px-7 py-16 text-center shadow-md">
-                        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-inset ring-indigo-100">
-                            <Bot className="h-8 w-8" strokeWidth={2} />
+                    <Breadcrumbs items={[{ label: 'Боты' }]} />
+                    
+                    <SectionHeader title="Боты" icon={Bot} />
+
+                    <div className="flex flex-col items-center justify-center rounded-three border border-border-color-one bg-background-one px-7 py-20 text-center shadow-lg relative overflow-hidden group">
+                        {/* Декоративные элементы фона */}
+                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary-color/5 rounded-full blur-3xl group-hover:bg-primary-color/10 transition-all duration-700"></div>
+                        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-primary-color/5 rounded-full blur-3xl group-hover:bg-primary-color/10 transition-all duration-700"></div>
+
+                        <span className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-primary-rgb-12 text-primary-color border border-primary-color/20 mb-6 group-hover:scale-110 transition-transform duration-500">
+                            <Bot className="h-10 w-10" strokeWidth={2} />
                         </span>
-                        <h3 className="mt-5 text-lg font-semibold text-gray-900">
-                            Подключение ботов
+                        
+                        <h3 className="relative text-xl font-title text-white-color uppercase tracking-tight">
+                            Подключение <span className="text-primary-color">ботов</span>
                         </h3>
-                        <p className="mt-2 max-w-md text-sm text-gray-500">
-                            Здесь можно будет подключить бота к вашей базе знаний.
+                        
+                        <p className="relative mt-4 max-w-md text-sm text-text-secondary leading-relaxed">
+                            Здесь можно будет подключить бота к вашей базе знаний. Мы работаем над интеграциями с Telegram, WhatsApp и другими платформами.
                         </p>
-                        <span className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
+                        
+                        <span className="relative mt-8 inline-flex items-center gap-2 rounded-full bg-primary-color/10 px-4 py-1.5 text-xs font-bold text-primary-color border border-primary-color/20 uppercase tracking-widest">
                             <Wrench className="h-4 w-4" strokeWidth={2} />
                             В разработке
                         </span>

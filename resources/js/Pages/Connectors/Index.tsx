@@ -6,7 +6,8 @@ import Modal from '@/Components/Modal';
 import Select from '@/Components/Select';
 import InputHint from '@/Components/InputHint';
 import { useState } from 'react';
-import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import FAQ from '@/Components/FAQ';
@@ -243,14 +244,13 @@ export default function Index({ connectors, assistants }: Props) {
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
                         <div className="lg:col-span-3">
-                            <div className="mb-12">
-                                <h3 className="text-3xl font-title text-white-color mb-4">
-                                    Управляйте своими <span className="text-primary-color">коннекторами</span>
-                                </h3>
-                                <p className="text-text-secondary-dark max-w-2xl">
-                                    Подключайте ассистентов к различным платформам для автоматизации взаимодействия с вашей аудиторией.
-                                </p>
-                            </div>
+                            <SectionHeader 
+                                title="Коннекторы" 
+                                icon={Share2}
+                            />
+                            <p className="text-text-secondary-dark max-w-2xl mb-12 -mt-8">
+                                Подключайте ассистентов к различным платформам для автоматизации взаимодействия с вашей аудиторией.
+                            </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {connectors.map((connector) => (

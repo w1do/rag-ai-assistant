@@ -18,7 +18,27 @@
   --color-form-input: #343434;
   --color-border-color-one: rgba(255, 255, 255, 0.10);
 
+  --radius-one: 5px;
+  --radius-two: 15px;
   --radius-three: 2px;
+  --radius-four: 24px;
+  --radius-full: 9999px;
+
+  /* Маппинг стандартных радиусов Tailwind на наши переменные для глобального контроля */
+  --radius-xs: var(--radius-one);
+  --radius-sm: var(--radius-one);
+  --radius-md: var(--radius-two);
+  --radius-lg: var(--radius-two);
+  --radius-xl: var(--radius-two);
+  --radius-2xl: var(--radius-four);
+  --radius-3xl: var(--radius-four);
+
+  /* Внутренние радиусы для сложных бордеров */
+  --radius-one-inner: calc(var(--radius-one) - 1px);
+  --radius-two-inner: calc(var(--radius-two) - 1px);
+  --radius-three-inner: calc(var(--radius-three) - 1px);
+  --radius-four-inner: calc(var(--radius-four) - 1px);
+
   --transition-base: 500ms all ease;
 
   /* Совместимость с существующими стилями */
@@ -49,6 +69,11 @@
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
   }
 }
 

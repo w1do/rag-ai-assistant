@@ -10,7 +10,7 @@ interface Props {
 
 /**
  * Компонент для отображения уведомления о достижении лимита.
- * Использует стилистику дизайн-системы: закругления 24px, фон --background-one,
+ * Использует стилистику дизайн-системы: закругления 2px (rounded-three), фон --background-one,
  * акцентная кнопка style-1 и декоративные элементы.
  */
 export default function LimitReachedCard({ 
@@ -20,7 +20,7 @@ export default function LimitReachedCard({
     className = ""
 }: Props) {
     return (
-        <div className={`pricing-item !mb-0 p-6 sm:p-8 border border-border-color-one bg-background-one rounded-[24px] relative overflow-hidden group transition-all duration-500 hover:border-primary-color/50 ${className}`}>
+        <div className={`pricing-item !mb-0 p-6 sm:p-8 border border-border-color-one bg-background-one rounded-three relative overflow-hidden group transition-all duration-500 hover:border-primary-color/50 ${className}`}>
             {/* Декоративные элементы фона для "красоты" */}
             <div className="absolute -top-12 -right-12 w-40 h-40 bg-primary-color/5 rounded-full blur-3xl group-hover:bg-primary-color/10 transition-all duration-700"></div>
             <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-primary-color/5 rounded-full blur-2xl group-hover:bg-primary-color/10 transition-all duration-700"></div>

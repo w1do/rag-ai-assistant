@@ -6,7 +6,8 @@ import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { useState } from 'react';
-import { User, Lock, AlertTriangle } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { User, Lock, AlertTriangle, Settings } from 'lucide-react';
 import Tips from '@/Components/Tips';
 
 type TabKey = 'profile' | 'password' | 'danger';
@@ -57,14 +58,13 @@ export default function Edit({
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Профиль' }]} />
 
-                    <div className="mb-10">
-                        <h2 className="text-2xl font-bold uppercase tracking-tight text-white-color font-title">
-                            Настройки <span className="text-primary-color">профиля</span>
-                        </h2>
-                        <p className="mt-2 text-sm text-text-secondary">
-                            Управляйте вашими персональными данными и настройками безопасности.
-                        </p>
-                    </div>
+                    <SectionHeader 
+                        title="Настройки профиля" 
+                        icon={Settings}
+                    />
+                    <p className="mt-2 text-sm text-text-secondary mb-10 -mt-6">
+                        Управляйте вашими персональными данными и настройками безопасности.
+                    </p>
 
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
                         {/* Sidebar Tabs */}

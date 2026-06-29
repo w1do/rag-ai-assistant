@@ -8,7 +8,8 @@ import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import LimitReachedCard from '@/Components/LimitReachedCard';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
-import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2, Pencil, ArrowRight, Plus } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { Mic, MicOff, Link2, Upload, Code, MessageSquare, Trash2, Pencil, ArrowRight, Plus, Sparkles, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
@@ -254,11 +255,18 @@ function AssistantCard({ assistant }: { assistant: Assistant }) {
                 <div className="mt-auto space-y-3">
                     <div className="flex items-center gap-2">
                         <Link
-                            href={route('share-chat.show', assistant.id)}
+                            href={route('assistants.dialogues', assistant.id)}
                             className="theme-button style-1 flex-grow !h-[40px] sm:!h-[44px] text-[9px] sm:text-sm"
                         >
-                            <span data-text="Открыть чат">Открыть чат</span>
+                            <span data-text="Диалоги">Диалоги</span>
                             <i><MessageSquare size={14} /></i>
+                        </Link>
+                        <Link
+                            href={route('share-chat.show', assistant.id)}
+                            className="theme-button style-2 w-[40px] sm:w-[44px] !h-[40px] sm:!h-[44px] !px-0"
+                            title="Открыть чат"
+                        >
+                            <span data-text="?"><ExternalLink size={16} /></span>
                         </Link>
                         <Link
                             href={route('assistants.show', assistant.id)}
@@ -399,17 +407,14 @@ export default function Index({ assistants }: Props) {
 
                     <Tips tips={assistantTips} />
 
-                    <div className="flex items-center justify-between mb-6 sm:mb-10">
-                        <h2 className="text-lg sm:text-2xl font-bold uppercase tracking-tight text-white-color font-title">
-                            Ассистенты
-                        </h2>
-                        {canCreateAssistant && (
-                            <Link href={route('assistants.create')} className="theme-button style-1 !h-[40px] sm:!h-[52px] text-[9px] sm:text-sm">
-                                <span data-text="Добавить">Добавить</span>
-                                <i><Plus size={16} /></i>
-                            </Link>
-                        )}
-                    </div>
+                    <SectionHeader 
+                        title="Ассистенты" 
+                        icon={Sparkles}
+                        href={canCreateAssistant ? route('assistants.create') : undefined}
+                        linkText="Добавить нового"
+                        linkIcon={Plus}
+                        className="!mb-10"
+                    />
 
                     {!canCreateAssistant && (
                         <div className="mb-10">

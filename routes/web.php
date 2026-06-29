@@ -3,6 +3,7 @@
 use App\Http\Controllers\Assistant\AssistantController;
 use App\Http\Controllers\Assistant\DashboardController;
 use App\Http\Controllers\Assistant\MarketplaceController;
+use App\Http\Controllers\Chat\AssistantChatController;
 use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Chat\PublicChatController;
 use App\Http\Controllers\Connector\ConnectorController;
@@ -15,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::prefix('/')->group(function () {
-
-
-   // Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
+    Route::get('/chats', [MarketplaceController::class, 'index'])->name('chats.index');
 
     Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -33,6 +32,8 @@ Route::prefix('/')->group(function () {
         Route::post('/connectors/attach-assistant', [ConnectorController::class, 'attachAssistant'])->name('connectors.attach-assistant');
 
         Route::get('assistants/{assistant}/chat', [ChatController::class, 'index'])->name('assistants.chat');
+        Route::get('assistants/{assistant}/dialogues', [AssistantChatController::class, 'index'])->name('assistants.dialogues');
+        Route::get('assistants/{assistant}/dialogues/summary', [AssistantChatController::class, 'summary'])->name('assistants.dialogues.summary');
 
         Route::get('/monitoring', fn () => Inertia::render('Monitoring'))->name('monitoring');
         Route::get('/competitors', fn () => Inertia::render('Competitors'))->name('competitors');

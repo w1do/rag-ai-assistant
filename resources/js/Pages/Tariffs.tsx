@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
-import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles } from 'lucide-react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 import FAQ from '@/Components/FAQ';
@@ -88,10 +89,11 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                         <div className="lg:col-span-2">
                             <div className="mb-12">
-                                <h3 className="text-3xl font-title text-white-color mb-4">
-                                    Выберите подходящий <span className="text-primary-color">тариф</span>
-                                </h3>
-                                <p className="text-text-secondary-dark max-w-2xl">
+                                <SectionHeader 
+                                    title="Тарифные планы" 
+                                    icon={Crown}
+                                />
+                                <p className="text-text-secondary-dark max-w-2xl -mt-8">
                                     Подключите бота к базе знаний на удобных условиях. Мы предлагаем гибкие планы для любого масштаба бизнеса.
                                 </p>
                             </div>

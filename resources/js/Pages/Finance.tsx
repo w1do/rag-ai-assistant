@@ -1,7 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
-import { CreditCard, ArrowUpCircle, ArrowDownCircle, Clock, Info } from 'lucide-react';
+import SectionHeader from '@/Components/UI/SectionHeader';
+import { CreditCard, ArrowUpCircle, ArrowDownCircle, Clock, Info, Wallet } from 'lucide-react';
 
 interface Payment {
     id: number;
@@ -59,14 +60,13 @@ export default function Finance({ payments }: Props) {
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Финансы' }]} />
 
-                    <div className="mb-8">
-                        <h3 className="text-3xl font-title text-white-color mb-4">
-                            История <span className="text-primary-color">финансов</span>
-                        </h3>
-                        <p className="text-text-secondary-dark max-w-2xl">
-                            Управляйте своим балансом, просматривайте историю пополнений и списаний за тарифные планы.
-                        </p>
-                    </div>
+                    <SectionHeader 
+                        title="История финансов" 
+                        icon={Wallet}
+                    />
+                    <p className="text-text-secondary-dark max-w-2xl mb-8 -mt-4">
+                        Управляйте своим балансом, просматривайте историю пополнений и списаний за тарифные планы.
+                    </p>
 
                     <div className="bg-background-one border border-border-color-one rounded-three overflow-hidden">
                         <div className="overflow-x-auto">

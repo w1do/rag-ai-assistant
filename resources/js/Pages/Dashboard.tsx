@@ -1,6 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import Breadcrumbs from '@/Components/Breadcrumbs';
+import StatCardComponent from '@/Components/Dashboard/StatCard';
+import SectionHeader from '@/Components/UI/SectionHeader';
 import {
     Bot,
     MessagesSquare,
@@ -32,7 +34,7 @@ interface StatCard {
     label: string;
     value: number;
     icon: LucideIcon;
-    accent: string;
+    href: string;
 }
 
 function statusBadge(status: string): { className: string; dot: string; label: string } {
@@ -73,19 +75,19 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
             label: 'Ассистенты',
             value: stats.assistants_count,
             icon: Bot,
-            accent: 'bg-primary-rgb-12 text-primary-color',
+            href: route('assistants.index'),
         },
         {
             label: 'Всего диалогов',
             value: stats.chats_count,
             icon: MessagesSquare,
-            accent: 'bg-primary-rgb-12 text-primary-color',
+            href: route('chats.index'),
         },
         {
             label: 'База знаний',
             value: stats.knowledge_count,
             icon: Database,
-            accent: 'bg-primary-rgb-12 text-primary-color',
+            href: route('connectors.index'),
         },
     ];
 
@@ -98,58 +100,42 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                 <div className="mx-auto max-w-7xl space-y-8">
                     <Breadcrumbs items={[]} />
 
+                    <SectionHeader 
+                        title="Статистика" 
+                        icon={Bot}
+                        href={route('dashboard')}
+                        linkText="Обновить"
+                        linkIcon={Sparkles}
+                        className="!mb-6"
+                    />
+
                     {/* Карточки статистики */}
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        {cards.map((card) => {
-                            const Icon = card.icon;
-                            return (
-                                <div
-                                    key={card.label}
-                                    className="pricing-item group"
-                                >
-                                    <div className="pricing-top">
-                                        <div className="flex justify-center mb-4">
-                                            <div className="w-[80px] h-[80px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
-                                                <Icon className="h-10 w-10 text-primary-color" strokeWidth={1.5} />
-                                            </div>
-                                        </div>
-                                        <div className="pricing-top-content">
-                                            <h2 className="text-xl sm:text-4xl font-title mb-1">{card.value}</h2>
-                                            <p className="text-text-secondary uppercase tracking-wider text-[9px] sm:text-sm font-semibold">{card.label}</p>
-                                        </div>
-                                    </div>
-                                    <div className="p-6 text-center">
-                                        <Link
-                                            href={route('assistants.index')}
-                                            className="text-primary-color hover:text-white-color transition-colors text-xs sm:text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2"
-                                        >
-                                            Подробнее <ArrowUpRight size={16} />
-                                        </Link>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                        {cards.map((card, index) => (
+                            <StatCardComponent
+                                key={card.label}
+                                label={card.label}
+                                value={card.value}
+                                icon={card.icon}
+                                href={card.href}
+                                className={`wow fadeInUp`}
+                                data-wow-delay={`${index * 0.1}s`}
+                            />
+                        ))}
                     </div>
 
                     {/* Последние ассистенты */}
-                    <div className="bg-background-one border border-border-color-one rounded-three overflow-hidden">
-                        <div className="flex items-center justify-between border-b border-border-color-one px-6 py-5 bg-extra-color">
-                            <div className="flex items-center gap-3">
-                                <Sparkles className="h-5 w-5 text-primary-color" strokeWidth={2} />
-                                <h3 className="text-sm sm:text-lg font-title uppercase text-white-color">
-                                    Ассистенты
-                                </h3>
-                            </div>
-                            <Link
-                                href={route('assistants.index')}
-                                className="text-xs sm:text-sm font-bold text-primary-color hover:text-white-color transition-colors uppercase tracking-widest flex items-center gap-1"
-                            >
-                                Все
-                                <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
-                            </Link>
-                        </div>
+                    <div className="space-y-6">
+                        <SectionHeader 
+                            title="Ассистенты" 
+                            icon={Sparkles}
+                            href={route('assistants.create')}
+                            linkText="Добавить нового"
+                            linkIcon={Plus}
+                        />
 
-                        {recent_assistants.length === 0 ? (
+                        <div className="bg-background-one border border-border-color-one rounded-three overflow-hidden">
+                            {recent_assistants.length === 0 ? (
                             <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
                                 <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-rgb-12 text-primary-color mb-4">
                                     <Bot className="h-8 w-8" strokeWidth={2} />
@@ -218,20 +204,10 @@ export default function Dashboard({ stats, recent_assistants }: Props) {
                                 })}
                             </ul>
                         )}
-
-                        {/* Кнопка добавления ассистента */}
-                        <div className="border-t border-border-color-one px-6 py-6 bg-extra-color/50">
-                            <Link
-                                href={route('assistants.create')}
-                                className="theme-button style-1 w-full sm:w-auto text-xs sm:text-sm"
-                            >
-                                <span data-text="Добавить ассистента">Добавить ассистента</span>
-                                <i><Plus size={16} /></i>
-                            </Link>
-                        </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
-    );
+        </div>
+    </AuthenticatedLayout>
+);
 }

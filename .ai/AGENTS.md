@@ -29,6 +29,11 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
 
+## Frontend UI/UX (вёрстка)
+- Обязательно выноси компоненты верстки и делай (переиспользуемыми компоненты) по сущности например components/User/UserCardBalance
+- Не делай компонент сложным, выноси в actions, hooks, services делай верстку так, чтобы можно было легко перенести проект на другой фреймворк
+- обязательно следуй инструкциям `DESIGN_UI.md`, делай примиальный дизайн, стильный и не перегруженный
+
 # Процесс выполнения
 - после каждого процесса выполнения задачи, обязательно задокументируй все что сделал
 - используй `skill/documentation` для документации с написаниями тестов
@@ -114,7 +119,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 - Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
 - Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+    - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === php rules ===
 
