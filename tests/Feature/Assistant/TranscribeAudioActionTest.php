@@ -40,25 +40,13 @@ test('transcribe audio action uses compatible audio transcriber and handles Open
 
     $action = new TranscribeAudioAction($mockIndexAction, $mockFactory);
 
-    // Mock storage
-    Storage::fake('private');
-    // TranscribeAudioAction uses storage_path('app/private/'.$knowledge->path)
-    // In tests storage_path might point to a temp dir.
-
-    // Create a dummy file
-    $fullPath = storage_path('app/private/'.$knowledge->path);
-    if (! is_dir(dirname($fullPath))) {
-        mkdir(dirname($fullPath), 0777, true);
-    }
-    file_put_contents($fullPath, 'dummy content');
+    Storage::fake('uploads');
+    Storage::disk('uploads')->put($knowledge->path, 'dummy content');
 
     $action->execute($knowledge);
 
     expect($knowledge->fresh()->content)->toBe('Transcribed text');
     expect($knowledge->fresh()->status)->toBe('ready');
-
-    // Cleanup
-    unlink($fullPath);
 });
 
 test('AIClientFactory selects correct transcriber based on URL', function () {

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
-    Storage::fake('local');
+    Storage::fake('uploads');
     Queue::fake();
     $this->withoutVite();
 

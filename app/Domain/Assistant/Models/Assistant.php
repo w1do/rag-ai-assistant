@@ -104,14 +104,14 @@ class Assistant extends Model
     protected function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Storage::disk('public')->url($value) : null,
+            get: fn (?string $value) => $value ? Storage::disk('uploads')->url($value) : null,
         );
     }
 
     protected function backgroundImage(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => $value ? Storage::disk('public')->url($value) : null,
+            get: fn (?string $value) => $value ? Storage::disk('uploads')->url($value) : null,
         );
     }
 

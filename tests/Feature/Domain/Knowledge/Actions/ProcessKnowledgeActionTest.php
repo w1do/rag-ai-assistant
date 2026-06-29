@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 test('it extracts text from file and saves to content', function () {
-    Storage::fake('local');
+    Storage::fake('uploads');
 
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
@@ -22,7 +22,7 @@ test('it extracts text from file and saves to content', function () {
         'status' => 'pending',
     ]);
 
-    Storage::disk('local')->put('documents/test.txt', 'Hello world, this is a test document.');
+    Storage::disk('uploads')->put('documents/test.txt', 'Hello world, this is a test document.');
 
     $indexAction = mock(IndexAssistantDocumentsAction::class);
     $indexAction->shouldReceive('execute')->once();
@@ -37,7 +37,7 @@ test('it extracts text from file and saves to content', function () {
 });
 
 test('it handles non-utf8 text files', function () {
-    Storage::fake('local');
+    Storage::fake('uploads');
 
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
@@ -50,7 +50,7 @@ test('it handles non-utf8 text files', function () {
 
     // Текст "Привет мир" в кодировке Windows-1251
     $content = mb_convert_encoding('Привет мир', 'Windows-1251', 'UTF-8');
-    Storage::disk('local')->put('documents/windows-1251.txt', $content);
+    Storage::disk('uploads')->put('documents/windows-1251.txt', $content);
 
     $indexAction = mock(IndexAssistantDocumentsAction::class);
     $indexAction->shouldReceive('execute')->once();
@@ -65,7 +65,7 @@ test('it handles non-utf8 text files', function () {
 });
 
 test('it handles corrupted pdf file', function () {
-    Storage::fake('local');
+    Storage::fake('uploads');
 
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
@@ -77,7 +77,7 @@ test('it handles corrupted pdf file', function () {
     ]);
 
     // Пишем строку, которая не является валидным PDF
-    Storage::disk('local')->put('documents/corrupted.pdf', 'This is not a PDF file but has .pdf extension');
+    Storage::disk('uploads')->put('documents/corrupted.pdf', 'This is not a PDF file but has .pdf extension');
 
     $indexAction = mock(IndexAssistantDocumentsAction::class);
     // Индексация НЕ должна быть вызвана
@@ -93,7 +93,7 @@ test('it handles corrupted pdf file', function () {
 });
 
 test('it handles file with only whitespace content', function () {
-    Storage::fake('local');
+    Storage::fake('uploads');
 
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create(['user_id' => $user->id]);
@@ -104,7 +104,7 @@ test('it handles file with only whitespace content', function () {
         'status' => 'pending',
     ]);
 
-    Storage::disk('local')->put('documents/whitespace.txt', "   \n\t  \n ");
+    Storage::disk('uploads')->put('documents/whitespace.txt', "   \n\t  \n ");
 
     $indexAction = mock(IndexAssistantDocumentsAction::class);
     $indexAction->shouldNotReceive('execute');

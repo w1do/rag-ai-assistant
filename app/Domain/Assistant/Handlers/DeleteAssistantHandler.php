@@ -17,10 +17,19 @@ class DeleteAssistantHandler
     {
         $assistant = $command->assistant;
 
+        // Delete avatar and background image files
+        if ($assistant->getRawOriginal('avatar')) {
+            Storage::disk('uploads')->delete($assistant->getRawOriginal('avatar'));
+        }
+
+        if ($assistant->getRawOriginal('background_image')) {
+            Storage::disk('uploads')->delete($assistant->getRawOriginal('background_image'));
+        }
+
         // Delete knowledge files
         $assistant->knowledge->each(function (Knowledge $knowledge) {
             if ($knowledge->path) {
-                Storage::delete($knowledge->path);
+                Storage::disk('uploads')->delete($knowledge->path);
             }
         });
 

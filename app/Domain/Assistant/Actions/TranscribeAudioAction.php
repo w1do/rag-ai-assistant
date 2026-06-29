@@ -4,6 +4,7 @@ namespace App\Domain\Assistant\Actions;
 
 use App\Domain\Knowledge\Models\Knowledge;
 use App\Infrastructure\AI\AIClientFactory;
+use Illuminate\Support\Facades\Storage;
 use LLPhant\Embeddings\Document;
 
 /**
@@ -31,7 +32,7 @@ class TranscribeAudioAction
         $knowledge->assistant->update(['status' => 'processing']);
 
         $audioService = $this->aiClientFactory->createAudioTranscriber();
-        $filePath = storage_path('app/private/'.$knowledge->path);
+        $filePath = Storage::disk('uploads')->path($knowledge->path);
         $transcription = $audioService->transcribe($filePath);
 
         if (empty($transcription->text)) {

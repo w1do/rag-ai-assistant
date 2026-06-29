@@ -59,7 +59,7 @@ test('user cannot view others assistant', function () {
 });
 
 test('assistant avatar and background image accessors return full urls', function () {
-    Storage::fake('public');
+    Storage::fake('uploads');
 
     $user = User::factory()->create();
     $assistant = Assistant::factory()->create([
@@ -68,6 +68,6 @@ test('assistant avatar and background image accessors return full urls', functio
         'background_image' => 'assistants/backgrounds/bg.jpg',
     ]);
 
-    expect($assistant->avatar)->toContain('/storage/assistants/avatars/test.jpg');
-    expect($assistant->background_image)->toContain('/storage/assistants/backgrounds/bg.jpg');
+    expect($assistant->avatar)->toContain('assistants/avatars/test.jpg');
+    expect($assistant->background_image)->toContain('assistants/backgrounds/bg.jpg');
 });

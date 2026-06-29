@@ -12,17 +12,17 @@ class UpdateAssistantHandler
         $data = $command->dto->toArray();
 
         if ($command->dto->avatar) {
-            if ($command->assistant->avatar) {
-                Storage::disk('public')->delete($command->assistant->avatar);
+            if ($command->assistant->getRawOriginal('avatar')) {
+                Storage::disk('uploads')->delete($command->assistant->getRawOriginal('avatar'));
             }
-            $data['avatar'] = $command->dto->avatar->store('assistants/avatars', 'public');
+            $data['avatar'] = $command->dto->avatar->store('assistants/avatars', 'uploads');
         }
 
         if ($command->dto->backgroundImage) {
-            if ($command->assistant->background_image) {
-                Storage::disk('public')->delete($command->assistant->background_image);
+            if ($command->assistant->getRawOriginal('background_image')) {
+                Storage::disk('uploads')->delete($command->assistant->getRawOriginal('background_image'));
             }
-            $data['background_image'] = $command->dto->backgroundImage->store('assistants/backgrounds', 'public');
+            $data['background_image'] = $command->dto->backgroundImage->store('assistants/backgrounds', 'uploads');
         }
 
         return $command->assistant->update($data);

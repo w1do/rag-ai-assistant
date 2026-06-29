@@ -42,7 +42,7 @@ class DeleteKnowledgeAction
 
             // Delete file if it exists
             if ($knowledge->path) {
-                Storage::delete($knowledge->path);
+                Storage::disk('uploads')->delete($knowledge->path);
             }
 
             $knowledge->delete();

@@ -12,11 +12,11 @@ class StoreAssistantHandler
         $data = $command->dto->toArray();
 
         if ($command->dto->avatar) {
-            $data['avatar'] = $command->dto->avatar->store('assistants/avatars', 'public');
+            $data['avatar'] = $command->dto->avatar->store('assistants/avatars', 'uploads');
         }
 
         if ($command->dto->backgroundImage) {
-            $data['background_image'] = $command->dto->backgroundImage->store('assistants/backgrounds', 'public');
+            $data['background_image'] = $command->dto->backgroundImage->store('assistants/backgrounds', 'uploads');
         }
 
         /** @var Assistant $assistant */

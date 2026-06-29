@@ -10,7 +10,7 @@ class UploadAudioHandler
 {
     public function handle(UploadAudioCommand $command): Knowledge
     {
-        $path = $command->file->store('audio');
+        $path = $command->file->store('audio', 'uploads');
 
         /** @var Knowledge $knowledge */
         $knowledge = $command->assistant->knowledge()->create([

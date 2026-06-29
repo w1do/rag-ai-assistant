@@ -10,7 +10,7 @@ class UploadKnowledgeHandler
 {
     public function handle(UploadKnowledgeCommand $command): Knowledge
     {
-        $path = $command->dto->file->store('documents', 'local');
+        $path = $command->dto->file->store('documents', 'uploads');
 
         /** @var Knowledge $knowledge */
         $knowledge = $command->assistant->knowledge()->create([

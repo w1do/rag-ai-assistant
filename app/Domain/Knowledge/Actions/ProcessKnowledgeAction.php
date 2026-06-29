@@ -32,14 +32,14 @@ class ProcessKnowledgeAction
         $knowledge->assistant->update(['status' => 'processing']);
 
         try {
-            $filePath = Storage::disk('local')->path($knowledge->path);
+            $filePath = Storage::disk('uploads')->path($knowledge->path);
 
-            if (! Storage::disk('local')->exists($knowledge->path)) {
+            if (! Storage::disk('uploads')->exists($knowledge->path)) {
                 throw new \Exception("Файл не найден по пути: {$filePath}");
             }
 
             // Проверяем размер файла
-            $fileSize = Storage::disk('local')->size($knowledge->path);
+            $fileSize = Storage::disk('uploads')->size($knowledge->path);
             if ($fileSize === 0) {
                 throw new \Exception('Загруженный файл пуст.');
             }
