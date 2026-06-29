@@ -30,15 +30,11 @@ services:
             - 'app-logs:/var/www/html/storage/logs'
             - 'uploads:/var/www/html/public'
         networks:
-            - app
-            - traefik-public
+          - dokploy-network
 
 networks:
-    app:
-        driver: bridge
-    traefik-public:
-        external: true
-        name: dokploy-network
+  dokploy-network:
+    external: true
 
 volumes:
     app-storage:
