@@ -18,7 +18,7 @@ services:
         environment:
             APP_ENV: production
             APP_DEBUG: false
-            APP_KEY: '${APP_KEY:base64:WHNuXOYAxHa/dwRj5rDIdC96kV7i444d0hrDAzwaIMo=}'
+            APP_KEY: '${APP_KEY:-base64:WHNuXOYAxHa/dwRj5rDIdC96kV7i444d0hrDAzwaIMo=}'
             REDIS_CLIENT: '${REDIS_CLIENT:-phpredis}'
             REDIS_HOST: '${REDIS_HOST}'
             REDIS_PASSWORD: '${REDIS_PASSWORD:-}'
