@@ -1,4 +1,5 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import DashboardFooter from '@/Components/DashboardFooter';
 import Dropdown from '@/Components/Dropdown';
 import MegaMenu from '@/Components/MegaMenu';
 import NavLink from '@/Components/NavLink';
@@ -55,7 +56,7 @@ export default function Authenticated({
     };
 
     return (
-        <div className="min-h-screen bg-body-color grid-bg">
+        <div className="min-h-screen flex flex-col bg-body-color grid-bg">
             {user.balance <= 0 && (
                 <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-2">
                     <div className="mx-auto max-w-7xl flex items-center justify-between">
@@ -294,7 +295,9 @@ export default function Authenticated({
                 </header>
             )}
 
-            <main className="text-white-color">{children}</main>
+            <main className="flex-1 text-white-color">{children}</main>
+
+            <DashboardFooter />
 
             <Modal show={showingTopUpModal} onClose={() => setShowingTopUpModal(false)} maxWidth="md">
                 <form onSubmit={submitTopUp} className="p-6">

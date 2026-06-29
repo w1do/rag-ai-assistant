@@ -12,6 +12,7 @@ class ChatHistory extends Model
     protected $fillable = [
         'assistant_id',
         'user_id',
+        'session_id',
         'question',
         'answer',
         'sources',

@@ -33,6 +33,13 @@ readonly class AskPublicAssistantHandler
 
         Cache::put($historyKey, $cachedHistory, now()->addDay());
 
+        $command->assistant->chatHistories()->create([
+            'user_id' => null,
+            'session_id' => $command->sessionId,
+            'question' => $command->question,
+            'answer' => $result['answer'],
+        ]);
+
         return [
             'answer' => $result['answer'],
         ];
