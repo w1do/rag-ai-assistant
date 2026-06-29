@@ -1,15 +1,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
 import Modal from '@/Components/Modal';
 import Select from '@/Components/Select';
 import InputHint from '@/Components/InputHint';
 import { useState } from 'react';
 import SectionHeader from '@/Components/UI/SectionHeader';
-import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { MessageSquare, Share2, Zap, Globe, Send, ArrowRight, Loader2, CheckCircle2, Clock, Sparkles, HelpCircle, Shield, Users, Key } from 'lucide-react';
+import Faq from '@/Components/Faq';
+import GradientAlert from '@/Components/GradientAlert';
 import Breadcrumbs from '@/Components/Breadcrumbs';
-import Tips from '@/Components/Tips';
 
 interface Assistant {
     id: number;
@@ -206,29 +205,37 @@ export default function Index({ connectors, assistants }: Props) {
         });
     };
 
-    const connectorTips = [
-        'Подключите Telegram для быстрой связи с клиентами.',
-        'Используйте ассистентов для автоматизации ответов в VK.',
-        'Мониторинг VC поможет вовремя реагировать на упоминания бренда.',
-    ];
-
     const connectorFaqs = [
         {
             question: "Как подключить новый канал?",
-            answer: "Выберите нужный коннектор из списка и нажмите кнопку 'Подключить'. Следуйте инструкциям по авторизации."
+            answer: "Выберите нужный коннектор из списка и нажмите кнопку 'Подключить'. Следуйте инструкциям по авторизации.",
+            icon: Share2,
         },
         {
             question: "Сколько ассистентов можно подключить?",
-            answer: "Количество ассистентов зависит от вашего тарифного плана. Базовый тариф позволяет подключить до 3 ассистентов."
+            answer: "Количество ассистентов зависит от вашего тарифного плана. Базовый тариф позволяет подключить до 3 ассистентов.",
+            icon: Users,
         },
         {
             question: "Какие данные собирает коннектор?",
-            answer: "Коннектор собирает только те данные, которые необходимы для работы ассистента: сообщения, упоминания и комментарии."
+            answer: "Коннектор собирает только те данные, которые необходимы для работы ассистента: сообщения, упоминания и комментарии.",
+            icon: Shield,
         },
         {
             question: "Безопасно ли передавать ключи доступа?",
-            answer: "Все ключи шифруются и хранятся в защищенном хранилище. Мы никогда не передаем ваши данные третьим лицам."
-        }
+            answer: "Все ключи шифруются и хранятся в защищенном хранилище. Мы никогда не передаем ваши данные третьим лицам.",
+            icon: Key,
+        },
+        {
+            question: "Можно ли подключить несколько платформ одновременно?",
+            answer: "Да, вы можете подключить несколько коннекторов к одному ассистенту. Он будет отвечать на сообщения из всех подключённых каналов.",
+            icon: Zap,
+        },
+        {
+            question: "Что делать, если коннектор перестал работать?",
+            answer: "Проверьте статус коннектора в боковой панели. Если статус 'Ошибка', попробуйте переподключить ассистента или обратитесь в поддержку.",
+            icon: HelpCircle,
+        },
     ];
 
     return (
@@ -239,7 +246,9 @@ export default function Index({ connectors, assistants }: Props) {
                 <div className="mx-auto max-w-7xl">
                     <Breadcrumbs items={[{ label: 'Коннекторы' }]} />
 
-                    <Tips tips={connectorTips} />
+                    <div className="mb-6">
+                        <GradientAlert />
+                    </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
                         <div className="lg:col-span-3">
@@ -265,6 +274,19 @@ export default function Index({ connectors, assistants }: Props) {
                         <div className="lg:col-span-1">
                             <ConnectorSidebar connectors={connectors} />
                         </div>
+                    </div>
+
+                    <div className="mt-8 mb-12">
+                        <div className="mb-10">
+                            <SectionHeader
+                                title="Частые вопросы"
+                                icon={HelpCircle}
+                            />
+                            <p className="text-text-secondary-dark max-w-2xl -mt-8">
+                                Ответы на популярные вопросы о подключении коннекторов и безопасности данных.
+                            </p>
+                        </div>
+                        <Faq items={connectorFaqs} />
                     </div>
                 </div>
             </div>

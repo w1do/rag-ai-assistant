@@ -1,7 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import SectionHeader from '@/Components/UI/SectionHeader';
-import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, Rocket, Calendar, Crown, type LucideIcon, ArrowRight, Sparkles, HelpCircle, CreditCard, RefreshCw, ShieldCheck, Wallet, Users, Lock, Zap, LifeBuoy, MessageCircle, ExternalLink } from 'lucide-react';
+import Faq from '@/Components/Faq';
 import Breadcrumbs from '@/Components/Breadcrumbs';
 import Tips from '@/Components/Tips';
 
@@ -28,20 +29,44 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
     const tariffFaqs = [
         {
             question: "Как происходит оплата?",
-            answer: "Оплата производится через защищенный платежный шлюз. Вы можете использовать банковские карты или другие доступные методы оплаты."
+            answer: "Оплата производится через защищенный платежный шлюз. Вы можете использовать банковские карты или другие доступные методы оплаты.",
+            icon: CreditCard,
         },
         {
             question: "Можно ли сменить тариф позже?",
-            answer: "Да, вы можете перейти на более дорогой тариф в любое время. Разница в стоимости будет пересчитана автоматически."
+            answer: "Да, вы можете перейти на более дорогой тариф в любое время. Разница в стоимости будет пересчитана автоматически.",
+            icon: RefreshCw,
         },
         {
             question: "Предусмотрен ли возврат средств?",
-            answer: "Мы предоставляем возврат средств в течение 7 дней, если сервис не подошел вам по техническим причинам."
+            answer: "Мы предоставляем возврат средств в течение 7 дней, если сервис не подошел вам по техническим причинам.",
+            icon: ShieldCheck,
         },
         {
             question: "Какие методы оплаты поддерживаются?",
-            answer: "Мы поддерживаем Visa, MasterCard, МИР, а также оплату через СБП и электронные кошельки."
-        }
+            answer: "Мы поддерживаем Visa, MasterCard, МИР, а также оплату через СБП и электронные кошельки.",
+            icon: Wallet,
+        },
+        {
+            question: "Можно ли использовать один аккаунт для нескольких проектов?",
+            answer: "Да, на тарифах Business и Pro вы можете создавать несколько ботов и баз знаний в рамках одного аккаунта.",
+            icon: Users,
+        },
+        {
+            question: "Насколько безопасны мои данные?",
+            answer: "Все данные хранятся в зашифрованном виде. Мы соблюдаем требования GDPR и не передаём ваши данные третьим лицам.",
+            icon: Lock,
+        },
+        {
+            question: "Как быстро активируется тариф после оплаты?",
+            answer: "Тариф активируется мгновенно после подтверждения платежа. Вы сразу получаете доступ ко всем функциям выбранного плана.",
+            icon: Zap,
+        },
+        {
+            question: "Какая поддержка предусмотрена на каждом тарифе?",
+            answer: "На тарифе Start доступна поддержка через чат. Business и Pro включают приоритетную поддержку с гарантированным временем ответа.",
+            icon: LifeBuoy,
+        },
     ];
 
     const getIcon = (slug: string) => {
@@ -85,100 +110,146 @@ export default function Tariffs({ plans, features, currentPlanSlug }: Props) {
 
                     <Tips tips={tariffTips} />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                        <div className="lg:col-span-2">
-                            <div className="mb-12">
-                                <SectionHeader
-                                    title="Тарифные планы"
-                                    icon={Crown}
-                                />
-                                <p className="text-text-secondary-dark max-w-2xl -mt-8">
-                                    Подключите бота к базе знаний на удобных условиях. Мы предлагаем гибкие планы для любого масштаба бизнеса.
-                                </p>
-                            </div>
+                    <div className="mb-12">
+                        <SectionHeader
+                            title="Тарифные планы"
+                            icon={Crown}
+                        />
+                        <p className="text-text-secondary-dark max-w-2xl -mt-8">
+                            Подключите бота к базе знаний на удобных условиях. Мы предлагаем гибкие планы для любого масштаба бизнеса.
+                        </p>
+                    </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {plans.map((plan) => {
-                                    const Icon = getIcon(plan.slug);
-                                    const highlighted = plan.slug === 'business';
-                                    return (
-                                        <div key={plan.id} className="pricing-item group flex flex-col">
-                                            <div className="pricing-top">
-                                                <div className="flex justify-center mb-6">
-                                                    <div className="w-[100px] h-[100px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
-                                                        <Icon className="h-8 w-8 text-primary-color" />
-                                                    </div>
-                                                </div>
-                                                <div className="pricing-top-content">
-                                                    <h2 className="text-[38px] font-title text-white-color">{formatPrice(plan.base_price / 100)}</h2>
-                                                    <p className="text-text-secondary-dark">
-                                                        {plan.billing_cycle === 'monthly' ? 'в месяц' : plan.billing_cycle}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div className="p-5 flex flex-col flex-1">
-                                                <div className="mb-4">
-                                                    {highlighted && (
-                                                        <div className="mb-4">
-                                                            <span className="bg-primary-color text-black-color text-[12px] font-title px-4 py-1 rounded-full uppercase">
-                                                                Популярный
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                    <h4 className="text-xl font-title text-white-color mb-2">{plan.name}</h4>
-                                                    <p className="text-sm text-text-secondary-dark leading-relaxed">
-                                                        {plan.trial_days > 0 ? `Пробный период: ${plan.trial_days} дней` : 'Мгновенный доступ'}
-                                                    </p>
-                                                </div>
-
-                                                <ul className="space-y-3 mb-8 flex-1">
-                                                    {Object.entries(plan.limits || {}).map(([slug, limit]) => (
-                                                        <li key={slug} className="flex items-start gap-3 text-sm text-text-secondary-dark">
-                                                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-color" strokeWidth={3} />
-                                                            {formatLimit(slug, limit)}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-
-                                                <button
-                                                    onClick={() => handleSubscribe(plan.slug)}
-                                                    disabled={plan.slug === currentPlanSlug}
-                                                    className={`theme-button w-full ${plan.slug === currentPlanSlug ? 'opacity-50 cursor-not-allowed' : (highlighted ? 'style-1' : 'style-2')}`}
-                                                >
-                                                    {plan.slug === currentPlanSlug ? (
-                                                        <>
-                                                            <span data-text="Уже выбрано">Уже выбрано</span>
-                                                            <Check className="w-5 h-5" />
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span data-text="Выбрать тариф">Выбрать тариф</span>
-                                                            <ArrowRight className="w-5 h-5" />
-                                                        </>
-                                                    )}
-                                                </button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                        {plans.map((plan) => {
+                            const Icon = getIcon(plan.slug);
+                            const highlighted = plan.slug === 'business';
+                            return (
+                                <div key={plan.id} className="pricing-item group flex flex-col">
+                                    <div className="pricing-top">
+                                        <div className="flex justify-center mb-6">
+                                            <div className="w-[100px] h-[100px] bg-primary-rgb-12 border border-primary-color rounded-full flex items-center justify-center">
+                                                <Icon className="h-8 w-8 text-primary-color" />
                                             </div>
                                         </div>
-                                    );
-                                })}
+                                        <div className="pricing-top-content">
+                                            <h2 className="text-[38px] font-title text-white-color">{formatPrice(plan.base_price / 100)}</h2>
+                                            <p className="text-text-secondary-dark">
+                                                {plan.billing_cycle === 'monthly' ? 'в месяц' : plan.billing_cycle}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-5 flex flex-col flex-1">
+                                        <div className="mb-4">
+                                            {highlighted && (
+                                                <div className="mb-4">
+                                                    <span className="bg-primary-color text-black-color text-[12px] font-title px-4 py-1 rounded-full uppercase">
+                                                        Популярный
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <h4 className="text-xl font-title text-white-color mb-2">{plan.name}</h4>
+                                            <p className="text-sm text-text-secondary-dark leading-relaxed">
+                                                {plan.trial_days > 0 ? `Пробный период: ${plan.trial_days} дней` : 'Мгновенный доступ'}
+                                            </p>
+                                        </div>
+
+                                        <ul className="space-y-3 mb-8 flex-1">
+                                            {Object.entries(plan.limits || {}).map(([slug, limit]) => (
+                                                <li key={slug} className="flex items-start gap-3 text-sm text-text-secondary-dark">
+                                                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary-color" strokeWidth={3} />
+                                                    {formatLimit(slug, limit)}
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <button
+                                            onClick={() => handleSubscribe(plan.slug)}
+                                            disabled={plan.slug === currentPlanSlug}
+                                            className={`theme-button w-full ${plan.slug === currentPlanSlug ? 'opacity-50 cursor-not-allowed' : (highlighted ? 'style-1' : 'style-2')}`}
+                                        >
+                                            {plan.slug === currentPlanSlug ? (
+                                                <>
+                                                    <span data-text="Уже выбрано">Уже выбрано</span>
+                                                    <Check className="w-5 h-5" />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span data-text="Выбрать тариф">Выбрать тариф</span>
+                                                    <ArrowRight className="w-5 h-5" />
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="mb-12">
+                        <SectionHeader
+                            title="Индивидуальные решения"
+                            icon={Sparkles}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                        <div className="bg-background-one border border-border-color-one rounded-three p-8 relative overflow-hidden">
+                            <div className="relative z-10">
+                                <h4 className="text-xl font-title text-white-color mb-4">Нужен <span className="text-primary-color">Enterprise</span>?</h4>
+                                <p className="text-sm text-text-secondary-dark mb-6 leading-relaxed">
+                                    Если вам нужны индивидуальные условия, персональный менеджер и SLA, свяжитесь с нами.
+                                </p>
+                                <button className="theme-button style-2 w-full">
+                                    <span data-text="Связаться">Связаться</span>
+                                    <ArrowRight className="w-5 h-5" />
+                                </button>
                             </div>
                         </div>
 
-                        <div className="lg:col-span-1">
-                            <div className="bg-background-one border border-border-color-one rounded-three p-8 relative overflow-hidden">
-                                <div className="relative z-10">
-                                    <h4 className="text-xl font-title text-white-color mb-4">Нужен <span className="text-primary-color">Enterprise</span>?</h4>
-                                    <p className="text-sm text-text-secondary-dark mb-6 leading-relaxed">
-                                        Если вам нужны индивидуальные условия, персональный менеджер и SLA, свяжитесь с нами.
-                                    </p>
-                                    <button className="theme-button style-2 w-full">
-                                        <span data-text="Связаться">Связаться</span>
-                                        <ArrowRight className="w-5 h-5" />
-                                    </button>
+                        <div className="bg-background-one border border-border-color-one rounded-three p-8 relative overflow-hidden">
+                            <div className="relative z-10">
+                                <h4 className="text-xl font-title text-white-color mb-4">Возникли <span className="text-primary-color">проблемы</span>?</h4>
+                                <p className="text-sm text-text-secondary-dark mb-6 leading-relaxed">
+                                    Мы всегда готовы помочь. Посетите наше сообщество или напишите напрямую разработчику.
+                                </p>
+                                <div className="flex flex-col gap-3">
+                                    <a
+                                        href="https://vk.com/botsync"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="theme-button style-2 w-full"
+                                    >
+                                        <span data-text="Группа ВКонтакте">Группа ВКонтакте</span>
+                                        <ExternalLink className="w-5 h-5" />
+                                    </a>
+                                    <a
+                                        href="https://vk.com/id0"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="theme-button style-1 w-full"
+                                    >
+                                        <span data-text="Написать разработчику">Написать разработчику</span>
+                                        <MessageCircle className="w-5 h-5" />
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div className="mt-16">
+                        <div className="mb-10">
+                            <SectionHeader
+                                title="Частые вопросы"
+                                icon={HelpCircle}
+                            />
+                            <p className="text-text-secondary-dark max-w-2xl -mt-8">
+                                Ответы на самые популярные вопросы о тарифах, оплате и безопасности.
+                            </p>
+                        </div>
+
+                        <Faq items={tariffFaqs} />
                     </div>
                 </div>
             </div>
