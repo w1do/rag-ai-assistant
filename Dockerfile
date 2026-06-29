@@ -24,7 +24,8 @@ WORKDIR /var/www/html
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy application files (invalidates cache on any source change)
+# Invalidate cache on every deploy — pass CACHEBUST=$(git rev-parse HEAD) in Dokploy build args
+ARG CACHEBUST=1
 COPY . .
 # Copy vendor from composer_stage to ensure Ziggy is available for SSR build
 COPY --from=composer_stage /var/www/html/vendor ./vendor
@@ -111,11 +112,11 @@ COPY --from=test_stage /var/www/html/vendor/autoload.php /dev/null
 # Copy vendor from composer_stage
 COPY --from=composer_stage /var/www/html/vendor ./vendor
 
-# Copy build assets from node_stage
-COPY --from=node_stage /var/www/html/public/build ./public/build
-
 # Copy application files
 COPY . .
+
+# Copy build assets from node_stage (must be AFTER COPY . . to avoid overwrite)
+COPY --from=node_stage /var/www/html/public/build ./public/build
 
 # Final optimization and permissions
 RUN composer dump-autoload --optimize --no-dev \
